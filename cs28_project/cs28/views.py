@@ -15,8 +15,7 @@ from decimal import localcontext, Decimal, ROUND_HALF_UP
 import numpy as np
 import json
 
-from cs28.models import Student
-from cs28.models import Grade
+from cs28.models import Student, Grade, GraduationYear, AcademicPlan
 
 
 def index(request):
@@ -59,7 +58,9 @@ def user_logout(request):
 
 @login_required
 def manage(request):
-    ctx = {"student": Student.objects.all()}
+    ctx = {"student": Student.objects.all(),
+           "years": GraduationYear.objects.all().order_by('gradYear'),
+           "plans": AcademicPlan.objects.all().order_by('planCode'), }
     return render(request, 'manage.html', context=ctx)
 
 
@@ -113,12 +114,21 @@ def update_field(request):
 
 @login_required
 def calculate(request):
-    if request.method == "POST":
-        if len(request.data) > 0:
-            students = Student.object.filter(gradeDataUpdated=True,
-                                             gradYear__in=request.data)
-        else:
-            students = Student.objects.filter(gradeDataUpdated=True)
+    if request.method == "POST" and request.is_ajax():
+        year = request.POST.get('year', None)
+        plan = request.POST.get('plan', None)
+
+        if not (year and plan):
+            return HttpResponse(status=400)
+        students = Student.objects.filter(gradeDataUpdated=True,
+                                          gradYear=year,
+                                          academicPlan=plan)
+
+        # if len(request.data) > 0:
+        #     students = Student.object.filter(gradeDataUpdated=True,
+        #                                      gradYear__in=request.data)
+        # else:
+        #     students = Student.objects.filter(gradeDataUpdated=True)
 
         course_counts = {}
         course_weights = {}

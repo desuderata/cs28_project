@@ -65,37 +65,55 @@ Manage
             <h1>Students</h1>
         </div>
     </div>
-    <!-- <div class="row justify-content-between"> -->
-        <!-- <div class="col-auto d-flex mt-3"> -->
-        <div id="toolbar">
-            <form class="form-inline">
+    <div class="row justify-content-between">
+        <div class="col-auto d-flex mt-3">
+        <!-- <div id="toolbar"> -->
+            <form class="form-inline" id="calculateForm">
                 <div class="form-row">
-                    <label class="mx-2">Year: </label>
+                    <!-- <label class="mx-2">Year: </label> -->
                     <div class="col-auto mr-2">
-                        <select class="form-control">
-                            <option selected>Year</option>
-                            <option value="1">2019-2020</option>
+                        <select name="year" class="form-control">
+                            <option value="" selected disabled>Graduation Year</option>
+                            {% for year in years %}
+                                <option value="{{ year.gradYear }}">{{ year.gradYear }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-auto mr-2">
-                        <select class="form-control">
-                            <option selected>Show All</option>
+                        <select name="plan" class="form-control">
+                            <option value="" selected disabled>Academic Plan</option>
+                            {% for plan in plans %}
+                                <option value="{{ plan.planCode }}">{{ plan.planCode }}</option>
+                            {% endfor %}
                         </select>
+                    </div>
+                    <div class="col-auto" id="calculate">
+                        <button class="btn btn-secondary"
+                                onclick="return false">
+                            Calculate
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
         <!-- </div> -->
-        <!-- <div class="col-auto d-flex mt-3">
+        <div class="col-auto d-flex mt-3 mb-3">
             <form class="form-inline">
                 <div class="form-row">
+                    <label class="mx-2">Color Code Legend: </label>
                     <div class="col-auto">
-                        <button class="btn btn-secondary">Edit</button>
+                        <button class="btn btn-success" disabled>Overridden</button>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-secondary">Export</button>
+                        <button class="btn btn-warning" disabled>Discretionary</button>
                     </div>
                     <div class="col-auto">
+                        <button class="btn btn-danger" disabled>Missing Grades</button>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" disabled>Special Code</button>
+                    </div>
+                    <!-- <div class="col-auto">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="anonymizeCheck" value="anonymize">
                             <label class="form-check-label" for="anonymizeCheck">Anonymize</label>
@@ -106,12 +124,27 @@ Manage
                             <input class="form-check-input" type="checkbox" id="mcLayoutCheck" value="mcLayout">
                             <label class="form-check-label" for="mcLayoutCheck">MyCampus Layout</label>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </form>
-        </div> -->
-    <!-- </div> -->
+        </div>
+    </div>
     <hr class="w-100">
+
+    <div id="toolbar">
+        <form class="form-inline">
+            <div class="form-row">
+                <div class="col-auto">
+                    <!-- return false to prevent refresh -->
+                    <button class="btn btn-secondary"
+                            id="myCampusLayout"
+                            onclick="return false">
+                        MyCampus Layout
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 
     <!-- pagination and sort are client side. -->
     <!-- notes:
@@ -192,15 +225,25 @@ Manage
                         "&#128077;"
                     {% endif %},
                 "id": "{{ model.matricNo }}",
+                "mcId": "{{ model.matricNo }}",  // using the same field name messes up with table header
                 "grad": "{{ model.gradYear }}",
+                "name": "{{ model.givenNames }},{{ model.surname }}",
                 "first": "{{ model.givenNames }}",
                 "last": "{{ model.surname }}",
+                "plan": "{{ model.academicPlan }}",
                 "gpa4": "{{ model.finalAward4 }}",
                 "gpa3": "{{ model.finalAward3 }}",
                 "gpa2": "{{ model.finalAward2 }}",
                 "gpa1": "{{ model.finalAward1 }}",
                 "oAward": "{{ model.award_as_mc }}",
                 "award": 
+                    {% if model.updatedAward == "-1" %}
+                        "{{ model.award_as_mc }}"
+                    {% else %}
+                        "{{ model.updatedAward }}"
+                    {% endif %},
+                "mcAward": 
+                    // as said earlier, using the same field messes up table header
                     {% if model.updatedAward == "-1" %}
                         "{{ model.award_as_mc }}"
                     {% else %}
@@ -242,6 +285,12 @@ Manage
                     sortable: true
                 },
                 {
+                    field: "mcId",
+                    title: "StudentID",
+                    sortable: true,
+                    visible: false
+                },
+                {
                     field: "id",
                     title: "Matric No.",
                     sortable: true,
@@ -253,6 +302,12 @@ Manage
                     sortable: true
                 },
                 {
+                    field: "name",
+                    title: "Name",
+                    sortable: true,
+                    visible: false
+                },
+                {
                     field: "first",
                     title: "First Name",
                     sortable: true
@@ -261,6 +316,12 @@ Manage
                     field: "last",
                     title: "Last Name",
                     sortable: true
+                },
+                {
+                    field: "plan",
+                    title: "Acad Plan",
+                    sortable: true,
+                    visible: false
                 },
                 {
                     field: "gpa4",
@@ -322,6 +383,12 @@ Manage
                             }
                         ]
                     }
+                },
+                {
+                    field: "mcAward",
+                    title: "Degree Honors",
+                    sortable: true,
+                    visible: false
                 },
                 {
                     field: "notes",
@@ -477,14 +544,49 @@ Manage
         return 0
     }
 
-    $('#table').on('editable-shown.bs.table', function(){
+    $('#table').on('editable-shown.bs.table', function() {
         $('#table').bootstrapTable('resetView')
     });
 
-    $('#table').on('editable-hidden.bs.table', function(){
+    $('#table').on('editable-hidden.bs.table', function() {
         $('#table').bootstrapTable('resetView')
     });
 
+    $(function() {
+        $('#myCampusLayout').click(function() {
+            $table.bootstrapTable('showColumn', 'mcId');
+            $table.bootstrapTable('showColumn', 'name');
+            $table.bootstrapTable('showColumn', 'plan');
+            $table.bootstrapTable('showColumn', 'mcAward');
+            $table.bootstrapTable('hideColumn', 'type');
+            $table.bootstrapTable('hideColumn', 'id');
+            $table.bootstrapTable('hideColumn', 'grad');
+            $table.bootstrapTable('hideColumn', 'first');
+            $table.bootstrapTable('hideColumn', 'last');
+            $table.bootstrapTable('hideColumn', 'gpa4');
+            $table.bootstrapTable('hideColumn', 'gpa3');
+            $table.bootstrapTable('hideColumn', 'gpa2');
+            $table.bootstrapTable('hideColumn', 'gpa1');
+            $table.bootstrapTable('hideColumn', 'oAward');
+            $table.bootstrapTable('hideColumn', 'award');
+            $table.bootstrapTable('hideColumn', 'notes');
+        });
+    });
+    $(function() {
+        $('#calculate').click(function() {
+            var calculate_data = $('#calculateForm').serialize();
+            // console.log("here");
+            // console.log(calculate_data);
+
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url: "{% url 'cs28:calculate' %}",
+                type: "POST",
+                data: calculate_data,
+                dataType: 'json'
+            })
+        })
+    });
     // ajax post to update database
     $('#table').on('editable-save.bs.table', function(e, field, row, oldValue, $el){
         console.log(e);  // event
