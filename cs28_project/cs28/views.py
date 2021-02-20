@@ -65,4 +65,41 @@ def module_grades(request):
 
 @login_required
 def module_grades_upload(request):
+    if request.method == "GET":
+        return render(request, module_grades_upload)
+    
+    try:
+        csv_file = request.FILES["csv_file"]
+        if not csv_file.name.endswith('.csv'):
+            return redirect(reverse("cs28:module_grades_upload"))
+        #check if file is too large
+        if csv_file.multiple_chunks():
+            return redirect(reverse("cs28:module_grades_upload"))
+        
+        file_data = csv_file.read().decode("utf-8")
+        
+        lines = file_data.split("\r")
+        
+        for line in lines:
+            fields = line.split(",")
+            print (fields)
+            try:
+                courseCode = 'D'
+                matricNo = Student.objects.get(matricNo = fields[0])
+                alphanum = fields[2]
+                Grade.objects.create(
+                    courseCode = courseCode,
+                    matricNo = matricNo,
+                    alphanum = alphanum,
+                )                                           
+            except Exception as e:
+                logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
+                pass
+
+
+    except Exception as e:
+        logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+
+    return redirect(reverse("cs28:module_grades_upload"))
+
     return render(request, 'module_grades_upload.html')
