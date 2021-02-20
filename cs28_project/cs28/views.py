@@ -83,12 +83,15 @@ def module_grades_upload(request):
         file_data = csv_file.read().decode("utf-8")
         
         lines = file_data.split("\r")
-        
+        lines.remove(lines[0])
         for line in lines:
             fields = line.split(",")
             print (fields)
             try:
-                courseCode = 'D'
+                courseCode = csv_file.name
+                #extract course code from the file name, for now hard-coded (expected format: "Grade Roster CourseCode.csv")
+                courseCode = courseCode[13:-4]
+                print(courseCode)
                 matricNo = Student.objects.get(matricNo = fields[0])
                 alphanum = fields[2]
                 Grade.objects.create(
