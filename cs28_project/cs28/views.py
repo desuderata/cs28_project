@@ -15,6 +15,10 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse
 
+import logging
+from .models.grade import Grade
+from .models.student import Student
+
 
 def index(request):
     return render(request, 'index.html')
