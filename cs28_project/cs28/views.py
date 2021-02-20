@@ -70,7 +70,7 @@ def module_grades(request):
 @login_required
 def module_grades_upload(request):
     if request.method == "GET":
-        return render(request, module_grades_upload)
+        return render(request, 'module_grades_upload.html', {})
     
     try:
         csv_file = request.FILES["csv_file"]
@@ -105,5 +105,3 @@ def module_grades_upload(request):
         logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
 
     return redirect(reverse("cs28:module_grades_upload"))
-
-    return render(request, 'module_grades_upload.html')
