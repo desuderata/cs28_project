@@ -329,7 +329,7 @@
 
 <div class="container">
     <form method="post"
-          action="#"
+          action="{% url 'cs28:module_grades_upload' %}"
           enctype="multipart/form-data"
           novalidate=""
           class="box has-advanced-upload">
@@ -353,6 +353,7 @@
             </label>
             <button type="submit" class="box__button ">Upload</button>
         </div>
+
         <div class="box__uploading">Uploading…</div>
         <div class="box__success">Done! <a href="#" class="box__restart" role="button">Upload more?</a></div>
         <div class="box__error">
@@ -363,7 +364,18 @@
                value="1">
     </form>
 </div>
+<div>
+	{% if messages %}
+		<ul class="messages">
+		{% for message in messages %}
+			<li class="{{ message.tags }}">{{ message }}</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+</div>
+
 {% endblock %}
+
 
 {% block scripts %}
 <script>

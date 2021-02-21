@@ -18,6 +18,7 @@ from django.http import HttpResponse
 import logging
 from .models.grade import Grade
 from .models.student import Student
+from django.contrib import messages
 
 
 def index(request):
@@ -75,6 +76,7 @@ def module_grades_upload(request):
     try:
         csv_file = request.FILES["csv_file"]
         if not csv_file.name.endswith('.csv'):
+            messages.error(request,"File is not CSV type")
             return redirect(reverse("cs28:module_grades_upload"))
         #check if file is too large
         if csv_file.multiple_chunks():
