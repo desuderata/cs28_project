@@ -74,36 +74,38 @@ def module_grades_upload(request):
         return render(request, 'module_grades_upload.html', {})
     
     try:
-        csv_file = request.FILES["csv_file"]
-        if not csv_file.name.endswith('.csv'):
-            messages.error(request,"File is not CSV type")
-            return redirect(reverse("cs28:module_grades_upload"))
-        #check if file is too large
-        if csv_file.multiple_chunks():
-            return redirect(reverse("cs28:module_grades_upload"))
+        csv_file = request.FILES.getlist["csv_file"]
+        #if not csv_file.name.endswith('.csv'):
+        #    messages.error(request,"File is not CSV type")
+        #    return redirect(reverse("cs28:module_grades_upload"))
+        ##check if file is too large
+        #if csv_file.multiple_chunks():
+        #    return redirect(reverse("cs28:module_grades_upload"))
         
-        file_data = csv_file.read().decode("utf-8")
+        for file in csv_file:
         
-        lines = file_data.split("\r")
-        lines.remove(lines[0])
-        for line in lines:
-            fields = line.split(",")
-            print (fields)
-            try:
-                courseCode = csv_file.name
-                #extract course code from the file name, for now hard-coded (expected format: "Grade Roster CourseCode.csv")
-                courseCode = courseCode[13:-4]
-                print(courseCode)
-                matricNo = Student.objects.get(matricNo = fields[0])
-                alphanum = fields[2]
-                Grade.objects.create(
-                    courseCode = courseCode,
-                    matricNo = matricNo,
-                    alphanum = alphanum,
-                )                                           
-            except Exception as e:
-                logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
-                pass
+            #extract course code from the file name, for now hard-coded
+            #(expected format: "Grade Roster CourseCode.csv")
+            courseCode = file.name[13:-9]
+            
+            file_data = csv_file.read().decode("utf-8")
+            lines = file_data.split("\n")[1:]
+            
+            for line in lines:
+                fields = line.split(",")
+                print (fields)
+                try:
+      
+                    matricNo = Student.objects.get(matricNo=fieolds[0])
+                    alphanum = fields[3]
+                    Grade.objects.get_or_create(
+                        courseCode = courseCode,
+                        matricNo = matricNo,
+                        alphanum = alphanum,
+                    )                                           
+                except Exception as e:
+                    logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
+                    pass
 
 
     except Exception as e:
