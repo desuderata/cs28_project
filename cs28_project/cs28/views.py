@@ -74,7 +74,7 @@ def module_grades_upload(request):
         return render(request, 'module_grades_upload.html', {})
     
     try:
-        csv_file = request.FILES.getlist["csv_file"]
+        csv_file = request.FILES.getlist("csv_file")
         #if not csv_file.name.endswith('.csv'):
         #    messages.error(request,"File is not CSV type")
         #    return redirect(reverse("cs28:module_grades_upload"))
@@ -96,9 +96,9 @@ def module_grades_upload(request):
                 print (fields)
                 try:
       
-                    matricNo = Student.objects.get(matricNo=fieolds[0])
-                    alphanum = fields[3]
-                    Grade.objects.get_or_create(
+                    matricNo = Student.objects.get(matricNo=fields[0])
+                    alphanum = fields[2]
+                    Grade.objects.create(
                         courseCode = courseCode,
                         matricNo = matricNo,
                         alphanum = alphanum,
