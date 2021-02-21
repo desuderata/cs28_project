@@ -65,6 +65,14 @@ def manage(request):
 
 
 @login_required
+def data(request):
+    ctx = {"student": Student.objects.all(),
+           "years": GraduationYear.objects.all().order_by('gradYear'),
+           "plans": AcademicPlan.objects.all().order_by('planCode'), }
+    return render(request, 'data.html', context=ctx)
+
+
+@login_required
 def module_grades(request):
     ctx = {"grade": Grade.objects.all()}
     return render(request, 'module_grades.html', context=ctx)
@@ -76,7 +84,7 @@ def update_field(request):
 
         field = request.POST.get('field', None)
         row = json.loads(request.POST.get('row', None))
-        old_value = request.POST.get('el', None)
+        # old_value = request.POST.get('el', None)
 
         # Update grade or award
         if field == "notes" or field == "award":
@@ -117,12 +125,28 @@ def calculate(request):
     if request.method == "POST" and request.is_ajax():
         year = request.POST.get('year', None)
         plan = request.POST.get('plan', None)
+        json_row = request.POST.get('row', None)
+        update_sub = False
+        print(json_row)
 
-        if not (year and plan):
+        if json_row:
+            row = json.loads(json_row)
+            update_sub = "gradeId" in row.keys()
+            print(update_sub)
+        # print(not (year and plan) or update_sub)
+
+        if not ((year and plan) or update_sub):
             return HttpResponse(status=400)
-        students = Student.objects.filter(gradeDataUpdated=True,
-                                          gradYear=year,
-                                          academicPlan=plan)
+
+        if update_sub:
+            matric = row["gradeId"][:7]
+            students = Student.objects.filter(matricNo=matric,
+                                              gradeDataUpdated=True)
+
+        else:
+            students = Student.objects.filter(gradeDataUpdated=True,
+                                              gradYear=year,
+                                              academicPlan=plan)
 
         # if len(request.data) > 0:
         #     students = Student.object.filter(gradeDataUpdated=True,

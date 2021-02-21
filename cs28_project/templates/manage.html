@@ -97,7 +97,7 @@ Manage
             </form>
         </div>
         <!-- </div> -->
-        <div class="col-auto d-flex mt-3 mb-3">
+        <div class="col-auto d-flex mt-3">
             <form class="form-inline">
                 <div class="form-row">
                     <label class="mx-2">Color Code Legend: </label>
@@ -208,65 +208,8 @@ Manage
                          "CR": -1, "MV": -1
                          }
 
-    // populate an array with json for each student
-    var mydata = [
-        {% for model in student %}
-            {
-                "type":
-                    {% if model.updatedAward != "-1" %}
-                        "Overridden"
-                    {% elif model.is_discretionary %}
-                        "Discretionary"
-                    {% elif model.isMissingGrades %}
-                        "Missing Grades"
-                    {% elif model.hasSpecialCode %}
-                        "Special Code"
-                    {% else %}
-                        "&#128077;"
-                    {% endif %},
-                "id": "{{ model.matricNo }}",
-                "mcId": "{{ model.matricNo }}",  // using the same field name messes up with table header
-                "grad": "{{ model.gradYear }}",
-                "name": "{{ model.givenNames }},{{ model.surname }}",
-                "first": "{{ model.givenNames }}",
-                "last": "{{ model.surname }}",
-                "plan": "{{ model.academicPlan }}",
-                "gpa4": "{{ model.finalAward4 }}",
-                "gpa3": "{{ model.finalAward3 }}",
-                "gpa2": "{{ model.finalAward2 }}",
-                "gpa1": "{{ model.finalAward1 }}",
-                "oAward": "{{ model.award_as_mc }}",
-                "award": 
-                    {% if model.updatedAward == "-1" %}
-                        "{{ model.award_as_mc }}"
-                    {% else %}
-                        "{{ model.updatedAward }}"
-                    {% endif %},
-                "mcAward": 
-                    // as said earlier, using the same field messes up table header
-                    {% if model.updatedAward == "-1" %}
-                        "{{ model.award_as_mc }}"
-                    {% else %}
-                        "{{ model.updatedAward }}"
-                    {% endif %},
-                "notes": "{{ model.notes }}",
-                "sub": [
-                    {% with model.grade_set.all as grades %}
-                        {% for grade in grades %}
-                            {
-                                "gradeId": "{{ grade.matricNo }}",
-                                "code": "{{ grade.courseCode }}",
-                                "alpha": "{{ grade.alphanum }}",
-                                "ttpt": grades_dict["{{ grade.alphanum }}"]
-                            }{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    {% endwith %}
-                ]
-            }
-            {% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    ];
 
+    var mydata = [{% include 'data.html' %}];
     // bootstrap table attributes
     $(function () {
         $('#table').bootstrapTable({
@@ -603,11 +546,47 @@ Manage
                 "row": JSON.stringify(row),
                 "el": $el
             },
-            dataType: 'json'
-            // success: function (data) {
-                
-            // }
+            dataType: 'json',
+            success: function (data) {
+                if (row.gradeId) {
+                    ajax_calculate(token, row, data);
+                // } else {
+                //     ajax_update(token, row, data);
+                }
+            }
         });
+        function ajax_calculate(token, row, data) {
+            if (row.gradeId) {
+                $.ajax({
+                    headers: { "X-CSRFToken": token },
+                    url: "{% url 'cs28:calculate' %}",
+                    type: "POST",
+                    data: {"row": JSON.stringify(row)},
+                    // dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        // ajax_update(token, row, data);
+                    }
+                });
+            }
+        };
+
+        // updates the table 
+        function ajax_update(token, row, data) {
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url: "{% url 'cs28:data' %}",
+                type: "GET",
+                success: function (data) {
+                    var data = [{% include 'data.html' %}];
+                    $('#table').bootstrapTable({ data: data });
+                    console.log(data);
+                    $('#table').bootstrapTable('load', data);
+                }
+            });
+        };
+
+        console.log(row.parentElement);
     });
 </script>
 
