@@ -88,7 +88,7 @@ def module_grades_upload(request):
             #(expected format: "Grade Roster CourseCode.csv")
             courseCode = file.name[13:-9]
             
-            file_data = csv_file.read().decode("utf-8")
+            file_data = file.read().decode("utf-8")
             lines = file_data.split("\n")[1:]
             
             for line in lines:
