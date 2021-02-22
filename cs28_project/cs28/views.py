@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse
 
+import re
 import logging
 from .models.grade import Grade
 from .models.student import Student
@@ -89,11 +90,10 @@ def module_grades_upload(request):
             courseCode = file.name[13:-9]
             
             file_data = file.read().decode("utf-8")
-            lines = file_data.split("\r")[1:]
+            lines = re.split('\r|\n', file_data)[1:]
             for line in lines:
                 
-                fields = line.split(",")
-                print (fields)
+                fields = re.split('",|,"', line)
                 try:
       
                     matricNo = Student.objects.get(matricNo=fields[0])
