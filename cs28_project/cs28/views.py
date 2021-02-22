@@ -22,10 +22,9 @@ from cs28.models import Grade
 def index(request):
     return render(request, 'index.html')
 
-
+@login_required
 def student_upload(request):
     return render(request, 'student_upload.html')
-
 
 def user_login(request):
     if request.user.is_authenticated:
