@@ -6,14 +6,15 @@ author: Yee Hou, Teoh (2471020t)
         Kien Welch 2371692w
         Alana Grant 239048G
 """
+import numpy as np
+import json
+
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from decimal import localcontext, Decimal, ROUND_HALF_UP
-import numpy as np
-import json
 
 from cs28.models import Student, Grade, GraduationYear, AcademicPlan
 
@@ -80,7 +81,7 @@ def module_grades(request):
 
 @login_required
 def update_field(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST":
 
         field = request.POST.get('field', None)
         row = json.loads(request.POST.get('row', None))
@@ -122,7 +123,7 @@ def update_field(request):
 
 @login_required
 def calculate(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST":
         year = request.POST.get('year', None)
         plan = request.POST.get('plan', None)
         json_row = request.POST.get('row', None)
