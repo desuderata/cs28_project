@@ -203,9 +203,9 @@ def calculate(request):
                                                   rounding=ROUND_HALF_UP)
 
             student.finalAward1 = round(overall_points, "0.0")
-            student.finalAward2 = round(overall_points, "0.0")
-            student.finalAward3 = round(overall_points, "0.0")
-            student.finalAward4 = round(overall_points, "0.0")
+            student.finalAward2 = round(overall_points, "0.00")
+            student.finalAward3 = round(overall_points, "0.000")
+            student.finalAward4 = round(overall_points, "0.0000")
 
             student.set_is_missing_grades(is_missing_grades)
             student.set_has_special_code(has_special_code)
