@@ -79,18 +79,7 @@ test_login:
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
-    - python manage.py test cs28.tests.test_login
-
-test_logout:
-  tags:
-    - docker
-  services:
-    - postgres:latest
-  stage: Test
-  variables:
-    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
-  script:
-    - python manage.py test cs28.tests.test_logout
+    - python manage.py test
 
 deploy:
   tags:

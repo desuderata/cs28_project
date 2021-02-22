@@ -159,7 +159,7 @@ class AcademicPlan(models.Model):
         # For each course
         for old_course, new_course in zip(old_courses, new_courses):
             # If the course changes
-            if new_course != old_course and len(old_course) != 0:
+            if new_course != old_course and len(old_courses) != 0:
                 # Get all the students on the plan
                 students_on_plan = Student.objects.filter(academicPlan=self)
                 for student in students_on_plan:

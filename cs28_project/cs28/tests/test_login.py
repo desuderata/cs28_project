@@ -8,9 +8,9 @@ Tests for the following functionalities:
 author: Yee Hou, Teoh (2471020t)
 """
 
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from .test_setup import user_create
 
 
 class LoginTest(TestCase):
@@ -18,12 +18,7 @@ class LoginTest(TestCase):
         """
         Setup by creates a user
         """
-        self.user, created = User.objects.get_or_create(username='testuser',
-                                                        first_name='Test',
-                                                        last_name='User',
-                                                        email='test@test.com')
-        self.user.set_password('password')
-        self.user.save()
+        self.user, created = user_create()
         self.assertTrue(created, "User was not created.")
 
     def test_login(self):
