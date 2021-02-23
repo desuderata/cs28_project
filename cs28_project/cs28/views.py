@@ -8,6 +8,7 @@ author: Yee Hou, Teoh (2471020t)
         Nguyen Thanh Hieu (2401707n)
         # add yr name here if you are working on this file.
         Kien Welch 2371692w
+        Alana Grant 239048G
 """
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -62,12 +63,15 @@ def user_logout(request):
 
 @login_required
 def manage(request):
-    return render(request, 'manage.html')
+    ctx = {"student": Student.objects.all()}
+    return render(request, 'manage.html', context=ctx)
 
 
 @login_required
 def module_grades(request):
-    return render(request, 'module_grades.html')
+    ctx = {"grade": Grade.objects.all()}
+    return render(request, 'module_grades.html', context=ctx)
+
 
 @login_required
 def module_grades_upload(request):

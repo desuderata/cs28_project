@@ -29,6 +29,9 @@ before_script:
   # Uncomment next line if your Django app needs a JS runtime:
   # - apt-get update -q && apt-get install nodejs -yqq
   - pip install -r requirements.txt
+  - cd cs28_project
+  - python manage.py makemigrations
+  - python manage.py migrate
 
 # To get Django tests to work you may need to create a settings file using
 # the following DATABASES:
@@ -50,54 +53,51 @@ stages:
   - Static Analysis
   - Test
   - Deploy
-
-pylint:
+  
+flake8:
   tags:
     - runner
+    - docker
   stage: Static Analysis
   before_script:
-    - mkdir -p public/badges public/lint
-    - echo undefined > public/badges/$CI_JOB_NAME.score
-    - pip install pylint_gitlab
+    - pip install flake8
+    - pip install flake8-codeclimate
   script:
-    - pylint --exit-zero --output-format=text $(find -type f -name "*.py" ! -path "**/.venv/**") | tee /tmp/pylint.txt
-    - sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' /tmp/pylint.txt > public/badges/$CI_JOB_NAME.score
-    - pylint --exit-zero --output-format=pylint_gitlab.GitlabCodeClimateReporter $(find -type f -name "*.py" ! -path "**/.venv/**") > codeclimate.json
-    - pylint --exit-zero --output-format=pylint_gitlab.GitlabPagesHtmlReporter $(find -type f -name "*.py" ! -path "**/.venv/**") > public/lint/index.html
-  after_script:
-    - anybadge --overwrite --label $CI_JOB_NAME --value=$(cat public/badges/$CI_JOB_NAME.score) --file=public/badges/$CI_JOB_NAME.svg 4=red 6=orange 8=yellow 10=green
-    - |
-      echo "Your score is: $(cat public/badges/$CI_JOB_NAME.score)"
+    - python -m flake8 --exit-zero --exclude="**\migrations\*"
+    - python -m flake8 --exit-zero --exclude="**\migrations\*" --format=codeclimate > codeclimate.json
   artifacts:
-    paths:
-      - public
     reports:
       codequality: codeclimate.json
     when: always
 
 test_login:
+  tags:
+    - docker
   services:
-  - postgres:latest
+    - postgres:latest
   stage: Test
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
-    - cd cs28_project
     - python manage.py test cs28.tests.test_login
 
 test_logout:
+  tags:
+    - docker
   services:
-  - postgres:latest
+    - postgres:latest
   stage: Test
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
-    - cd cs28_project
     - python manage.py test cs28.tests.test_logout
 
 deploy:
+  tags:
+    - docker
   stage: Deploy
   script:
+    - cd ..
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl

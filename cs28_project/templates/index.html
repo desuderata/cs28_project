@@ -103,8 +103,8 @@
 {% block body_block %}
 
 <!-- responsiveness abit wonky here -->
-<div class="py-5">
-    <div class="row h-100 align-items-center bg-uog">
+<div class="pt-5 container-fluid">
+    <div class="row h-100 align-items-center bg-uog-light">
         <div class="welcome-text col-md-5 col-xs-12">
             <div class="d-inline-flex white">
                 <h1>
@@ -117,7 +117,7 @@
                     class="img-fluid"
                     alt="Uni of Glasgow Image">
         </div> -->
-        <div class="col-md-7 col-xs-12">
+        <div class="col-md-7 col-xs-12 pr-0">
             <div id="slideshow"
                  class="carousel slide"
                  data-ride="carousel"
@@ -146,7 +146,7 @@
 </div>
 
 <!-- These buttons are not actually center -->
-<div class="container-fluid">
+<div class="py-5 container-fluid">
     <div class="d-flex justify-content-around">
         <div class="row nav-buttons w-100 px-5">
             <div class="col-md-3 col-sm-6 col d-flex justify-content-center py-2">
@@ -156,7 +156,7 @@
                     <h1>MANAGE</h1>
                     <br>
 
-                    <i class="fas fa-cogs"></i>
+                    <i class="fa-fw fas fa-cogs"></i>
                     <br>
 
                     <h5>Go to...</h5>
@@ -170,7 +170,7 @@
                     <h1>UPLOAD</h1>
                     <br>
 
-                    <i class="fas fa-upload"></i>
+                    <i class="fa-fw fas fa-upload"></i>
                     <br>
 
                     <h5>Go to...</h5>
@@ -184,7 +184,7 @@
                     <h1>DEGREES</h1>
                     <br>
 
-                    <i class="fas fa-graduation-cap"></i>
+                    <i class="fa-fw fas fa-graduation-cap"></i>
                     <br>
 
                     <h5>Go to...</h5>
@@ -194,11 +194,11 @@
             <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
                 <button class="shadow btn btn-light btn-block btn-sq"
                         type ="submit"
-                        onclick="location.href = '{% url 'cs28:module_grades' %}';">
-                    <h1>STUDENTS</h1>
+                        onclick="location.href = '{% url 'cs28:course_grades' %}';">
+                    <h1>GRADES</h1>
                     <br>
 
-                    <i class="fas fa-book-reader"></i>
+                    <i class="fa-fw fas fa-award"></i>
                     <br>
 
                     <h5>Go to...</h5>

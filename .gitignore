@@ -5,3 +5,4 @@ db.sqlite3
 *.key
 thumbs.db
 cs28_project/cs28/migrations/*
+../public/

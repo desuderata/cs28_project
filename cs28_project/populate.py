@@ -96,19 +96,30 @@ def populate_students():
     with open("population_csv/student.csv") as f:
         reader = csv.reader(f)
         next(reader)  # skip header
+        notes = ["The quick brown fox", "jumps over the lazy dog",
+                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                 "sed do eiusmod tempor incididunt ut labore",
+                 "et dolore magna aliqua.", "Ut enim ad minim veniam",
+                 "quis nostrud exercitation ullamco laboris nisi ut aliquip",
+                 "ex ea commodo consequat. Duis aute irure dolor",
+                 "in reprehenderit in voluptate velit esse cillum dolore",
+                 "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat",
+                 "non proident, sunt in culpa qui officia deserunt",
+                 "mollit anim id est laborum."]
 
         for row in reader:
             rand_award = round(random.uniform(0, 22), 4)
             first, last = row[1].split(",")
             plan = AcademicPlan.objects.get(planCode=row[2])
             year = GraduationYear.objects.get(gradYear=row[3])
-
+            note = random.choice([random.choice(notes), ""])
             Student.objects.get_or_create(matricNo=row[0],
                                           givenNames=last,
                                           surname=first,
                                           academicPlan=plan,
                                           gradYear=year,
-                                          finalAward4=rand_award)
+                                          finalAward4=rand_award,
+                                          notes=note)
     print("Populated students...")
 
 

@@ -16,7 +16,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('manage/', views.manage, name='manage'),
-    path('module_grades/', views.module_grades, name='module_grades'),
+    path('course_grades/', views.module_grades, name='course_grades'),
     path('studentUpload/', views.studentUpload, name='studentUpload'),
     path('module_grades_upload/', views.module_grades_upload, name='module_grades_upload'),
 ]
