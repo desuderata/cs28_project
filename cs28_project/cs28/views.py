@@ -6,14 +6,15 @@ author: Yee Hou, Teoh (2471020t)
         Kien Welch 2371692w
         Alana Grant 239048G
 """
+import numpy as np
+import json
+
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from decimal import localcontext, Decimal, ROUND_HALF_UP
-import numpy as np
-import json
 
 from .convert_to_ttpt import to_ttpt
 from cs28.models import Student, Grade, GraduationYear, AcademicPlan
@@ -167,7 +168,7 @@ def module_grades(request):
 
 @login_required
 def update_field(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST":
 
         field = request.POST.get('field', None)
         row = json.loads(request.POST.get('row', None))
@@ -209,7 +210,7 @@ def update_field(request):
 
 @login_required
 def calculate(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST":
         year = request.POST.get('year', None)
         plan = request.POST.get('plan', None)
         json_row = request.POST.get('row', None)
@@ -218,7 +219,6 @@ def calculate(request):
         if json_row:
             row = json.loads(json_row)
             update_sub = "gradeId" in row.keys()
-        # print(not (year and plan) or update_sub)
 
         if not ((year and plan) or update_sub):
             return HttpResponse(status=400)
@@ -287,9 +287,9 @@ def calculate(request):
                                                   rounding=ROUND_HALF_UP)
 
             student.finalAward1 = round(overall_points, "0.0")
-            student.finalAward2 = round(overall_points, "0.0")
-            student.finalAward3 = round(overall_points, "0.0")
-            student.finalAward4 = round(overall_points, "0.0")
+            student.finalAward2 = round(overall_points, "0.00")
+            student.finalAward3 = round(overall_points, "0.000")
+            student.finalAward4 = round(overall_points, "0.0000")
 
             student.set_is_missing_grades(is_missing_grades)
             student.set_has_special_code(has_special_code)
