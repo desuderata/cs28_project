@@ -1,5 +1,12 @@
 """ Tests Grades
 
+- Tests if updating a grade will change gradeDataUpdated to true
+- Checks if the course for the grade added exists. If it doesn't
+the course should not be created.
+- Tests if there is a special course in a student's grade
+- Tests if a course does not exist after it has been deleted
+- Tests if to string works as intended
+
 author: Yee Hou, Teoh (2471020t)
 """
 from django.test import TestCase
@@ -17,6 +24,9 @@ class GradesTest(TestCase):
                                        matricNo=self.student)
 
     def test_grade_data_updated(self):
+        """
+        Tests if updating a grade will change gradeDataUpdated to true
+        """
         grade = Grade.objects.get(courseCode="CHEM_4012",
                                   matricNo=self.student)
         old_grade = grade.alphanum
@@ -37,7 +47,6 @@ class GradesTest(TestCase):
             grade = Grade.objects.get_or_create(courseCode="DNE",
                                                 matricNo=self.student,
                                                 alphanum="A1")
-            grade.save()
 
         self.assertFalse(Grade.objects.filter(courseCode="DNE").exists())
 
@@ -59,4 +68,7 @@ class GradesTest(TestCase):
         self.assertFalse(Grade.objects.filter(courseCode="CHEM_4012").exists())
 
     def test___str__(self):
+        """
+        Tests if to string works as intended
+        """
         self.assertEqual(str(self.grade), "2456789 : CHEM_4012 F1")

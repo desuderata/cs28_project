@@ -51,12 +51,13 @@ class AcademicPlanTest(TestCase):
                     course_2="Barfoo", weight_2=0.5)
 
         # this should not exist
-        plan.create(gradYear=self.year,
-                    planCode="Wrong",
-                    courseCode="Test",
-                    mcName="Test",
-                    course_1="Foobar", weight_1=0.5,
-                    course_2="Barfoo", weight_2=0.6)
+        with self.assertRaises(ValidationError):
+            plan.create(gradYear=self.year,
+                        planCode="Wrong",
+                        courseCode="Test",
+                        mcName="Test",
+                        course_1="Foobar", weight_1=0.5,
+                        course_2="Barfoo", weight_2=0.6).clean()
 
         self.assertTrue(plan.filter(planCode="Correct").exists())
         self.assertFalse(plan.filter(planCode="Wrong").exists())
@@ -97,3 +98,10 @@ class AcademicPlanTest(TestCase):
                                         mcName="Foobar",
                                         course_1="Foobar", weight_1=0.5,
                                         weight_2=0.5)
+
+    def test___str__(self):
+        """
+        Tests if to string works as intended
+        """
+        plan = AcademicPlan.objects.get(planCode="F100-2208")
+        self.assertTrue(str(plan), "F100-2208")
