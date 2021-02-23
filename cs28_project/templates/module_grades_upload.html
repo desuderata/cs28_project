@@ -18,7 +18,7 @@
 
 {% block head %}
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="main.css">
+
 
 <style>
     *{
@@ -310,6 +310,9 @@
         r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")
     })(document,window,0);
 </script>
+
+<script>M.toast({html:"{{message})", classes:'blue rounded', 
+			displayLength:2000})</script>
 {% endblock %}
 
 
@@ -320,7 +323,7 @@
         <div class="welcome-text col-md-5 col-xs-12 ">
             <div class="text-nowrap white">
                 <h1>
-                    Upload Module Grades
+                    Module Grades Upload
                 </h1>
             </div>
         </div>
@@ -364,15 +367,19 @@
                value="1">
     </form>
 </div>
-<div>
-	{% if messages %}
-		<ul class="messages">
-		{% for message in messages %}
-			<li class="{{ message.tags }}">{{ message }}</li>
-		{% endfor %}
-		</ul>
-	{% endif %}
-</div>
+
+
+
+
+{% if messages %}
+	<ul class="messages">
+	{% for message in messages %}
+		<script>M.toast({html:"{{message})", classes:'blue rounded', 
+			displayLength:2000})</script>
+	{% endfor %}
+	</ul>
+{% endif %}
+
 
 {% endblock %}
 
@@ -380,7 +387,7 @@
 {% block scripts %}
 <script>
     'use strict';
-
+	
     ;( function ( document, window, index )
     {
         // feature detection for drag&drop upload

@@ -76,14 +76,20 @@ def module_grades_upload(request):
     
     try:
         csv_file = request.FILES.getlist("csv_file")
+        
         #if not csv_file.name.endswith('.csv'):
-        #    messages.error(request,"File is not CSV type")
+        #   messages.error(request,"File is not CSV type")
         #    return redirect(reverse("cs28:module_grades_upload"))
         ##check if file is too large
         #if csv_file.multiple_chunks():
         #    return redirect(reverse("cs28:module_grades_upload"))
         
         for file in csv_file:
+            
+            if not  file.name.endswith('.csv'):
+                print("File is not CSV type")
+                messages.error(request,"File is not CSV type")
+                return redirect(reverse("cs28:module_grades_upload"))
             
             #extract course code from the file name, for now hard-coded
             #(expected format: "Grade Roster CourseCode.csv")
@@ -104,6 +110,7 @@ def module_grades_upload(request):
                         alphanum = alphanum,
                     )                                           
                 except Exception as e:
+                    messages.error(request, repr(e))
                     logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
                     pass
 
