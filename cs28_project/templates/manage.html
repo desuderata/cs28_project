@@ -54,7 +54,7 @@
 
 
 {% block title_block %}
-Manage
+Manage Students
 {% endblock %}
 
 
@@ -62,7 +62,7 @@ Manage
 <div class="mt-4 pb-5 container-fluid container-width bg-white">
     <div class="page-header row h-100 align-items-center bg-blue">
         <div class="page-text d-inline-flex text-white">
-            <h1>Students</h1>
+            <h1>Manage Students</h1>
         </div>
     </div>
     <div class="row justify-content-between">
@@ -80,7 +80,7 @@ Manage
                         </select>
                     </div>
                     <div class="col-auto mr-2">
-                        <select name="plan" class="form-control">
+                        <select name="plan" id="plan" class="form-control">
                             <option value="" selected disabled>Academic Plan</option>
                             {% for plan in plans %}
                                 <option value="{{ plan.planCode }}">{{ plan.planCode }}</option>
@@ -90,7 +90,7 @@ Manage
                     <div class="col-auto" id="calculate">
                         <button class="btn btn-secondary"
                                 onclick="return false">
-                            Calculate
+                            Get Students
                         </button>
                     </div>
                 </div>
@@ -139,7 +139,7 @@ Manage
                     <button class="btn btn-secondary"
                             id="myCampusLayout"
                             onclick="return false">
-                        MyCampus Layout
+                        Toggle MyCampus Layout
                     </button>
                 </div>
             </div>
@@ -167,9 +167,6 @@ Manage
 
            data-loading-template="loadingTemplate"
 
-           data-query-params="queryParams"
-           data-response-handler="responseHandler"
-
            data-toolbar="#toolbar"
 
            data-search="true"
@@ -193,6 +190,8 @@ Manage
     
     var token = '{{ csrf_token }}'
 
+    var filename = "degree_classification"
+
     const grades_dict = {"A1": 22, "A2": 21,
                          "A3": 20, "A4": 19,
                          "A5": 18, "B1": 17,
@@ -208,8 +207,11 @@ Manage
                          "CR": -1, "MV": -1
                          }
 
+    // change loading template
+    function loadingTemplate(message) {
+        return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+  }
 
-    var mydata = [{% include 'data.html' %}];
     // bootstrap table attributes
     $(function () {
         $('#table').bootstrapTable({
@@ -220,7 +222,9 @@ Manage
             exportDataType: "all",
             visibleSearch: true,
             minimumCountColumns: 2,
-            data: mydata,
+            exportOptions: {
+                fileName: filename
+            },
             columns: [
                 {
                     field: "type",
@@ -479,7 +483,9 @@ Manage
                 classes: 'table-primary'
             }
         }
-        if (row.ttpt === -1) {
+        if (row.alpha === "CW" ||
+            row.alpha === "MV" ||
+            row.alpha === "CR") {
             return {
                 classes: 'table-primary'
             }
@@ -497,39 +503,78 @@ Manage
 
     $(function() {
         $('#myCampusLayout').click(function() {
-            $table.bootstrapTable('showColumn', 'mcId');
-            $table.bootstrapTable('showColumn', 'name');
-            $table.bootstrapTable('showColumn', 'plan');
-            $table.bootstrapTable('showColumn', 'mcAward');
-            $table.bootstrapTable('hideColumn', 'type');
-            $table.bootstrapTable('hideColumn', 'id');
-            $table.bootstrapTable('hideColumn', 'grad');
-            $table.bootstrapTable('hideColumn', 'first');
-            $table.bootstrapTable('hideColumn', 'last');
-            $table.bootstrapTable('hideColumn', 'gpa4');
-            $table.bootstrapTable('hideColumn', 'gpa3');
-            $table.bootstrapTable('hideColumn', 'gpa2');
-            $table.bootstrapTable('hideColumn', 'gpa1');
-            $table.bootstrapTable('hideColumn', 'oAward');
-            $table.bootstrapTable('hideColumn', 'award');
-            $table.bootstrapTable('hideColumn', 'notes');
+
+            var iteration=$(this).data('iteration')||1
+            switch (iteration) {
+                case 1:
+                    $table.bootstrapTable('showColumn', 'mcId');
+                    $table.bootstrapTable('showColumn', 'name');
+                    $table.bootstrapTable('showColumn', 'plan');
+                    $table.bootstrapTable('showColumn', 'mcAward');
+                    $table.bootstrapTable('hideColumn', 'type');
+                    $table.bootstrapTable('hideColumn', 'id');
+                    $table.bootstrapTable('hideColumn', 'grad');
+                    $table.bootstrapTable('hideColumn', 'first');
+                    $table.bootstrapTable('hideColumn', 'last');
+                    $table.bootstrapTable('hideColumn', 'gpa4');
+                    $table.bootstrapTable('hideColumn', 'gpa3');
+                    $table.bootstrapTable('hideColumn', 'gpa2');
+                    $table.bootstrapTable('hideColumn', 'gpa1');
+                    $table.bootstrapTable('hideColumn', 'oAward');
+                    $table.bootstrapTable('hideColumn', 'award');
+                    $table.bootstrapTable('hideColumn', 'notes');
+                    break;
+                case 2:
+                    $table.bootstrapTable('hideColumn', 'mcId');
+                    $table.bootstrapTable('hideColumn', 'name');
+                    $table.bootstrapTable('hideColumn', 'plan');
+                    $table.bootstrapTable('hideColumn', 'mcAward');
+                    $table.bootstrapTable('showColumn', 'type');
+                    $table.bootstrapTable('showColumn', 'id');
+                    $table.bootstrapTable('showColumn', 'grad');
+                    $table.bootstrapTable('showColumn', 'first');
+                    $table.bootstrapTable('showColumn', 'last');
+                    $table.bootstrapTable('hideColumn', 'gpa4');
+                    $table.bootstrapTable('hideColumn', 'gpa3');
+                    $table.bootstrapTable('hideColumn', 'gpa2');
+                    $table.bootstrapTable('showColumn', 'gpa1');
+                    $table.bootstrapTable('hideColumn', 'oAward');
+                    $table.bootstrapTable('showColumn', 'award');
+                    $table.bootstrapTable('showColumn', 'notes');
+                    break;
+            }
+            iteration++;
+            if (iteration>2) iteration = 1;
+            $(this).data('iteration',iteration);
+
+            
         });
     });
+
+    var calculate_data;
+
+    // get students and calculate data
     $(function() {
         $('#calculate').click(function() {
-            var calculate_data = $('#calculateForm').serialize();
-            // console.log("here");
-            // console.log(calculate_data);
-
+            calculate_data = $('#calculateForm').serialize();
+            $table.bootstrapTable('refreshOptions', {
+                exportOptions: {"fileName": document.getElementById("plan").value}
+            });
             $.ajax({
                 headers: { "X-CSRFToken": token },
                 url: "{% url 'cs28:calculate' %}",
                 type: "POST",
                 data: calculate_data,
-                dataType: 'json'
+                success: function (data) {
+                    $table.bootstrapTable('refresh', {
+                        url: "{% url 'cs28:data' %}".concat("?", calculate_data)
+                    });
+                }
             })
         })
     });
+
+    console.log(filename)
     // ajax post to update database
     $('#table').on('editable-save.bs.table', function(e, field, row, oldValue, $el){
         console.log(e);  // event
@@ -550,8 +595,9 @@ Manage
             success: function (data) {
                 if (row.gradeId) {
                     ajax_calculate(token, row, data);
-                // } else {
-                //     ajax_update(token, row, data);
+                    ajax_update(token, row, data);
+                } else {
+                    ajax_update(token, row, data);
                 }
             }
         });
@@ -564,8 +610,7 @@ Manage
                     data: {"row": JSON.stringify(row)},
                     // dataType: 'json',
                     success: function (data) {
-                        console.log(data);
-                        // ajax_update(token, row, data);
+                        ajax_update(token, row, data);
                     }
                 });
             }
@@ -577,11 +622,11 @@ Manage
                 headers: { "X-CSRFToken": token },
                 url: "{% url 'cs28:data' %}",
                 type: "GET",
+                data: calculate_data,
                 success: function (data) {
-                    var data = [{% include 'data.html' %}];
-                    $('#table').bootstrapTable({ data: data });
-                    console.log(data);
-                    $('#table').bootstrapTable('load', data);
+                    $table.bootstrapTable('refresh', {
+                        url: "{% url 'cs28:data' %}".concat("?", calculate_data)
+                    });
                 }
             });
         };
