@@ -10,6 +10,7 @@ Todo:
 
 from cs28.models import Student, Grade
 from cs28.models.graduation_year import GraduationYear
+from decimal import Decimal, ROUND_HALF_UP
 
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -49,8 +50,8 @@ class AcademicPlan(models.Model):
                                           "student's module marks.")
     weight_1 = models.DecimalField(blank=True,
                                    null=True,
-                                   max_digits=4,
-                                   decimal_places=3,
+                                   max_digits=5,
+                                   decimal_places=4,
                                    validators=[MinValueValidator(0.0),
                                                MaxValueValidator(1.0)],
                                    help_text="Enter the corresponding weight "
@@ -79,7 +80,9 @@ class AcademicPlan(models.Model):
 
     def _calculate_total_weight(self):
         self._check_corresponding_weights()
-        return sum(round(w, 3) if w is not None
+        def round(x): return Decimal(str(x)).quantize(Decimal("0.0000"),
+                                                      rounding=ROUND_HALF_UP)
+        return sum(round(w) if w is not None
                    else 0 for w in self.get_weights())
 
     def _weight_in_correct_range(self):
@@ -188,6 +191,6 @@ for i in range(2, 41):
     AcademicPlan.add_to_class('weight_%s' % i,
                               models.DecimalField(blank=True,
                                                   null=True,
-                                                  max_digits=4,
-                                                  decimal_places=3,
+                                                  max_digits=5,
+                                                  decimal_places=4,
                                                   validators=validators))
