@@ -167,9 +167,6 @@ Manage
 
            data-loading-template="loadingTemplate"
 
-           data-query-params="queryParams"
-           data-response-handler="responseHandler"
-
            data-toolbar="#toolbar"
 
            data-search="true"
@@ -208,8 +205,11 @@ Manage
                          "CR": -1, "MV": -1
                          }
 
+    // change loading template
+    function loadingTemplate(message) {
+        return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+  }
 
-    var mydata = [{% include 'data.html' %}];
     // bootstrap table attributes
     $(function () {
         $('#table').bootstrapTable({
@@ -220,7 +220,7 @@ Manage
             exportDataType: "all",
             visibleSearch: true,
             minimumCountColumns: 2,
-            data: mydata,
+            url: "{% url 'cs28:data' %}",
             columns: [
                 {
                     field: "type",
@@ -479,7 +479,9 @@ Manage
                 classes: 'table-primary'
             }
         }
-        if (row.ttpt === -1) {
+        if (row.alpha === "CW" ||
+            row.alpha === "MV" ||
+            row.alpha === "CR") {
             return {
                 classes: 'table-primary'
             }
@@ -550,8 +552,8 @@ Manage
             success: function (data) {
                 if (row.gradeId) {
                     ajax_calculate(token, row, data);
-                // } else {
-                //     ajax_update(token, row, data);
+                } else {
+                    ajax_update(token, row, data);
                 }
             }
         });
@@ -565,7 +567,7 @@ Manage
                     // dataType: 'json',
                     success: function (data) {
                         console.log(data);
-                        // ajax_update(token, row, data);
+                        ajax_update(token, row, data);
                     }
                 });
             }
@@ -578,10 +580,12 @@ Manage
                 url: "{% url 'cs28:data' %}",
                 type: "GET",
                 success: function (data) {
-                    var data = [{% include 'data.html' %}];
-                    $('#table').bootstrapTable({ data: data });
-                    console.log(data);
-                    $('#table').bootstrapTable('load', data);
+                    // $('#table').bootstrapTable({ });
+                    // // console.log(data);
+                    // $('#table').bootstrapTable('load', data);
+                    $table.bootstrapTable('refresh', {
+                        url: "{% url 'cs28:data' %}"
+                    });
                 }
             });
         };
