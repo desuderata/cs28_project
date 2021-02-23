@@ -128,13 +128,10 @@ def calculate(request):
         plan = request.POST.get('plan', None)
         json_row = request.POST.get('row', None)
         update_sub = False
-        print(json_row)
 
         if json_row:
             row = json.loads(json_row)
             update_sub = "gradeId" in row.keys()
-            print(update_sub)
-        # print(not (year and plan) or update_sub)
 
         if not ((year and plan) or update_sub):
             return HttpResponse(status=400)

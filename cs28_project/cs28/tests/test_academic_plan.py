@@ -10,7 +10,6 @@ course code
 author: Yee Hou, Teoh (2471020t)
 """
 from django.test import TestCase
-from django.urls import reverse
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 
