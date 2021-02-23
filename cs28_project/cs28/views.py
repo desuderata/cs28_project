@@ -24,7 +24,49 @@ def index(request):
 
 @login_required
 def student_upload(request):
-    return render(request, 'student_upload.html')
+    if request.method == "GET":
+        return render(request, 'student_upload.html',{})
+        
+    try:
+        csv_file = request.FILES.getlist("csv_file")
+        #if not csv_file.name.endswith('.csv'):
+        #    messages.error(request,"File is not CSV type")
+        #    return redirect(reverse("cs28:module_grades_upload"))
+        ##check if file is too large
+        #if csv_file.multiple_chunks():
+        #    return redirect(reverse("cs28:module_grades_upload"))
+        
+        for file in csv_file:
+            
+            #extract course code from the file name, for now hard-coded
+            #(expected format: "Grade Roster CourseCode.csv")
+            courseCode = file.name[13:-9]
+            
+            file_data = file.read().decode("utf-8")
+            lines = re.split('\r|\n', file_data)[1:]
+            for line in lines:
+                
+                fields = re.split('",|,"', line)
+                try:
+      
+                    matricNo = Student.objects.get(matricNo=fields[0])
+                    alphanum = fields[2]
+                    Grade.objects.get_or_create(
+                        courseCode = courseCode,
+                        matricNo = matricNo,
+                        alphanum = alphanum,
+                    )                                           
+                except Exception as e:
+                    logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
+                    pass
+
+
+
+    except Exception as e:
+        logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+
+    return redirect(reverse("cs28:student_upload.html"))
+
 
 def user_login(request):
     if request.user.is_authenticated:
