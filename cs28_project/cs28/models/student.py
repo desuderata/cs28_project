@@ -154,14 +154,5 @@ class Student(models.Model):
         else:
             return "Fail"
 
-    def is_discretionary(self):
-        award = self.finalAward4
-        if ((17 < award < 18) or
-            (14 < award < 15) or
-            (11 < award < 12) or
-                (8 < award < 9)):
-            return True
-        return False
-
     def __str__(self):
         return f"{self.matricNo} ({self.surname}, {self.givenNames})"

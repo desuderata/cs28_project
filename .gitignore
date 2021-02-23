@@ -6,3 +6,5 @@ db.sqlite3
 thumbs.db
 cs28_project/cs28/migrations/*
 ../public/
+cs28_project/.coverage
+cs28_project/htmlcov
