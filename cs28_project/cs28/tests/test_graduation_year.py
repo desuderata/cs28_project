@@ -1,6 +1,7 @@
 """ Tests Graduation Year
 
 - Tests if graduation year validator works
+- Tests if to string works as intended
 
 author: Yee Hou, Teoh (2471020t)
 """
@@ -18,7 +19,7 @@ class GraduationYearOverride(TestCase):
 
     def test_grad_year_validator(self):
         """
-        - Tests if graduation year validator works
+        Tests if graduation year validator works
         """
         year = GraduationYear.objects
         year.create(gradYear="20-22")
