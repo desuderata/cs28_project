@@ -397,3 +397,6 @@ def module_grades_upload(request):
             "Unable to upload file. "+repr(e))
 
     return redirect(reverse("cs28:module_grades_upload"))
+
+def help(request):
+    return render(request, 'help.html')
