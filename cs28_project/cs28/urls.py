@@ -27,5 +27,4 @@ urlpatterns = [
     path('module-grades/', views.module_grades, name='module_grades'),
     path('manage/data/', views.data, name='data'),
     path('module-grades-upload/', views.module_grades_upload, name='module_grades_upload'),
->>>>>>> cs28_project/cs28/urls.py
 ]
