@@ -2,6 +2,7 @@
 
 author: Yee Hou, Teoh (2471020t)
         Ekaterina Terzieva(2403606t)
+        Nguyen Thanh Hieu (2401707n)
         # add yr name here if you are working on this file.
         Kien Welch 2371692w
         Alana Grant 239048G
@@ -18,6 +19,10 @@ from decimal import localcontext, Decimal, ROUND_HALF_UP
 
 from .convert_to_ttpt import to_ttpt
 from cs28.models import Student, Grade, GraduationYear, AcademicPlan
+
+import re
+import logging
+from django.contrib import messages
 
 
 def index(request):
@@ -297,3 +302,54 @@ def calculate(request):
         students.update(gradeDataUpdated=False)
         return HttpResponse(status=201)
     return HttpResponse(status=400)
+
+def module_grades_upload(request):
+    if request.method == "GET":
+        return render(request, 'module_grades_upload.html', {})
+
+    try:
+        csv_file = request.FILES.getlist("csv_file")
+
+        # if not csv_file.name.endswith('.csv'):
+        #   messages.error(request,"File is not CSV type")
+        #    return redirect(reverse("cs28:module_grades_upload"))
+        # check if file is too large
+        # if csv_file.multiple_chunks():
+        #    return redirect(reverse("cs28:module_grades_upload"))
+
+        for file in csv_file:
+
+            if not file.name.endswith('.csv'):
+                print("File is not CSV type")
+                messages.error(request, "File is not CSV type")
+                return redirect(reverse("cs28:module_grades_upload"))
+
+            # extract course code from the file name, for now hard-coded
+            # (expected format: "Grade Roster CourseCode.csv")
+            courseCode = file.name[13:-9]
+
+            file_data = file.read().decode("utf-8")
+            lines = re.split('\r|\n', file_data)[1:]
+            for line in lines:
+
+                fields = re.split('",|,"', line)
+                try:
+
+                    matricNo = Student.objects.get(matricNo=fields[0])
+                    alphanum = fields[2]
+                    Grade.objects.get_or_create(
+                        courseCode=courseCode,
+                        matricNo=matricNo,
+                        alphanum=alphanum,
+                    )
+                except Exception as e:
+                    messages.error(request, repr(e))
+                    logging.getLogger("error_logger").error(
+                        "Unable to upload file. "+repr(e))
+                    pass
+
+    except Exception as e:
+        logging.getLogger("error_logger").error(
+            "Unable to upload file. "+repr(e))
+
+    return redirect(reverse("cs28:module_grades_upload"))

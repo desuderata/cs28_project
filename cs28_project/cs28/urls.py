@@ -2,6 +2,7 @@
 
 author: Yee Hou, Teoh (2471020t)
         Ekaterina Terzieva(2403606t)
+        Nguyen Thanh Hieu(2401707n)
         # add yr name here if you are working on this file.
         Kien Welch 2371692w
 """
@@ -21,4 +22,5 @@ urlpatterns = [
     path('manage/calculate/', views.calculate, name='calculate'),
     path('manage/update/', views.update_field, name='update'),
     path('manage/data/', views.data, name='data'),
+    path('module-grades-upload/', views.module_grades_upload, name='module_grades_upload'),
 ]
