@@ -4,5 +4,7 @@ __pycache__/
 db.sqlite3
 *.key
 thumbs.db
-cs28_project/cs28/migrations/*
+cs28_project/cs28/migrations
 ../public/
+cs28_project/.coverage
+cs28_project/htmlcov

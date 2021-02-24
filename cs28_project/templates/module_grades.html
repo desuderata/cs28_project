@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-    Module Marks page
+    Course Grades page
 
 
 
@@ -44,7 +44,7 @@
 
 
 {% block title_block %}
-Module grades
+Course grades
 {% endblock %}
 
 
@@ -52,7 +52,7 @@ Module grades
 <div class="mt-4 pb-5 container-fluid container-width bg-white">
     <div class="page-header row h-100 align-items-center bg-blue">
         <div class="page-text d-inline-flex text-white">
-            <h1>Module Grades</h1>
+            <h1>Course Grades</h1>
         </div>
     </div>
     <div class="row justify-content-between">
@@ -115,6 +115,7 @@ Module grades
             <th data-field = "first" data-sortable="true">First Name</th>
             <th data-field = "last" data-sortable="true">Last Name</th>
             <th data-field = "an_grade" data-sortable="true">Alphanumeric Grade</th>
+            <th data-field = "ttpt_grade" data-sortable="true">22pt Grade</th>
           </tr>
         </thead>
     </table>
@@ -124,10 +125,24 @@ Module grades
 {% endblock %}
 
 
-<!-- working progress,-->
 {% block scripts %}
 <script>
     var $table = $('#table');
+
+    var grades_dict = {"A1": 22, "A2": 21,
+                       "A3": 20, "A4": 19,
+                       "A5": 18, "B1": 17,
+                       "B2": 16, "B3": 15,
+                       "C1": 14, "C2": 13,
+                       "C3": 12, "D1": 11,
+                       "D2": 10, "D3": 9,
+                       "E1": 8, "E2": 7,
+                       "E3": 6, "F1": 5,
+                       "F2": 4, "F3": 3,
+                       "G1": 2, "G2": 1,
+                       "H": 0, "CW": 0,
+                       "CR": 0, "MV": 0
+                       };
 
     var objects = [
         {% for model in grade %}
@@ -136,7 +151,8 @@ Module grades
                 "id": "{{ model.matricNo.matricNo }}",
                 "first": "{{ model.matricNo.givenNames }}",
                 "last": "{{ model.matricNo.surname }}",
-                "an_grade": "{{ model.alphanum }}"
+                "an_grade": "{{ model.alphanum }}",
+                "ttpt_grade": grades_dict["{{ model.alphanum }}"]
         }
 
         {% if not forloop.last %},{% endif %}

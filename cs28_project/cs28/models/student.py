@@ -13,9 +13,6 @@ Note:
     This is because 2.15 in decimal is 2.14999999999999991118215802998747676610
     9466552734375
 
-Todo:
-    Fix rounding errors due to floating point inaccuracies
-
 author: Yee Hou, Teoh (2471020t)
 """
 
@@ -143,6 +140,19 @@ class Student(models.Model):
 
     def set_is_missing_grades(self, value):
         self.isMissingGrades = value
+
+    def award_as_mc(self):
+        award = self.finalAward4
+        if award >= 18:
+            return "01"
+        elif award >= 15:
+            return "0U"
+        elif award >= 12:
+            return "0L"
+        elif award >= 9:
+            return "33"
+        else:
+            return "Fail"
 
     def __str__(self):
         return f"{self.matricNo} ({self.surname}, {self.givenNames})"

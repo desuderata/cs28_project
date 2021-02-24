@@ -7,6 +7,7 @@ Todo:
 from django.core.exceptions import ValidationError
 from django.db import models
 from cs28.models import Student
+from ..convert_to_ttpt import to_ttpt
 
 
 class Grade(models.Model):
@@ -41,8 +42,7 @@ class Grade(models.Model):
         app_label = "cs28"
 
     def get_alphanum_as_num(self):
-        # todo add converter
-        return
+        return to_ttpt(self.alphanum)
 
     def is_grade_a_special_code(self):
         return self.alphanum in ["MV", "CW", "CR"]
@@ -57,12 +57,9 @@ class Grade(models.Model):
                                    "academic plan."))
 
     def save(self, *args, **kwargs):
-        if self.course_does_not_exist():
-            raise ValidationError(("Course code does not exist in student's "
-                                   "academic plan."))
-        else:
-            self.matricNo.set_grade_data_updated()
-            super(Grade, self).save(*args, **kwargs)
+        self.clean()
+        self.matricNo.set_grade_data_updated()
+        super(Grade, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.matricNo.set_grade_data_updated()

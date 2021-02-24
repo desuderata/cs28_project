@@ -1,0 +1,324 @@
+/* CSS for base.html
+
+Author: Author: Yee Hou, Teoh (2471020t)
+*/
+.w-c {
+    width: 98%
+}
+/* UOG colorway */
+.bg-uog {
+    background-color: #003865;
+}
+
+.bg-uog-light {
+    background-color: #013e70;
+}
+
+.bg-blue {
+    background-color: #005398;
+}
+
+.text-white {
+    color: #E1E9EF; /* Bluish white. Use for text */
+}
+
+body {
+    /* set minimum content width when resizing */
+    min-width: 1000px !important;
+    width: auto !important;
+    width: 1000px; /* for ie6 */
+}
+
+body {
+    /* Temporary font... MyGlasgow uses nimbus sans and recommenced font
+       by UOG is Swiss 721 BT
+    */
+    font-family: Arial, Helvetica, sans-serif;
+    color: #212529;
+    background-color: #EBF1F5 !important;
+
+    padding-top: 40px;
+    padding-bottom: 100px;
+}
+
+@media (max-width: 800px) {
+    .logo {
+        display: none;
+    }
+
+    #logo {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        
+    }
+}
+
+@media (max-width: 550px) {
+    #collapseSidebar {
+        display: none;
+    }
+}
+
+/* navbar */
+.navbar {
+    z-index: 1000 !important;
+}
+.navbar .btn {
+    color: #E1E9EF;
+    font-size: 1rem;
+}
+
+.navbar .btn {
+    background-color: #002747 !important;
+}
+
+.navbar input {
+    background-color: #E1E9EF;
+}
+
+/* .navbar-nav > li > a{ padding: 0px 15px !important;} */
+
+.navbar .navbar-brand {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.navbar .form-inline .btn {
+    padding-top: 0px !important;
+}
+
+.navbar .form-control {
+    padding: 1rem 1rem;
+    border-width: 0;
+}
+
+.logo {
+    max-height: 32px;
+    height: 5;
+    width: 5;
+}
+
+/* footer */
+
+#footer {
+    position: absolute;
+    width: 100%;
+    height: 3rem;
+    bottom: 0;
+    color: #577492;
+}
+
+#footer ul {
+    line-height: 2em;
+    list-style-type: none;
+}
+
+#footer a:link,
+#footer a:visited {
+    text-decoration: none;
+    color: rgb(0, 60, 100);
+}
+
+#footer a:hover,
+#footer a:active {
+    text-decoration: underline;
+}
+
+#footer h5 {
+    line-height: 2em;
+}
+
+/* sidebar */
+.wrapper {
+    /* pushes content aside */
+    /* display: flex;
+    width: 100%; */
+    /* for overlay version */
+    display: block;
+}
+
+.overlay {
+    visibility: hidden;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 998;
+    opacity: 0;
+    /* transition: all 0.5s ease-in-out; */
+}
+
+.overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+#sidebar {
+    width: 250px;
+
+    height: 100vh;
+
+    position: fixed;
+    top: 20;
+    left: 0;
+    z-index: 999;
+
+    background:#003865;
+    color: #fefefe;
+
+    /* transition: all 0.2s; */
+}
+
+#sidebar.active {
+    width: 70px;
+    height: 100vh;
+    text-align:center;
+}
+
+#sidebar ul {
+    padding: 15px 0;
+}
+
+#sidebar ul li a {
+    text-align: left;
+    font-size: 0.85em;
+}
+
+#sidebar ul li a i {
+    vertical-align: middle;
+    margin-right: 0;
+    font-size: 1.8em;
+    margin-bottom:5px;
+}
+
+#sidebar.active ul li a {
+    font-size: 0.85em;
+}
+
+#sidebar.active ul li a i {
+    margin-right: 0;
+    font-size: 1.8em;
+    margin-bottom: 5px;
+}
+
+#sidebar ul li a:hover {
+    color: #fefefe;
+    text-shadow: 0 0 3px #fefefe6c;
+}
+
+#sidebar ul li:hover{
+    background-color: #005398;
+}
+
+#sidebar p {
+    display: inline;
+}
+
+#sidebar.active p {
+    display: none;
+}
+
+#sidebar .nav-link {
+    color: #E1E9EF;
+}
+
+.bars {
+    margin-left: auto;
+    margin-right: auto;
+    width: 22px;
+    height: 20px;
+    position: relative;
+    margin: 0 auto;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+    cursor: pointer;
+    }
+
+.bars span {
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: .25s ease-in-out;
+    -moz-transition: .25s ease-in-out;
+    -o-transition: .25s ease-in-out;
+    transition: .25s ease-in-out;
+    background: #E1E9EF;
+}
+
+.bars:hover > span {
+    color: #fefefe;
+    box-shadow: 0 0 3px #fefefe6c;
+}
+
+.bars span:nth-child(1) {
+    top: 0px;
+}
+
+.bars span:nth-child(2), .bars span:nth-child(3) {
+    top: 9px;
+}
+
+.bars span:nth-child(4) {
+    top: 18px;
+}
+
+.bars.active span:nth-child(1) {
+    top: 10px;
+    width: 0%;
+    left: 50%;
+}
+
+.bars.active span:nth-child(2) {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.bars.active span:nth-child(3) {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.bars.active span:nth-child(4) {
+    top: 10px;
+    width: 0%;
+    left: 50%;
+}
+
+/* body block */
+#bodyBlock {
+    width: calc(100% - 250px);
+    position: absolute;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    /* transition: all 0.2s; */
+    top: 60;
+    right: 0;
+}
+
+#bodyBlock.active {
+    width: calc(100% - 70px);
+    position: absolute;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    /* transition: all 0.2s; */
+    top: 60;
+    right: 0;
+}

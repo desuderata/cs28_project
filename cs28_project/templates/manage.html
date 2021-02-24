@@ -14,7 +14,7 @@
 <!-- add to separate css file later -->
 <style>
     .container-width {
-        width: 98%
+        width: 99%
     }
 
     .page-text {
@@ -37,7 +37,16 @@
         background-color: #fefefe;
     }
 
+    .text-area {
+        /* width: 150px;
+        height: 100px; */
+        width: 300px;
+    }
+
 </style>
+
+<!-- jump to page -->
+<link href="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
 
 <!-- editable tables -->
 <link href="https://cdn.jsdelivr.net/gh/Talv/x-editable@develop/dist/bootstrap4-editable/css/bootstrap-editable.css" rel="stylesheet">
@@ -45,7 +54,7 @@
 
 
 {% block title_block %}
-Manage
+Manage Students
 {% endblock %}
 
 
@@ -53,38 +62,58 @@ Manage
 <div class="mt-4 pb-5 container-fluid container-width bg-white">
     <div class="page-header row h-100 align-items-center bg-blue">
         <div class="page-text d-inline-flex text-white">
-            <h1>Students</h1>
+            <h1>Manage Students</h1>
         </div>
     </div>
     <div class="row justify-content-between">
         <div class="col-auto d-flex mt-3">
-            <form class="form-inline">
+        <!-- <div id="toolbar"> -->
+            <form class="form-inline" id="calculateForm">
                 <div class="form-row">
-                    <label class="mx-2">Year: </label>
+                    <!-- <label class="mx-2">Year: </label> -->
                     <div class="col-auto mr-2">
-                        <select class="form-control">
-                            <option selected>Year</option>
-                            <option value="1">2019-2020</option>
+                        <select name="year" class="form-control">
+                            <option value="" selected disabled>Graduation Year</option>
+                            {% for year in years %}
+                                <option value="{{ year.gradYear }}">{{ year.gradYear }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-auto mr-2">
-                        <select class="form-control">
-                            <option selected>Show All</option>
+                        <select name="plan" id="plan" class="form-control">
+                            <option value="" selected disabled>Academic Plan</option>
+                            {% for plan in plans %}
+                                <option value="{{ plan.planCode }}">{{ plan.planCode }}</option>
+                            {% endfor %}
                         </select>
+                    </div>
+                    <div class="col-auto" id="calculate">
+                        <button class="btn btn-secondary"
+                                onclick="return false">
+                            Get Students
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
+        <!-- </div> -->
         <div class="col-auto d-flex mt-3">
             <form class="form-inline">
                 <div class="form-row">
+                    <label class="mx-2">Color Code Legend: </label>
                     <div class="col-auto">
-                        <button class="btn btn-secondary">Edit</button>
+                        <button class="btn btn-success" disabled>Overridden</button>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-secondary">Export</button>
+                        <button class="btn btn-warning" disabled>Discretionary</button>
                     </div>
                     <div class="col-auto">
+                        <button class="btn btn-danger" disabled>Missing Grades</button>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" disabled>Special Code</button>
+                    </div>
+                    <!-- <div class="col-auto">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="anonymizeCheck" value="anonymize">
                             <label class="form-check-label" for="anonymizeCheck">Anonymize</label>
@@ -95,28 +124,54 @@ Manage
                             <input class="form-check-input" type="checkbox" id="mcLayoutCheck" value="mcLayout">
                             <label class="form-check-label" for="mcLayoutCheck">MyCampus Layout</label>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </div>
     </div>
     <hr class="w-100">
 
+    <div id="toolbar">
+        <form class="form-inline">
+            <div class="form-row">
+                <div class="col-auto">
+                    <!-- return false to prevent refresh -->
+                    <button class="btn btn-secondary"
+                            id="myCampusLayout"
+                            onclick="return false">
+                        Toggle MyCampus Layout
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <!-- pagination and sort are client side. -->
+    <!-- notes:
+    - adding data-search-highlight="true" breaks editable fields.
+    - data-reorderable-columns="true" breaks table-->
     <table id="table"
-           data-height="700"
+           class="table table-bordered"
+           data-search-accent-neutralise="true"
+
+           data-unique-id="id"
+           data-row-style="rowStyle"
+
+           data-height="650"
+           data-key-events="true"
 
            data-pagination="true"
+           data-show-jump-to="true"
            data-side-pagination="client"
            data-server-sort="false"
 
            data-loading-template="loadingTemplate"
 
-           data-query-params="queryParams"
-           data-response-handler="responseHandler"
-
            data-toolbar="#toolbar"
+
            data-search="true"
+           data-search-highlight="true"
+
            data-show-refresh="true"
            data-show-toggle="true"
            data-show-fullscreen="true"
@@ -125,16 +180,6 @@ Manage
            data-show-export="true"
 
            data-detail-view="true">
-        <thead>
-            <tr>
-                <th data-field="id" data-sortable="true">Matric No.</th>
-                <th data-field="first" data-sortable="true">First Name</th>
-                <th data-field="last" data-sortable="true">Last Name</th>
-                <th data-field="gpa" data-sortable="true" data-editable="true">GPA</th>
-                <th data-field="award" data-sortable="true">Award</th>
-                <th data-field="notes" data-sortable="true">Notes</th>
-            </tr>
-        </thead>
     </table>
 </div>
 {% endblock %}
@@ -142,45 +187,480 @@ Manage
 {% block scripts %}
 <script>
     var $table = $('#table');
+    
+    var token = '{{ csrf_token }}'
 
-    // populate an array with json for each student
-    var mydata = [
-        {% for model in student %}
-            {
-                "id": "{{ model.matricNo }}",
-                "first": "{{ model.givenNames }}",
-                "last": "{{ model.surname}}",
-                "gpa": "{{ model.finalAward4 }}",
-                "award": "{{ model.foobar }}",
-                "notes": "{{ model.notes }}"
-            }
-            {% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    ];
+    var filename = "degree_classification"
 
+    const grades_dict = {"A1": 22, "A2": 21,
+                         "A3": 20, "A4": 19,
+                         "A5": 18, "B1": 17,
+                         "B2": 16, "B3": 15,
+                         "C1": 14, "C2": 13,
+                         "C3": 12, "D1": 11,
+                         "D2": 10, "D3": 9,
+                         "E1": 8, "E2": 7,
+                         "E3": 6, "F1": 5,
+                         "F2": 4, "F3": 3,
+                         "G1": 2, "G2": 1,
+                         "H": 0, "CW": -1,
+                         "CR": -1, "MV": -1
+                         }
+
+    // change loading template
+    function loadingTemplate(message) {
+        return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+  }
+
+    // bootstrap table attributes
     $(function () {
         $('#table').bootstrapTable({
-            data: mydata
+            exportTypes: ['json', 'xml', 'csv', 'txt', 'excel', 'pdf'],
+            sortReset: true,
+            sortStable: true,
+            theadClasses: "thead-light",
+            exportDataType: "all",
+            visibleSearch: true,
+            minimumCountColumns: 2,
+            exportOptions: {
+                fileName: filename
+            },
+            columns: [
+                {
+                    field: "type",
+                    title: "Type",
+                    sortable: true
+                },
+                {
+                    field: "mcId",
+                    title: "StudentID",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "id",
+                    title: "Matric No.",
+                    sortable: true,
+                    width: 100
+                },
+                {
+                    field: "grad",
+                    title: "Graduation Year",
+                    sortable: true
+                },
+                {
+                    field: "name",
+                    title: "Name",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "first",
+                    title: "First Name",
+                    sortable: true
+                },
+                {
+                    field: "last",
+                    title: "Last Name",
+                    sortable: true
+                },
+                {
+                    field: "plan",
+                    title: "Acad Plan",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "gpa4",
+                    title: "GPA (4 d.p.)",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "gpa3",
+                    title: "GPA (3 d.p.)",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "gpa2",
+                    title: "GPA (2 d.p.)",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "gpa1",
+                    title: "GPA (1 d.p.)",
+                    sortable: true
+                },
+                {
+                    field: "oAward",
+                    title: "Original Award",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "award",
+                    title: "Award",
+                    sortable: true,
+                    searchable: false,
+                    editable: {
+                        type: 'select',
+                        mode: 'inline',
+                        source: [
+                            {
+                                text: "Honors Classification",
+                                children: [
+                                    {value: "01", text: "01"},
+                                    {value: "0U", text: "0U"},
+                                    {value: "0L", text: "0L"},
+                                    {value: "33", text: "33"},
+                                    {value: "Fail", text: "Fail"}
+                                ]
+                            },
+                            {
+                                text: "Other Classifications",
+                                children: [
+                                    {value: "GC", text: "GC"},
+                                    {value: "DD-UD", text: "DD-UD"},
+                                    {value: "DD-UM", text: "DD-UM"},
+                                    {value: "DD-UQ", text: "DD-UQ"},
+                                    {value: "TBC", text: "TBC"}
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    field: "mcAward",
+                    title: "Degree Honors",
+                    sortable: true,
+                    visible: false
+                },
+                {
+                    field: "notes",
+                    title: "Notes",
+                    sortable: true,
+                    searchable: false,
+                    editable: {
+                        mode: "inline",
+                        inputclass: "text-area",
+                        emptytext: "Add Note"
+                    }
+                }
+            ],
+            // subtable
+            onExpandRow: function (index, row, $detail) {
+                var $el = $detail.html('<table></table>').find('table')
+                var columns = [
+                    {
+                        field: "gradeId",
+                        title: "Matric No. (Grades)",
+                        visible: false
+                    },
+                    {
+                        field: "code",
+                        title: "Course Code",
+                        sortable: true
+                    },
+                    {
+                        field: "alpha",
+                        title: "Alphanumeric Grade",
+                        sortable: true,
+                        editable: {
+                            type: 'select',
+                            mode: 'inline',
+                            source: [
+                                {
+                                    text: "A",
+                                    children: [
+                                        {value: "A1", text: "A1"},
+                                        {value: "A2", text: "A2"},
+                                        {value: "A3", text: "A3"},
+                                        {value: "A4", text: "A4"},
+                                        {value: "A5", text: "A5"},
+                                    ]
+                                },
+                                {
+                                    text: "B",
+                                    children: [
+                                        {value: "B1", text: "B1"},
+                                        {value: "B2", text: "B2"},
+                                        {value: "B3", text: "B3"}
+                                    ]
+                                },
+                                {
+                                    text: "C",
+                                    children: [
+                                        {value: "C1", text: "C1"},
+                                        {value: "C2", text: "C2"},
+                                        {value: "C3", text: "C3"}
+                                    ]
+                                },
+                                {
+                                    text: "D",
+                                    children: [
+                                        {value: "D1", text: "D1"},
+                                        {value: "D2", text: "D2"},
+                                        {value: "D3", text: "D3"}
+                                    ]
+                                },
+                                {
+                                    text: "E",
+                                    children: [
+                                        {value: "E1", text: "E1"},
+                                        {value: "E2", text: "E2"},
+                                        {value: "E3", text: "E3"}
+                                    ]
+                                },
+                                {
+                                    text: "F",
+                                    children: [
+                                        {value: "F1", text: "F1"},
+                                        {value: "F2", text: "F2"},
+                                        {value: "F3", text: "F3"}
+                                    ]
+                                },
+                                {
+                                    text: "G",
+                                    children: [
+                                        {value: "G1", text: "G1"},
+                                        {value: "G2", text: "G2"}
+                                    ]
+                                },
+                                {
+                                    text: "H",
+                                    children: [
+                                        {value: "H", text: "H"},
+                                    ]
+                                },
+                                {
+                                    text: "Special Codes",
+                                    children: [
+                                        {value: "CW", text: "CW"},
+                                        {value: "CR", text: "CR"},
+                                        {value: "MV", text: "MV"}
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        field: "ttpt",
+                        title: "22pt. (4 d.p.)",
+                        sortable: true
+                    },
+                ]
+                $el.bootstrapTable({
+                    rowStyle: 'rowStyle',
+                    columns: columns,
+                    data: row.sub,
+                })
+            }
         });
     });
 
-    $('#table').on('editable-save.bs.table', function(e, field, row, oldValue, $el){
-        console.log(row);
-        // ajax post call to update db
+    // to highlight rows in the future
+    function rowStyle(row, index) {
+        // console.log(row.notes);
+        if (row.type === 'Overridden') {
+            return {
+                classes: 'table-success'
+            }
+        }
+        if (row.type === "Discretionary") {
+            return {
+                classes: 'table-warning'
+            }
+        }
+        if (row.type === "Missing Grades") {
+            return {
+                classes: 'table-danger'
+            }
+        }
+        if (row.type === "Special Code") {
+            return {
+                classes: 'table-primary'
+            }
+        }
+        if (row.alpha === "CW" ||
+            row.alpha === "MV" ||
+            row.alpha === "CR") {
+            return {
+                classes: 'table-primary'
+            }
+        }
+        if (row.alpha === "-") {
+            return {
+                classes: 'table-danger'
+            }
+        }
+        return 0
+    }
+
+    $('#table').on('editable-shown.bs.table', function() {
+        $('#table').bootstrapTable('resetView')
     });
 
+    $('#table').on('editable-hidden.bs.table', function() {
+        $('#table').bootstrapTable('resetView')
+    });
+
+    $(function() {
+        $('#myCampusLayout').click(function() {
+
+            var iteration=$(this).data('iteration')||1
+            switch (iteration) {
+                case 1:
+                    $table.bootstrapTable('showColumn', 'mcId');
+                    $table.bootstrapTable('showColumn', 'name');
+                    $table.bootstrapTable('showColumn', 'plan');
+                    $table.bootstrapTable('showColumn', 'mcAward');
+                    $table.bootstrapTable('hideColumn', 'type');
+                    $table.bootstrapTable('hideColumn', 'id');
+                    $table.bootstrapTable('hideColumn', 'grad');
+                    $table.bootstrapTable('hideColumn', 'first');
+                    $table.bootstrapTable('hideColumn', 'last');
+                    $table.bootstrapTable('hideColumn', 'gpa4');
+                    $table.bootstrapTable('hideColumn', 'gpa3');
+                    $table.bootstrapTable('hideColumn', 'gpa2');
+                    $table.bootstrapTable('hideColumn', 'gpa1');
+                    $table.bootstrapTable('hideColumn', 'oAward');
+                    $table.bootstrapTable('hideColumn', 'award');
+                    $table.bootstrapTable('hideColumn', 'notes');
+                    break;
+                case 2:
+                    $table.bootstrapTable('hideColumn', 'mcId');
+                    $table.bootstrapTable('hideColumn', 'name');
+                    $table.bootstrapTable('hideColumn', 'plan');
+                    $table.bootstrapTable('hideColumn', 'mcAward');
+                    $table.bootstrapTable('showColumn', 'type');
+                    $table.bootstrapTable('showColumn', 'id');
+                    $table.bootstrapTable('showColumn', 'grad');
+                    $table.bootstrapTable('showColumn', 'first');
+                    $table.bootstrapTable('showColumn', 'last');
+                    $table.bootstrapTable('hideColumn', 'gpa4');
+                    $table.bootstrapTable('hideColumn', 'gpa3');
+                    $table.bootstrapTable('hideColumn', 'gpa2');
+                    $table.bootstrapTable('showColumn', 'gpa1');
+                    $table.bootstrapTable('hideColumn', 'oAward');
+                    $table.bootstrapTable('showColumn', 'award');
+                    $table.bootstrapTable('showColumn', 'notes');
+                    break;
+            }
+            iteration++;
+            if (iteration>2) iteration = 1;
+            $(this).data('iteration',iteration);
+
+            
+        });
+    });
+
+    var calculate_data;
+
+    // get students and calculate data
+    $(function() {
+        $('#calculate').click(function() {
+            calculate_data = $('#calculateForm').serialize();
+            $table.bootstrapTable('refreshOptions', {
+                exportOptions: {"fileName": document.getElementById("plan").value}
+            });
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url: "{% url 'cs28:calculate' %}",
+                type: "POST",
+                data: calculate_data,
+                success: function (data) {
+                    $table.bootstrapTable('refresh', {
+                        url: "{% url 'cs28:data' %}".concat("?", calculate_data)
+                    });
+                }
+            })
+        })
+    });
+
+    console.log(filename)
+    // ajax post to update database
+    $('#table').on('editable-save.bs.table', function(e, field, row, oldValue, $el){
+        console.log(e);  // event
+        console.log(field);  // field
+        console.log(row);  // row as json
+        console.log(oldValue);  // old value? it just returns a 0
+        console.log($el);  // old value
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            url:"{% url 'cs28:update' %}",
+            type: "POST",
+            data: {
+                "field": field,
+                "row": JSON.stringify(row),
+                "el": $el
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (row.gradeId) {
+                    ajax_calculate(token, row, data);
+                    ajax_update(token, row, data);
+                } else {
+                    ajax_update(token, row, data);
+                }
+            }
+        });
+        function ajax_calculate(token, row, data) {
+            if (row.gradeId) {
+                $.ajax({
+                    headers: { "X-CSRFToken": token },
+                    url: "{% url 'cs28:calculate' %}",
+                    type: "POST",
+                    data: {"row": JSON.stringify(row)},
+                    // dataType: 'json',
+                    success: function (data) {
+                        ajax_update(token, row, data);
+                    }
+                });
+            }
+        };
+
+        // updates the table 
+        function ajax_update(token, row, data) {
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url: "{% url 'cs28:data' %}",
+                type: "GET",
+                data: calculate_data,
+                success: function (data) {
+                    $table.bootstrapTable('refresh', {
+                        url: "{% url 'cs28:data' %}".concat("?", calculate_data)
+                    });
+                }
+            });
+        };
+
+        console.log(row.parentElement);
+    });
 </script>
 
+<!-- pdf export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js" integrity="sha512-ToRWKKOvhBSS8EtqSflysM/S7v9bB9V0X3B1+E7xo7XZBEZCPL3VX5SFIp8zxY19r7Sz0svqQVbAOx+QcLQSAQ==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.0.14/jspdf.plugin.autotable.js" integrity="sha512-9xVpHMGorTPbSEFD6+ex0dKDYKxvciATI70tPCHCGxTkBD3HXboXLTnnpMwgdxms9uOwocFZdUx4AFl4p0FHag==" crossorigin="anonymous"></script>
+
+<!-- excel export -->
+<script type="text/javascript" src="libs/js-xlsx/xlsx.core.min.js"></script>
+
+<!-- keystrokes -->
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
+
+<!-- jump to page -->
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js"></script>
 
 <!-- editable bootstrap tables -->
 <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/editable/bootstrap-table-editable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/Talv/x-editable@develop/dist/bootstrap4-editable/js/bootstrap-editable.min.js"></script>
 
 <!-- bootstrap table export -->
-<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
 
 <!-- dependency for export -->
-<script type="text/javascript" src="tableExport.js"></script>
-<script type="text/javascript" src="jquery.base64.js"></script>
+<!-- <script type="text/javascript" src="jquery.base64.js"></script> -->
 {% endblock %}
