@@ -489,7 +489,7 @@
                     ajax.onload = function()
                     {
                         form.classList.remove( 'is-uploading' );
-                        if( ajax.status >= 200 && ajax.status < 500 )
+                        if( ajax.status >= 200 && ajax.status < 1000 )
                         {
                             var data = JSON.parse( ajax.responseText );
                             form.classList.add( data.success == true ? 'is-success' : 'is-error' );

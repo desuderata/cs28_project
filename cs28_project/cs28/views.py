@@ -15,8 +15,12 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse
 
-from cs28.models import Student
-from cs28.models import Grade
+import re
+import logging
+from .models.grade import Grade
+from .models.student import Student
+from django.contrib import messages
+
 
 
 def index(request):
@@ -40,7 +44,7 @@ def student_upload(request):
             
             #extract course code from the file name, for now hard-coded
             #(expected format: "Grade Roster CourseCode.csv")
-            courseCode = file.name[13:-9]
+            #courseCode = file.name[13:-9]
             
             file_data = file.read().decode("utf-8")
             lines = re.split('\r|\n', file_data)[1:]
@@ -49,13 +53,19 @@ def student_upload(request):
                 fields = re.split('",|,"', line)
                 try:
       
-                    matricNo = Student.objects.get(matricNo=fields[0])
-                    alphanum = fields[2]
-                    Grade.objects.get_or_create(
-                        courseCode = courseCode,
+                    matricNo = fields[0]
+                    givenNames = fields[1]
+                    names = givenNames.split(",")
+                    for name in names:
+                        surname = name[1]
+                        
+                    Student.objects.get_or_create(
+                        
                         matricNo = matricNo,
-                        alphanum = alphanum,
-                    )                                           
+                        givenNames = givenNames,
+                        surname = surname,
+                    )
+
                 except Exception as e:
                     logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
                     pass
@@ -65,7 +75,7 @@ def student_upload(request):
     except Exception as e:
         logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
 
-    return redirect(reverse("cs28:student_upload.html"))
+    return redirect(reverse("cs28:student_upload"))
 
 
 def user_login(request):
