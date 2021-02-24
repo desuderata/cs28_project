@@ -302,6 +302,22 @@
     {
         background-color: #0f3c4b;
     }
+	
+	    .page-text {
+        padding-left: 75px;
+        padding-right: 75px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+	
+    @media (max-width: 979px) {
+        .page-text {
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-top: 25px;
+            padding-bottom: 25px;
+        }
+    }
 </style>
 
 <script>
@@ -316,16 +332,10 @@
 
 {% block body_block %}
 <!-- responsiveness abit wonky here -->
-<div class="py-0">
-    <div class="row h-100 align-items-center blue-bg">
-        <div class="welcome-text col-md-5 col-xs-12 ">
-            <div class="text-nowrap white">
-                <h1>
-                    Module Grades Upload
-                </h1>
-            </div>
-        </div>
-    </div>
+<div class="page-header row h-100 align-items-center bg-blue">
+	<div class="page-text d-inline-flex text-white">
+		<h1>Module Grades Upload</h1>
+	</div>
 </div>
 
 <div class="container">
