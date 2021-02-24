@@ -103,7 +103,7 @@ class Student(models.Model):
     isMissingGrades = models.BooleanField(default=True,
                                           help_text=missing_grades_help)
 
-    #notes = models.TextField(default="", blank=True)
+    notes = models.TextField(default="", blank=True)
 
     class Meta:
         verbose_name_plural = "Students"

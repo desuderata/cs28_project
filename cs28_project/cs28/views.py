@@ -17,6 +17,9 @@ from django.http import HttpResponse
 
 import re
 import logging
+from .models.academic_plan import AcademicPlan
+from .models.graduation_year import GraduationYear
+
 from .models.grade import Grade
 from .models.student import Student
 from django.contrib import messages
@@ -33,37 +36,28 @@ def student_upload(request):
         
     try:
         csv_file = request.FILES.getlist("csv_file")
-        #if not csv_file.name.endswith('.csv'):
-        #    messages.error(request,"File is not CSV type")
-        #    return redirect(reverse("cs28:module_grades_upload"))
-        ##check if file is too large
-        #if csv_file.multiple_chunks():
-        #    return redirect(reverse("cs28:module_grades_upload"))
-        
         for file in csv_file:
-            
-            #extract course code from the file name, for now hard-coded
-            #(expected format: "Grade Roster CourseCode.csv")
-            #courseCode = file.name[13:-9]
-            
             file_data = file.read().decode("utf-8")
             lines = re.split('\r|\n', file_data)[1:]
             for line in lines:
-                
-                fields = re.split('",|,"', line)
+               
+                fields = line.split(",")
                 try:
-      
+                    print(fields)
                     matricNo = fields[0]
-                    givenNames = fields[1]
-                    names = givenNames.split(",")
-                    for name in names:
-                        surname = name[1]
-                        
+                    givenNames = fields[1][1:]
+                    surname = fields[2][:-1]
+                    academicPlan = AcademicPlan.objects.get(planCode=fields[3])
+                    gradYear = GraduationYear.objects.get(gradYear=fields[4])
+                   
+                       
                     Student.objects.get_or_create(
-                        
-                        matricNo = matricNo,
-                        givenNames = givenNames,
-                        surname = surname,
+                       
+                        matricNo=matricNo,
+                        givenNames=givenNames,
+                        surname=surname,
+                        academicPlan=academicPlan,
+                        gradYear=gradYear,
                     )
 
                 except Exception as e:
