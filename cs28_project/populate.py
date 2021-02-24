@@ -146,8 +146,8 @@ def populate_grades():
 
             for i in range(len(courses[row[2]])):
                 Grade.objects.get_or_create(courseCode=courses[row[2]][i],
-                                             matricNo=matric_no,
-                                             alphanum=random.choice(grades))
+                                            matricNo=matric_no,
+                                            alphanum=random.choice(grades))
     print("Populated Grades...")
 
 

@@ -1,0 +1,54 @@
+{% for model in student %}
+    {
+        "type":
+            {% if model.updatedAward != "-1" %}
+                "Overridden"
+            {% elif model.is_discretionary %}
+                "Discretionary"
+            {% elif model.isMissingGrades %}
+                "Missing Grades"
+            {% elif model.hasSpecialCode %}
+                "Special Code"
+            {% else %}
+                "&#128077;"
+            {% endif %},
+        "id": "{{ model.matricNo }}",
+        "mcId": "{{ model.matricNo }}",
+        "grad": "{{ model.gradYear }}",
+        "name": "{{ model.givenNames }},{{ model.surname }}",
+        "first": "{{ model.givenNames }}",
+        "last": "{{ model.surname }}",
+        "plan": "{{ model.academicPlan }}",
+        "gpa4": "{{ model.finalAward4 }}",
+        "gpa3": "{{ model.finalAward3 }}",
+        "gpa2": "{{ model.finalAward2 }}",
+        "gpa1": "{{ model.finalAward1 }}",
+        "oAward": "{{ model.award_as_mc }}",
+        "award": 
+            {% if model.updatedAward == "-1" %}
+                "{{ model.award_as_mc }}"
+            {% else %}
+                "{{ model.updatedAward }}"
+            {% endif %},
+        "mcAward":
+            {% if model.updatedAward == "-1" %}
+                "{{ model.award_as_mc }}"
+            {% else %}
+                "{{ model.updatedAward }}"
+            {% endif %},
+        "notes": "{{ model.notes }}",
+        "sub": [
+            {% with model.grade_set.all as grades %}
+                {% for grade in grades %}
+                    {
+                        "gradeId": "{{ grade.matricNo }}",
+                        "code": "{{ grade.courseCode }}",
+                        "alpha": "{{ grade.alphanum }}",
+                        "ttpt": grades_dict["{{ grade.alphanum }}"]
+                    }{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            {% endwith %}
+        ]
+    }
+    {% if not forloop.last %}, {% endif %}
+{% endfor %}
