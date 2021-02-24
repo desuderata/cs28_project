@@ -16,8 +16,11 @@ urlpatterns = [
     # path('cs28', include('django.contrib.auth.urls')),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
-    path('manage/', views.manage, name='manage'),
-    path('course_grades/', views.module_grades, name='course_grades'),
+    path('course-grades/', views.module_grades, name='course_grades'),
     path('studentUpload/', views.studentUpload, name='studentUpload'),
+    path('manage/', views.manage, name='manage'),
+    path('manage/calculate/', views.calculate, name='calculate'),
+    path('manage/update/', views.update_field, name='update'),
+    path('manage/data/', views.data, name='data'),
     path('module-grades-upload/', views.module_grades_upload, name='module_grades_upload'),
 ]
