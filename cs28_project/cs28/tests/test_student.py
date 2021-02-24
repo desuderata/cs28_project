@@ -1,5 +1,9 @@
 """ Test Student
 
+- Tests for matriculation number validation
+- Tests if unset_grade_data_updated() works
+- Tests if award_as_mc returns the correct mc award
+- Tests if to string works as intended
 
 author: Yee Hou, Teoh (2471020t)
 """

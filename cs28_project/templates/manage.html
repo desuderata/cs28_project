@@ -378,7 +378,7 @@ Manage Students
                                         {value: "A2", text: "A2"},
                                         {value: "A3", text: "A3"},
                                         {value: "A4", text: "A4"},
-                                        {value: "A5", text: "A4"},
+                                        {value: "A5", text: "A5"},
                                     ]
                                 },
                                 {
@@ -488,6 +488,11 @@ Manage Students
             row.alpha === "CR") {
             return {
                 classes: 'table-primary'
+            }
+        }
+        if (row.alpha === "-") {
+            return {
+                classes: 'table-danger'
             }
         }
         return 0
@@ -638,6 +643,9 @@ Manage Students
 <!-- pdf export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js" integrity="sha512-ToRWKKOvhBSS8EtqSflysM/S7v9bB9V0X3B1+E7xo7XZBEZCPL3VX5SFIp8zxY19r7Sz0svqQVbAOx+QcLQSAQ==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.0.14/jspdf.plugin.autotable.js" integrity="sha512-9xVpHMGorTPbSEFD6+ex0dKDYKxvciATI70tPCHCGxTkBD3HXboXLTnnpMwgdxms9uOwocFZdUx4AFl4p0FHag==" crossorigin="anonymous"></script>
+
+<!-- excel export -->
+<script type="text/javascript" src="libs/js-xlsx/xlsx.core.min.js"></script>
 
 <!-- keystrokes -->
 <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
