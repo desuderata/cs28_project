@@ -22,15 +22,59 @@ from cs28.models import Student, Grade, GraduationYear, AcademicPlan
 
 import re
 import logging
+from .models.academic_plan import AcademicPlan
+from .models.graduation_year import GraduationYear
+
+from .models.grade import Grade
+from .models.student import Student
 from django.contrib import messages
+
 
 
 def index(request):
     return render(request, 'index.html')
 
+@login_required
+def student_upload(request):
+    if request.method == "GET":
+        return render(request, 'student_upload.html',{})
+        
+    try:
+        csv_file = request.FILES.getlist("csv_file")
+        for file in csv_file:
+            file_data = file.read().decode("utf-8")
+            lines = re.split('\r|\n', file_data)[1:]
+            for line in lines:
+               
+                fields = line.split(",")
+                try:
+                    print(fields)
+                    matricNo = fields[0]
+                    givenNames = fields[1][1:]
+                    surname = fields[2][:-1]
+                    academicPlan = AcademicPlan.objects.get(planCode=fields[3])
+                    gradYear = GraduationYear.objects.get(gradYear=fields[4])
+                   
+                       
+                    Student.objects.get_or_create(
+                       
+                        matricNo=matricNo,
+                        givenNames=givenNames,
+                        surname=surname,
+                        academicPlan=academicPlan,
+                        gradYear=gradYear,
+                    )
 
-def studentUpload(request):
-    return render(request, 'studentUpload.html')
+                except Exception as e:
+                    logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
+                    pass
+
+
+
+    except Exception as e:
+        logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+
+    return redirect(reverse("cs28:student_upload"))
 
 
 def user_login(request):
