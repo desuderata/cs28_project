@@ -12,6 +12,7 @@
 
         Author: Yee Hou, Teoh (2471020t)
                 Kien Welch 2371692w
+                Alana Grant 2390384G
 
         Filename: base.html
     -->
@@ -152,9 +153,9 @@
                 <!-- degree -->
                 <li class="nav-item">
                     <div class="px-1 py-2">
-                        <a class="nav-link" href="#">
-                            <i class="fa-fw fas fa-graduation-cap"></i>
-                            <p class="pl-2">Degree</p>
+                        <a class="nav-link" href="{% url 'cs28:module_grades_upload' %}">
+                            <i class="fa-fw fas fa-file-upload"></i>
+                            <p class="pl-2">Grades</p>
                         </a>
                     </div>
                 </li>
@@ -182,6 +183,15 @@
                         <a class="nav-link" href="#">
                             <i class="fa-fw fas fa-upload"></i>
                             <p class="pl-2">Upload</p>
+                        </a>
+                    </div>
+                </li>
+                <!-- help page -->
+                <li class="nav-item">
+                    <div class="px-1 py-2">
+                        <a class="nav-link" href="{% url 'cs28:help_page' %}">
+                            <i class="fa-fw fas fa-question-circle"></i>
+                            <p class="pl-2">Help Page</p>
                         </a>
                     </div>
                 </li>
@@ -276,8 +286,9 @@
 
             $('#collapseSidebar').on('click', function () {
                 $('#sidebar').toggleClass('active');
-                $('#overlay').toggleClass('active');
+                $('#bodyBlock').toggleClass('active');
                 $('.bars').toggleClass('active');
+                $('#table').bootstrapTable('resetView')
             });
 
             $('#overlay').on('click', function () {

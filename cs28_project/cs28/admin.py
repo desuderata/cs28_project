@@ -1,5 +1,3 @@
-# from django.contrib import admin
-# from cs28.models import Grade, Student, AcademicPlan, GraduationYear
 # Register your models here.
 
 from django.contrib.admin import ModelAdmin, register
