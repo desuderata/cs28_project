@@ -14,11 +14,6 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
-<style>
-    .bg-height {
-        min-height: 100vh;
-    }
-</style>
 {% endblock %}
 
 
@@ -35,26 +30,39 @@ Search Results
     </div>
 
     <div class="mt-3">
-        <!-- if results -->
-        {% if students %}
-        <h5>Showing results for <b> {{ request.GET.search }} </b></h5>
-        <hr class="w-100">
+        {% if submit_button == "Search" and request.GET.search != "" %}
 
-        <!-- Todo: implement results here -->
-        {% for student in students %}
+            {% if students %}
+                <h5>Showing results for <b> {{ request.GET.search }} </b></h5>
+                <hr class="w-100">
 
-        <div class="container-fluid rounded bg-light w-100">
-            <p class="py-3">
-                {{ student }}
-            </p>
-        </div>
 
-        {% endfor %}
+                {% for student in students %}
+                    <div class="container-fluid rounded bg-light w-100 mb-2">
+                        <p class="pt-3 pb-1">
+                            <b>Name:</b> {{ student.givenNames }} {{ student.surname }}
+                            <br>
+                            <b>Matriculation Number:</b> {{ student.matricNo }}
+                            <br>
+                            <b>Academic Plan: </b> {{ student.academicPlan }}
+                            <br>
+                            <b>Graduation Year: </b> {{ student.gradYear }}
+                        </p>
+                        <div class="pb-3">
+                            <a href="{% url 'cs28:manage' %}?year={{ student.gradYear }}&plan={{ student.academicPlan }}&id={{ student.matricNo }}">
+                                Manage Final Award
+                            </a>
+                            <a class="pl-3" href="{% url 'cs28:module_grades' %}?id={{ student.matricNo }}">
+                                Module Grades
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
 
-        <!-- else -->
-        {% else %}
-        <h5>No search results for <b> {{ request.GET.search }} </b></h5>
-        <hr class="w-100">
+            {% else %}
+                <h5>No search results for <b> {{ request.GET.search }} </b></h5>
+                <hr class="w-100">
+            {% endif %}
         {% endif %}
     </div>
 

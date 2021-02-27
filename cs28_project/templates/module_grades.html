@@ -157,13 +157,25 @@ Course grades
 
         {% if not forloop.last %},{% endif %}
         {% endfor %}
-
     ];
 
     $(function () {
         $('#table').bootstrapTable({
             data: objects
         });
+    });
+
+    $(document).ready(function() {
+        // check for query param
+        var url = new URL(document.location);
+        var params = url.searchParams;
+
+        var id = params.get("id");
+        if (id) {
+            $table.bootstrapTable('refreshOptions', {
+                searchText: id
+            });
+        }
     });
 
 </script>

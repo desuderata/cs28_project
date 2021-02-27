@@ -407,11 +407,12 @@ def search_results(request):
             for w in words:
                 lookup_student = Q(matricNo__icontains=w) | \
                     Q(givenNames__icontains=w) | \
-                    Q(surname__icontains=w)
-                # Q(gradYear__icontains=w) | \
-                # Q(academicPlan__icontains=w)
+                    Q(surname__icontains=w) | \
+                    Q(gradYear__gradYear__icontains=w) | \
+                    Q(academicPlan__planCode__icontains=w)
                 student = student.filter(lookup_student).distinct()
-            ctx = {'students': student, }
+            ctx = {'students': student,
+                   'submit_button': submit_button}
             return render(request, 'search_results.html', ctx)
 
     return render(request, 'search_results.html')

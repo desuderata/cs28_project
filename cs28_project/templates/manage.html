@@ -11,39 +11,7 @@
 
 
 {% block head %}
-<!-- add to separate css file later -->
-<style>
-    .container-width {
-        width: 99%
-    }
-
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-
-    .bg-white {
-        background-color: #fefefe;
-    }
-
-    .text-area {
-        /* width: 150px;
-        height: 100px; */
-        width: 300px;
-    }
-
-</style>
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 
 <!-- jump to page -->
 <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
@@ -72,7 +40,7 @@ Manage Students
                 <div class="form-row">
                     <!-- <label class="mx-2">Year: </label> -->
                     <div class="col-auto mr-2">
-                        <select name="year" class="form-control">
+                        <select name="year" id="year" class="form-control">
                             <option value="" selected disabled>Graduation Year</option>
                             {% for year in years %}
                                 <option value="{{ year.gradYear }}">{{ year.gradYear }}</option>
@@ -559,27 +527,29 @@ Manage Students
     var calculate_data;
 
     // get students and calculate data
+    function calculate() {
+        calculate_data = $('#calculateForm').serialize();
+        $table.bootstrapTable('refreshOptions', {
+            exportOptions: {"fileName": document.getElementById("plan").value}
+        });
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            url: "{% url 'cs28:calculate' %}",
+            type: "POST",
+            data: calculate_data,
+            success: function (data) {
+                $table.bootstrapTable('refresh', {
+                    url: "{% url 'cs28:data' %}".concat("?", calculate_data)
+                });
+            }
+        })
+    }
     $(function() {
         $('#calculate').click(function() {
-            calculate_data = $('#calculateForm').serialize();
-            $table.bootstrapTable('refreshOptions', {
-                exportOptions: {"fileName": document.getElementById("plan").value}
-            });
-            $.ajax({
-                headers: { "X-CSRFToken": token },
-                url: "{% url 'cs28:calculate' %}",
-                type: "POST",
-                data: calculate_data,
-                success: function (data) {
-                    $table.bootstrapTable('refresh', {
-                        url: "{% url 'cs28:data' %}".concat("?", calculate_data)
-                    });
-                }
-            })
+            calculate();
         })
     });
 
-    console.log(filename)
     // ajax post to update database
     $('#table').on('editable-save.bs.table', function(e, field, row, oldValue, $el){
         console.log(e);  // event
@@ -635,8 +605,25 @@ Manage Students
                 }
             });
         };
+    });
 
-        console.log(row.parentElement);
+    // for search
+    $(document).ready(function() {
+        // check for query param
+        var url = new URL(document.location);
+        var params = url.searchParams;
+
+        var plan = params.get("plan");
+        var year = params.get("year");
+        var id = params.get("id");
+        if (plan && year && id) {
+            $table.bootstrapTable('refreshOptions', {
+                searchText: id
+            });
+            $("#plan").val(plan);
+            $("#year").val(year);
+            calculate();
+        }
     });
 </script>
 
@@ -645,7 +632,7 @@ Manage Students
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.0.14/jspdf.plugin.autotable.js" integrity="sha512-9xVpHMGorTPbSEFD6+ex0dKDYKxvciATI70tPCHCGxTkBD3HXboXLTnnpMwgdxms9uOwocFZdUx4AFl4p0FHag==" crossorigin="anonymous"></script>
 
 <!-- excel export -->
-<script type="text/javascript" src="libs/js-xlsx/xlsx.core.min.js"></script>
+<!-- <script type="text/javascript" src="libs/js-xlsx/xlsx.core.min.js"></script> -->
 
 <!-- keystrokes -->
 <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
