@@ -84,14 +84,16 @@
                     </div> -->
 
                 {% if user.is_authenticated %}
-                <form action=""
+                <form action="{% url 'cs28:search_results' %}"
                       class="ml-2 mr-5 my-auto form-inline d-inline w-100"
                       method="GET"
                       value="{{ request.GET.search }}">
                     <div class="input-group">
 
                         <input type="search"
+                               name="search"
                                placeholder="Search or jump to..."
+                               value="{{ request.GET.search }}"
                                aria-label="Search"
                                class="form-control">
 

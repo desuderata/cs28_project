@@ -30,22 +30,22 @@ from .models.student import Student
 from django.contrib import messages
 
 
-
 def index(request):
     return render(request, 'index.html')
+
 
 @login_required
 def student_upload(request):
     if request.method == "GET":
-        return render(request, 'student_upload.html',{})
-        
+        return render(request, 'student_upload.html', {})
+
     try:
         csv_file = request.FILES.getlist("csv_file")
         for file in csv_file:
             file_data = file.read().decode("utf-8")
             lines = re.split('\r|\n', file_data)[1:]
             for line in lines:
-               
+
                 fields = line.split(",")
                 try:
                     print(fields)
@@ -54,10 +54,9 @@ def student_upload(request):
                     surname = fields[2][:-1]
                     academicPlan = AcademicPlan.objects.get(planCode=fields[3])
                     gradYear = GraduationYear.objects.get(gradYear=fields[4])
-                   
-                       
+
                     Student.objects.get_or_create(
-                       
+
                         matricNo=matricNo,
                         givenNames=givenNames,
                         surname=surname,
@@ -66,13 +65,13 @@ def student_upload(request):
                     )
 
                 except Exception as e:
-                    logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
+                    logging.getLogger("error_logger").error(
+                        "Unable to upload file. "+repr(e))
                     pass
 
-
-
     except Exception as e:
-        logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+        logging.getLogger("error_logger").error(
+            "Unable to upload file. "+repr(e))
 
     return redirect(reverse("cs28:student_upload"))
 
@@ -113,14 +112,6 @@ def manage(request):
            "years": GraduationYear.objects.all().order_by('gradYear'),
            "plans": AcademicPlan.objects.all().order_by('planCode'), }
     return render(request, 'manage.html', context=ctx)
-
-
-# @login_required
-# def data(request):
-#     ctx = {"student": Student.objects.all(),
-#            "years": GraduationYear.objects.all().order_by('gradYear'),
-#            "plans": AcademicPlan.objects.all().order_by('planCode'), }
-#     return render(request, 'data.html', context=ctx)
 
 
 def is_discretionary(student):
@@ -347,6 +338,7 @@ def calculate(request):
         return HttpResponse(status=201)
     return HttpResponse(status=400)
 
+
 def module_grades_upload(request):
     if request.method == "GET":
         return render(request, 'module_grades_upload.html', {})
@@ -398,5 +390,10 @@ def module_grades_upload(request):
 
     return redirect(reverse("cs28:module_grades_upload"))
 
+
 def help(request):
     return render(request, 'help.html')
+
+
+def search_results(request):
+    return render(request, 'search_results.html')
