@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
+from django.db.models import Q
 from decimal import localcontext, Decimal, ROUND_HALF_UP
 
 from .convert_to_ttpt import to_ttpt
@@ -22,11 +23,6 @@ from cs28.models import Student, Grade, GraduationYear, AcademicPlan
 
 import re
 import logging
-from .models.academic_plan import AcademicPlan
-from .models.graduation_year import GraduationYear
-
-from .models.grade import Grade
-from .models.student import Student
 from django.contrib import messages
 
 
@@ -396,4 +392,26 @@ def help(request):
 
 
 def search_results(request):
+    """Search results view.
+
+    Splits the query, iterates through it then filter results
+    """
+    if request.method == "GET":
+        query = request.GET.get('search')
+        submit_button = request.GET.get('submit')
+
+        if query:
+            student = Student.objects.all()
+            words = query.split()
+
+            for w in words:
+                lookup_student = Q(matricNo__icontains=w) | \
+                    Q(givenNames__icontains=w) | \
+                    Q(surname__icontains=w)
+                # Q(gradYear__icontains=w) | \
+                # Q(academicPlan__icontains=w)
+                student = student.filter(lookup_student).distinct()
+            ctx = {'students': student, }
+            return render(request, 'search_results.html', ctx)
+
     return render(request, 'search_results.html')

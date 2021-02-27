@@ -21,3 +21,7 @@
     padding-top: 50px;
     padding-bottom: 50px;
 }
+
+.bg-height {
+    min-height: 100vh;
+}
