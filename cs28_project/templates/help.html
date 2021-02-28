@@ -5,6 +5,10 @@
         Everyone should add how their page works and walk
         the user through how they could use it
     Filename: help.html
+    Author: Alana Grant (2390384G)
+            Yee Hou, Teoh (2471020t)
+
+
 -->
 {% extends 'base.html' %}
 {% load static %}
@@ -14,29 +18,13 @@
 {% endblock %}
 
 {% block head %}
-<style>
-    .container-width {
-        width: 99%
-    }
-    .bg-white {
-        background-color: #fefefe;
-    }
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-</style>
+
 {% endblock %}
+
+<!-- CSS file -->
+<head>
+    <link rel="stylesheet" href="{% static 'css/help.css' %}">
+</head>
 
 {% block body_block %}
 <div class="mt-4 pb-5 container-fluid container-width bg-white">
