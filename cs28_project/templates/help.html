@@ -14,28 +14,7 @@
 {% endblock %}
 
 {% block head %}
-<style>
-    .container-width {
-        width: 99%
-    }
-    .bg-white {
-        background-color: #fefefe;
-    }
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 {% endblock %}
 
 {% block body_block %}
@@ -45,7 +24,60 @@
             <h1>Help Page</h1>
         </div>
     </div>
-    <div class="mt-3" id="accordion">
+    <div class="container w-75 mt-3" id="accordion">
+        <h2 class="mb-3">
+            Introduction</br>
+            <small class="text-muted">Not that it matters. You won't read it anyways.</small>
+        </h2>
+        <hr class="w-100">
+
+        <p class="lead mb-3">
+            Just a year ago, you were toiling in front of your screen, jabbing away
+            at keyboard deciding which student to fail and on what account; all these 
+            while paying Microsoft their costly annual subscription for a few weeks worth
+            of editing an excel spreadsheet. That's why you came up to us, to streamline
+            the failings (touch wood) without knocking a chunk out of your department budget.
+
+            <dl class="row">
+                <dt class="col-sm-2">View Course Grades</dt>
+                <dd class="col-sm-10">
+                    <p>
+                        Course grades &mdash; responsible for more sleepless nights than
+                        insomnia. Here's where you view your worst nightmares. You could
+                        even sort them in increasing or decreasing order.
+                    </p>
+                </dd>
+
+                <dt class="col-sm-2">Manage</dt>
+                <dd class="col-sm-10">
+                    <p>
+                        Missing grades? Discretionary zones? Passing (hopefully) and
+                        failing is just a few clicks away. You could edit and export
+                        individual user grades and Degree Classification.
+
+                        Plus, the rows are highlighted to help you identify issues
+                        so even the luckiest of your students wouldn't slip by to
+                        get an undeserving pass.
+                    </p>
+                </dd>
+
+                <dt class="col-sm-2">Upload</dt>
+                <dd class="col-sm-10">
+                    <p>
+                        Yes, that's great and all but how could you get those pesky
+                        data into the database? That's what the upload page is for. The
+                        name is self explanatory.
+                    </p>
+                </dd>
+            </dl>
+
+        </p>
+        <h2 class="mb-3">
+            Not sure how to use the page?</br>
+            <small class="text-muted">Here's how. You're welcome.</small>
+        </h2>
+        <hr class="w-100">
+
         <div class="card">
             <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
@@ -78,7 +110,7 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="mb-3 card">
             <div class="card-header" id="headingThree">
                 <h5 class="mb-0">
                     <button class="btn collapsed" data-toggle="collapse" data-target="#collapseThree">
@@ -92,6 +124,50 @@
                 </div>
             </div>
         </div>
+        <h2 class="mb-3">
+            Still don't get it?</br>
+            <small class="text-muted">We knew you wouldn't.</small>
+        </h2>
+        <hr class="w-100">
+        <p class="lead">
+            You're a chemist, not a coder &mdash; we wouldn't know what makes coke and
+            mentos goes boom either. So drop us an email if you need us to walk
+            you through on how to use the site (and maybe give us a crash course
+            on the sugary reaction while you're at it!).
+        </p>
+        <h4 class=mb-3>Team members and contact</h4>
+        <dl class="row">
+            <dt class="col-sm-2">Yee Hou Teoh</dt>
+            <dd class="col-sm-10">
+                <p class="mb-2">
+                    I know how to use the product in general in addition to 
+                    what I've worked on (the 
+                    <a href="{% url 'cs28:manage' %}">
+                        manage page
+                    </a>
+                    ). If you need to know anything specific about the other 
+                    pages, please reach out to the other team members.
+                    </br>
+                </p>
+                <p class=mb-3>Contact me at: <a href="mailto:2471020t@student.gla.ac.uk">2471020t@student.gla.ac.uk</a></p>
+            </dd>
+
+            <!-- To the rest of the team, please add yr contact details below Here's a template for y'all
+            to copy-paste -->
+            <dt class="col-sm-2">Team Member</dt>
+            <dd class="col-sm-10">
+                <p class="mb-2">
+                    <!-- Todo: Add which page you've worked on and what they should contact
+                    you about -->
+                    Lorem Ipsum 
+                    </br>
+                </p>
+                <!-- Todo: Change the email to yrs. remember the mailto:  -->
+                <p class=mb-3>Contact me at: <a href="mailto:1234567a@student.gla.ac.uk">1234567a@student.gla.ac.uk</a></p>
+            </dd>
+            
+        </dl>
+
     </div>
 </div>
 {% endblock %}
