@@ -10,40 +10,13 @@
 {% load static %}
 
 
+<!-- CSS file -->
+<head>
+    <link rel="stylesheet" href="{% static 'css/manage.css' %}">
+</head>
+
 {% block head %}
-<!-- add to separate css file later -->
-<style>
-    .container-width {
-        width: 99%
-    }
 
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-
-    .bg-white {
-        background-color: #fefefe;
-    }
-
-    .text-area {
-        /* width: 150px;
-        height: 100px; */
-        width: 300px;
-    }
-
-</style>
 
 <!-- jump to page -->
 <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
