@@ -84,13 +84,28 @@
                     </div> -->
 
                 {% if user.is_authenticated %}
-                <form action="" class="ml-2 mr-5 my-auto form-inline d-inline w-100">
+                <form action="{% url 'cs28:search_results' %}"
+                      class="ml-2 mr-5 my-auto form-inline d-inline w-100"
+                      method="GET"
+                      value="{{ request.GET.search }}">
                     <div class="input-group">
-                        <input type="search" placeholder="Search or jump to..." aria-label="Search"
-                            class="form-control">
+
+                        <input type="search"
+                               name="search"
+                               placeholder="Search or jump to..."
+                               value="{{ request.GET.search }}"
+                               aria-label="Search"
+                               class="form-control">
+
                         <div class="input-group-append">
-                            <button type="submit" class="btn"><i class="mr-1 fas fa-search"></i> Search</button>
+                            <button type="submit"
+                                    name="submit"
+                                    class="btn"
+                                    value="Search">
+                                <i class="mr-1 fas fa-search"></i> Search
+                            </button>
                         </div>
+
                     </div>
                 </form>
 

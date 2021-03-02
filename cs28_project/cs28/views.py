@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
+from django.db.models import Q
 from decimal import localcontext, Decimal, ROUND_HALF_UP
 
 from .convert_to_ttpt import to_ttpt
@@ -22,30 +23,25 @@ from cs28.models import Student, Grade, GraduationYear, AcademicPlan
 
 import re
 import logging
-from .models.academic_plan import AcademicPlan
-from .models.graduation_year import GraduationYear
-
-from .models.grade import Grade
-from .models.student import Student
 from django.contrib import messages
-
 
 
 def index(request):
     return render(request, 'index.html')
 
+
 @login_required
 def student_upload(request):
     if request.method == "GET":
-        return render(request, 'student_upload.html',{})
-        
+        return render(request, 'student_upload.html', {})
+
     try:
         csv_file = request.FILES.getlist("csv_file")
         for file in csv_file:
             file_data = file.read().decode("utf-8")
             lines = re.split('\r|\n', file_data)[1:]
             for line in lines:
-               
+
                 fields = line.split(",")
                 try:
                     print(fields)
@@ -54,10 +50,9 @@ def student_upload(request):
                     surname = fields[2][:-1]
                     academicPlan = AcademicPlan.objects.get(planCode=fields[3])
                     gradYear = GraduationYear.objects.get(gradYear=fields[4])
-                   
-                       
+
                     Student.objects.get_or_create(
-                       
+
                         matricNo=matricNo,
                         givenNames=givenNames,
                         surname=surname,
@@ -66,13 +61,13 @@ def student_upload(request):
                     )
 
                 except Exception as e:
-                    logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
+                    logging.getLogger("error_logger").error(
+                        "Unable to upload file. "+repr(e))
                     pass
 
-
-
     except Exception as e:
-        logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+        logging.getLogger("error_logger").error(
+            "Unable to upload file. "+repr(e))
 
     return redirect(reverse("cs28:student_upload"))
 
@@ -113,14 +108,6 @@ def manage(request):
            "years": GraduationYear.objects.all().order_by('gradYear'),
            "plans": AcademicPlan.objects.all().order_by('planCode'), }
     return render(request, 'manage.html', context=ctx)
-
-
-# @login_required
-# def data(request):
-#     ctx = {"student": Student.objects.all(),
-#            "years": GraduationYear.objects.all().order_by('gradYear'),
-#            "plans": AcademicPlan.objects.all().order_by('planCode'), }
-#     return render(request, 'data.html', context=ctx)
 
 
 def is_discretionary(student):
@@ -347,6 +334,7 @@ def calculate(request):
         return HttpResponse(status=201)
     return HttpResponse(status=400)
 
+
 def module_grades_upload(request):
     if request.method == "GET":
         return render(request, 'module_grades_upload.html', {})
@@ -398,5 +386,33 @@ def module_grades_upload(request):
 
     return redirect(reverse("cs28:module_grades_upload"))
 
+
 def help(request):
     return render(request, 'help.html')
+
+
+def search_results(request):
+    """Search results view.
+
+    Splits the query, iterates through it then filter results
+    """
+    if request.method == "GET":
+        query = request.GET.get('search')
+        submit_button = request.GET.get('submit')
+
+        if query:
+            student = Student.objects.all()
+            words = query.split()
+
+            for w in words:
+                lookup_student = Q(matricNo__icontains=w) | \
+                    Q(givenNames__icontains=w) | \
+                    Q(surname__icontains=w) | \
+                    Q(gradYear__gradYear__icontains=w) | \
+                    Q(academicPlan__planCode__icontains=w)
+                student = student.filter(lookup_student).distinct()
+            ctx = {'students': student,
+                   'submit_button': submit_button}
+            return render(request, 'search_results.html', ctx)
+
+    return render(request, 'search_results.html')
