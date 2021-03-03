@@ -19,7 +19,6 @@
 {% block head %}
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-
 <style>
     *{
         margin: 0;
@@ -377,13 +376,12 @@
 </div>
 
 
-
+<center> Hello </center>
 
 {% if messages %}
 	<ul class="messages">
 	{% for message in messages %}
-		<script>M.toast({html:"{{message})", classes:'blue rounded', 
-			displayLength:2000})</script>
+		<center>{{message}}</center>
 	{% endfor %}
 	</ul>
 {% endif %}
@@ -391,7 +389,7 @@
 
 {% endblock %}
 
-
+<!--
 {% block scripts %}
 <script>
     'use strict';
@@ -508,7 +506,7 @@
                     ajax.onload = function()
                     {
                         form.classList.remove( 'is-uploading' );
-                        if( ajax.status >= 200 && ajax.status < 500 )
+                        if( ajax.status >= 200 && ajax.status < 300 )
                         {
                             var data = JSON.parse( ajax.responseText );
                             form.classList.add( data.success == true ? 'is-success' : 'is-error' );
@@ -570,3 +568,4 @@
     }( document, window, 0 ));
 </script>
 {% endblock %}
+-->
