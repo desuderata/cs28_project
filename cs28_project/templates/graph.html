@@ -59,24 +59,9 @@
             </div>
             <div class="col-md-6 align-self-center">
                 <form id="dataset">
-                    <!-- make this show up without a reload -->
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert
-                                        {% if message.tags %}
-                                            alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}{{ message.tags }}{% endif %}
-                                        {% endif %}
-                                        alert-dismissible
-                                        fade
-                                        show"
-                                   role="alert">
-                                {{ message }}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                    <!-- make this show up without a reload 
+                        monkeypatching this to use errorfunction and js-->
+                    <div id="message"></div>
                     <!-- <div class="form-group">
                         <label for="type">Type</label>
                         <select class="form-control" id="type">
@@ -108,8 +93,8 @@
                             <label for="type">Type</label>
                             <select name="type" id="type" class="form-control">
                                 <option value="" selected disabled>Type</option>
-                                <option value="percentage">percentage</option>
-                                <option value="count">count</option>
+                                <option value="percentage">percentage (%)</option>
+                                <option value="count">count (#)</option>
                             </select>
                         </div>
                     </div>
@@ -166,6 +151,7 @@
                 data: data,
                 success: function (data) {
                     // var data = console.log(getData(data));
+                    $('#message').empty();
                     plan = document.getElementById("plan").value;
                     year = document.getElementById("year").value;
                     type = document.getElementById("type").value;
@@ -173,6 +159,16 @@
                         addDataset(`${plan} | ${year} | ${type=="percentage"?"%":"#"}`,
                             type=="percentage"?getPercentage(data):getCount(data));
                     }
+                },
+                error: function (data) {
+                    $('#message').html(
+                        '<div class="alert alert-danger alert-dismissible fade show" role="alert"> \
+                            Error retrieving data. Please ensure that <strong>Academic Year</strong>, \
+                            <strong>Academic Plan</strong> and  <strong>Type</strong> are selected. \
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
+                                <span aria-hidden="true">&times;</span> \
+                            </button>\
+                        </div>')
                 }
             })
         })

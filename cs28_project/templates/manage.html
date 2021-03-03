@@ -33,6 +33,7 @@ Manage Students
             <h1>Manage Students</h1>
         </div>
     </div>
+    <div class="mt-3" id="message"></div>
     <div class="row justify-content-between">
         <div class="col-auto d-flex mt-3">
         <!-- <div id="toolbar"> -->
@@ -544,9 +545,19 @@ Manage Students
             type: "POST",
             data: calculate_data,
             success: function (data) {
+                $('#message').empty();
                 $table.bootstrapTable('refresh', {
                     url: "{% url 'cs28:data' %}".concat("?", calculate_data)
                 });
+            },
+            error: function (data) {
+                $('#message').html(
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert"> \
+                        Error retrieving data. Please ensure that both <strong>Graduation Year</strong> and <strong>Academic Plans</strong> are selected. \
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
+                            <span aria-hidden="true">&times;</span> \
+                        </button>\
+                    </div>')
             }
         })
     }
