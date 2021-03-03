@@ -90,7 +90,7 @@ def user_login(request):
 
         else:
             # wrong details
-            print(f"Invalid login details: {username}, {password}")
+            messages.error(request, "Invalid username or password")
             return redirect(reverse('cs28:login'))
     else:
         return render(request, 'login.html')
@@ -126,6 +126,7 @@ def data(request):
     plan = request.GET.get('plan', None)
 
     if not (year and plan):
+        messages.error(request, "Error retrieving data")
         return HttpResponse(status=400)
 
     students = Student.objects.filter(gradYear=year,

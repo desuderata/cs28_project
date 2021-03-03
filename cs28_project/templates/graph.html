@@ -59,6 +59,24 @@
             </div>
             <div class="col-md-6 align-self-center">
                 <form id="dataset">
+                    <!-- make this show up without a reload -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert
+                                        {% if message.tags %}
+                                            alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}{{ message.tags }}{% endif %}
+                                        {% endif %}
+                                        alert-dismissible
+                                        fade
+                                        show"
+                                   role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     <!-- <div class="form-group">
                         <label for="type">Type</label>
                         <select class="form-control" id="type">
