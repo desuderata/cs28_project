@@ -70,13 +70,13 @@ Manage Students
                 <div class="form-row">
                     <label class="mx-2">Color Code Legend: </label>
                     <div class="col-auto">
-                        <button class="btn btn-success" disabled>Overridden</button>
+                        <button class="btn btn-danger" disabled>Missing Grades</button>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-warning" disabled>Discretionary</button>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-danger" disabled>Missing Grades</button>
+                        <button class="btn btn-success" disabled>Degree Overridden</button>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-primary" disabled>Special Code</button>
@@ -430,10 +430,9 @@ Manage Students
 
     // to highlight rows in the future
     function rowStyle(row, index) {
-        // console.log(row.notes);
-        if (row.type === 'Overridden') {
+        if (row.type === "Missing Grades") {
             return {
-                classes: 'table-success'
+                classes: 'table-danger'
             }
         }
         if (row.type === "Discretionary") {
@@ -441,9 +440,9 @@ Manage Students
                 classes: 'table-warning'
             }
         }
-        if (row.type === "Missing Grades") {
+        if (row.type === 'Overridden') {
             return {
-                classes: 'table-danger'
+                classes: 'table-success'
             }
         }
         if (row.type === "Special Code") {

@@ -136,12 +136,12 @@ def data(request):
     for student in students:
         row = {}
 
-        if student.updatedAward != "-1":
-            row["type"] = "Overridden"
+        if student.isMissingGrades:
+            row["type"] = "Missing Grades"
         elif is_discretionary(student):
             row["type"] = "Discretionary"
-        elif student.isMissingGrades:
-            row["type"] = "Missing Grades"
+        elif student.updatedAward != "-1":
+            row["type"] = "Overridden"
         elif student.hasSpecialCode:
             row["type"] = "Special Code"
         else:
