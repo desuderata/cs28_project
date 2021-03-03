@@ -37,6 +37,7 @@ class StudentAdmin(ModelAdmin):
     icon_name = "school"
     model = Student
     exclude = ("gradeDataUpdated",
+               "finalAward",
                "finalAward1",
                "finalAward2",
                "finalAward3",
@@ -46,6 +47,7 @@ class StudentAdmin(ModelAdmin):
                     "givenNames",
                     "surname",
                     "academicPlan",
+                    "finalAward",
                     "finalAward1",
                     "finalAward2",
                     "finalAward3",
