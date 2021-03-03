@@ -90,7 +90,7 @@ def user_login(request):
 
         else:
             # wrong details
-            print(f"Invalid login details: {username}, {password}")
+            messages.error(request, "Invalid username or password")
             return redirect(reverse('cs28:login'))
     else:
         return render(request, 'login.html')
@@ -126,6 +126,7 @@ def data(request):
     plan = request.GET.get('plan', None)
 
     if not (year and plan):
+        messages.error(request, "Error retrieving data")
         return HttpResponse(status=400)
 
     students = Student.objects.filter(gradYear=year,
@@ -164,6 +165,7 @@ def data(request):
         row["gpa3"] = str(student.finalAward3)
         row["gpa2"] = str(student.finalAward2)
         row["gpa1"] = str(student.finalAward1)
+        row["gpa"] = str(student.finalAward)
         row["oAward"] = student.award_as_mc()
         row["award"] = student.award_as_mc() if student.updatedAward == "-1" \
             else student.updatedAward
@@ -322,6 +324,7 @@ def calculate(request):
                 return Decimal(str(flt)).quantize(Decimal(dec),
                                                   rounding=ROUND_HALF_UP)
 
+            student.finalAward = round(overall_points, "0")
             student.finalAward1 = round(overall_points, "0.0")
             student.finalAward2 = round(overall_points, "0.00")
             student.finalAward3 = round(overall_points, "0.000")
@@ -335,6 +338,7 @@ def calculate(request):
     return HttpResponse(status=400)
 
 
+@login_required
 def module_grades_upload(request):
     if request.method == "GET":
         return render(request, 'module_grades_upload.html', {})
@@ -387,10 +391,12 @@ def module_grades_upload(request):
     return redirect(reverse("cs28:module_grades_upload"))
 
 
+@login_required
 def help(request):
     return render(request, 'help.html')
 
 
+@login_required
 def search_results(request):
     """Search results view.
 
@@ -416,3 +422,10 @@ def search_results(request):
             return render(request, 'search_results.html', ctx)
 
     return render(request, 'search_results.html')
+
+
+@login_required
+def graph(request):
+    ctx = {"years": GraduationYear.objects.all(),
+           "plans": AcademicPlan.objects.all(), }
+    return render(request, 'graph.html', context=ctx)
