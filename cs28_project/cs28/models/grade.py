@@ -1,7 +1,4 @@
 """Grades Model
-
-Todo:
-    create and import alphanumeric grade converter
 """
 
 from django.core.exceptions import ValidationError
@@ -33,6 +30,8 @@ class Grade(models.Model):
                                          ("G1", "G1"), ("G2", "G2"),
                                          ("H", "H"), ("CW", "CW"),
                                          ("CR", "CR"), ("MV", "MV")])
+
+    notes = models.TextField(default="", blank=True)
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["courseCode",

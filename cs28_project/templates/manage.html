@@ -70,17 +70,18 @@ Manage Students
                 <div class="form-row">
                     <label class="mx-2">Color Code Legend: </label>
                     <div class="col-auto">
-                        <button class="btn btn-danger" disabled>Missing Grades</button>
+                        <button class="btn btn-danger" disabled>Incomplete Course Assessment</button>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-warning" disabled>Discretionary</button>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-success" disabled>Degree Overridden</button>
+
                     </div>
-                    <div class="col-auto">
+                    <!-- <div class="col-auto">
                         <button class="btn btn-primary" disabled>Special Code</button>
-                    </div>
+                    </div> -->
                     <!-- <div class="col-auto">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="anonymizeCheck" value="anonymize">
@@ -155,7 +156,7 @@ Manage Students
 {% block scripts %}
 <script>
     var $table = $('#table');
-    
+
     var token = '{{ csrf_token }}'
 
     var filename = "degree_classification"
@@ -197,7 +198,8 @@ Manage Students
                 {
                     field: "type",
                     title: "Type",
-                    sortable: true
+                    sortable: true,
+                    visible: false
                 },
                 {
                     field: "mcId",
@@ -264,8 +266,7 @@ Manage Students
                 {
                     field: "oAward",
                     title: "Original Award",
-                    sortable: true,
-                    visible: false
+                    sortable: true
                 },
                 {
                     field: "award",
@@ -418,6 +419,17 @@ Manage Students
                         title: "22pt. (4 d.p.)",
                         sortable: true
                     },
+                    {
+                    field: "subNotes",
+                    title: "Notes",
+                    sortable: true,
+                    searchable: false,
+                    editable: {
+                        mode: "inline",
+                        inputclass: "text-area",
+                        emptytext: "Add Note"
+                    }
+                }
                 ]
                 $el.bootstrapTable({
                     rowStyle: 'rowStyle',
@@ -430,7 +442,7 @@ Manage Students
 
     // to highlight rows in the future
     function rowStyle(row, index) {
-        if (row.type === "Missing Grades") {
+        if (row.type === "Incomplete Course Assessment") {
             return {
                 classes: 'table-danger'
             }
@@ -440,7 +452,7 @@ Manage Students
                 classes: 'table-warning'
             }
         }
-        if (row.type === 'Overridden') {
+        if (row.type === "Degree Overridden") {
             return {
                 classes: 'table-success'
             }
@@ -454,7 +466,7 @@ Manage Students
             row.alpha === "MV" ||
             row.alpha === "CR") {
             return {
-                classes: 'table-primary'
+                classes: 'table-danger'
             }
         }
         if (row.alpha === "-") {
@@ -510,7 +522,7 @@ Manage Students
                     $table.bootstrapTable('hideColumn', 'gpa3');
                     $table.bootstrapTable('hideColumn', 'gpa2');
                     $table.bootstrapTable('showColumn', 'gpa1');
-                    $table.bootstrapTable('hideColumn', 'oAward');
+                    $table.bootstrapTable('showColumn', 'oAward');
                     $table.bootstrapTable('showColumn', 'award');
                     $table.bootstrapTable('showColumn', 'notes');
                     break;
@@ -519,11 +531,25 @@ Manage Students
             if (iteration>2) iteration = 1;
             $(this).data('iteration',iteration);
 
-            
+
         });
     });
 
     var calculate_data;
+
+    function error(message) {
+        $('#message').html(
+            `<div class="alert alert-danger alert-dismissible fade show" role="alert"> \
+                ${message} \
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
+                    <span aria-hidden="true">&times;</span> \
+                </button>\
+            </div>`
+        )
+    }
+
+    var clear = function() {$('#message').empty()};
+
 
     // get students and calculate data
     function calculate() {
@@ -537,9 +563,13 @@ Manage Students
             type: "POST",
             data: calculate_data,
             success: function (data) {
+                clear();
                 $table.bootstrapTable('refresh', {
                     url: "{% url 'cs28:data' %}".concat("?", calculate_data)
                 });
+            },
+            error: function (data) {
+                error('Error retrieving data. Please ensure that both <strong>Graduation Year</strong> and <strong>Academic Plans</strong> are selected.')
             }
         })
     }
@@ -556,6 +586,10 @@ Manage Students
         console.log(row);  // row as json
         console.log(oldValue);  // old value? it just returns a 0
         console.log($el);  // old value
+        if (row.alpha === "-") {
+            error('Error updating data. Please ensure that <strong>Alphanumeric Grade</strong> is not <strong><i>Empty</i></strong>');
+            return;
+        }
         $.ajax({
             headers: { "X-CSRFToken": token },
             url:"{% url 'cs28:update' %}",
@@ -568,6 +602,9 @@ Manage Students
             dataType: 'json',
             success: function (data) {
                 if (row.gradeId) {
+                    if (!(field === "subNotes")){
+                        clear();
+                    }
                     ajax_calculate(token, row, data);
                     ajax_update(token, row, data);
                 } else {
@@ -590,7 +627,7 @@ Manage Students
             }
         };
 
-        // updates the table 
+        // updates the table
         function ajax_update(token, row, data) {
             $.ajax({
                 headers: { "X-CSRFToken": token },

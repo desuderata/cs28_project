@@ -136,22 +136,14 @@ def data(request):
     for student in students:
         row = {}
 
-        if student.isMissingGrades:
-            row["type"] = "Missing Grades"
+        if student.isMissingGrades or student.hasSpecialCode:
+            row["type"] = "Incomplete Course Assessment"
         elif is_discretionary(student):
             row["type"] = "Discretionary"
         elif student.updatedAward != "-1":
-            row["type"] = "Overridden"
-        elif student.hasSpecialCode:
-            row["type"] = "Special Code"
+            row["type"] = "Degree Overridden"
         else:
-            row["type"] = "&#128077;"
-
-        # row["type"] = "Overridden" if student.updatedAward != "-1" else \
-        #     "Discretionary" if student.is_discretionary else \
-        #     "Missing Grades" if student.isMissingGrades else \
-        #     "Special Code" if student.hasSpecialCode else \
-        #     "&#128077;"  # Everything is good (thumbs up emoji)
+            row["type"] = "&#128077;"  # Thumbs up emoji
 
         row["id"] = student.matricNo
         row["mcId"] = student.matricNo
@@ -181,14 +173,19 @@ def data(request):
                 grade = grades.filter(courseCode=course)
                 sub_row["gradeId"] = student.matricNo
                 sub_row["code"] = grade.values('courseCode')[0]['courseCode']
+
                 alpha = grade.values('alphanum')[0]['alphanum']
                 sub_row["alpha"] = alpha
+
                 sub_row["ttpt"] = to_ttpt(alpha)
+
+                sub_row["subNotes"] = grade.values('notes')[0]['notes']
             else:
                 sub_row["gradeId"] = student.matricNo
                 sub_row["code"] = course
                 sub_row["alpha"] = "-"
                 sub_row["ttpt"] = "-"
+                sub_row["subNotes"] = ""
             sub.append(sub_row)
         row["sub"] = sub
         json_array.append(row)
@@ -226,16 +223,29 @@ def update_field(request):
                 student.updatedAward = award if award != o_award else "-1"
                 student.save()
 
-        if field == "alpha":
+        if field == "alpha" or field == "subNotes":
             # First seven chars of gradeId is matric Num
             matric = row["gradeId"][:7]
             code = row["code"]
 
             student = Student.objects.get(matricNo=matric)
-            grade = Grade.objects.get(matricNo=student, courseCode=code)
 
-            grade.alphanum = row["alpha"]
-            grade.save()
+            if Grade.objects.filter(matricNo=student, courseCode=code).exists():
+
+                grade = Grade.objects.get(matricNo=student, courseCode=code)
+                if field == "alpha":
+                    grade.alphanum = row["alpha"]
+                    grade.save()
+                if field == "subNotes":
+                    grade.notes = row["subNotes"]
+                    grade.save()
+            else:
+                if field == "alpha":
+                    print(row['alpha'])
+                    grade, created = Grade.objects.get_or_create(
+                        matricNo=student, courseCode=code)
+                    grade.alphanum = row["alpha"]
+                    grade.save()
 
         data = {
             'Status': 'success'

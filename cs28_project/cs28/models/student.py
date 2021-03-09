@@ -113,7 +113,7 @@ class Student(models.Model):
         # self.finalAward2 = Decimal(round(self.finalAward4, 2))
         # self.finalAward3 = Decimal(round(self.finalAward4, 3))
         # self.finalAward4 = Decimal(round(self.finalAward4, 4))
-        award = self.finalAward4
+        award = str(self.finalAward4)
         with localcontext() as ctx:
             ctx.rounding = ROUND_HALF_UP
             self.finalAward1 = Decimal(str(award)).quantize(Decimal("0.0"))
