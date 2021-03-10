@@ -79,7 +79,11 @@ def user_login(request):
         # get username and password then check if acc is valid
         username = request.POST.get("username")
         password = request.POST.get("password")
+        remember_me = request.POST.get("remember") == "remember"
+
         user = authenticate(username=username, password=password)
+        if not remember_me:
+            request.session.set_expiry(0)
 
         if user:
             if user.is_active:
