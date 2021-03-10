@@ -56,6 +56,7 @@
             <!-- todo: brand redirects to index 
                            edit svg to include School of Chemistry Database -->
             <div class="d-flex flex-grow-1">
+                {% if user.is_authenticated %}
                 <button class="btn btn-sm"
                         type="button"
                         id="collapseSidebar">
@@ -67,21 +68,11 @@
                         <span></span>
                     </div>
                 </button>
-
+                {% endif %}
 
                 <a id="logo" class="d-none d-sm-block navbar-brand pl-4" href="{% url 'cs28:index' %}">
                     <img class="logo" src="{% static 'icons/UoG_keyline_edited.svg' %}" height="150" alt="UoG brand logo" />
                 </a>
-
-                <!-- if the customer wants to use the other navbar option, its here. -->
-                <!-- use "user.is_authenticated" to check whether user is logged in to show these navbar items -->
-                <!-- <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav">
-                            <a class="nav-item nav-link active" href="{% url 'cs28:index' %}">Home <span class="sr-only">(current)</span></a>
-                            <a class="nav-item nav-link" href="#">Manage</a>
-                            <a class="nav-item nav-link" href="#">Upload</a>
-                        </div>
-                    </div> -->
 
                 {% if user.is_authenticated %}
                 <form action="{% url 'cs28:search_results' %}"
@@ -303,12 +294,6 @@
             $("#sidebar").mCustomScrollbar({
                 theme: "minimal"
             });
-
-            // $('#collapseSidebar').on('click', function () {
-            //     $('#sidebar').toggleClass('active');
-            //     $('#bodyBlock').toggleClass('active');
-            //     $('.bars').toggleClass('active');
-            // });
 
             $('#collapseSidebar').on('click', function () {
                 $('#sidebar').toggleClass('active');
