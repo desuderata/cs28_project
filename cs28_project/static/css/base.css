@@ -54,7 +54,10 @@ body {
 }
 
 @media (max-width: 550px) {
-    #collapseSidebar {
+    /* #collapseSidebar {
+        display: none;
+    } */
+    #searchText {
         display: none;
     }
 }

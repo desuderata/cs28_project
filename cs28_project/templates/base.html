@@ -102,7 +102,7 @@
                                     name="submit"
                                     class="btn"
                                     value="Search">
-                                <i class="mr-1 fas fa-search"></i> Search
+                                <i class="mr-1 fas fa-search"></i> <span id="searchText">Search</span>
                             </button>
                         </div>
 
@@ -165,6 +165,7 @@
                         </a>
                     </div>
                 </li>
+                {% if user.is_superuser or user.is_staff %}
                 <!-- Student Upload -->
                 <li class="nav-item">
                     <div class="px-1 py-2">
@@ -183,6 +184,7 @@
                         </a>
                     </div>
                 </li>
+                {% endif %}
                 <!-- students -->
                 <li class="nav-item">
                     <div class="px-1 py-2">

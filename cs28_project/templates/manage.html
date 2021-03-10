@@ -156,6 +156,8 @@ Manage Students
 
 {% block scripts %}
 <script>
+    var edit = {% if user.is_superuser or user.is_staff %} true {% else %} false {% endif %};
+
     var $table = $('#table');
 
     var token = '{{ csrf_token }}'
@@ -192,6 +194,7 @@ Manage Students
             exportDataType: "all",
             visibleSearch: true,
             minimumCountColumns: 2,
+            showColumnsSearch: true,
             exportOptions: {
                 fileName: filename
             },
@@ -281,6 +284,7 @@ Manage Students
                     sortable: true,
                     searchable: false,
                     editable: {
+                        disabled: !edit,
                         type: 'select',
                         mode: 'inline',
                         source: [
@@ -319,6 +323,7 @@ Manage Students
                     sortable: true,
                     searchable: false,
                     editable: {
+                        disabled: !edit,
                         mode: "inline",
                         inputclass: "text-area",
                         emptytext: "Add Note"
@@ -344,6 +349,7 @@ Manage Students
                         title: "Alphanumeric Grade",
                         sortable: true,
                         editable: {
+                            disabled: !edit,
                             type: 'select',
                             mode: 'inline',
                             source: [
@@ -432,6 +438,7 @@ Manage Students
                     sortable: true,
                     searchable: false,
                     editable: {
+                        disabled: !edit,
                         mode: "inline",
                         inputclass: "text-area",
                         emptytext: "Add Note"
