@@ -373,12 +373,15 @@ def module_grades_upload(request):
             courseCode = file.name[13:-9]
 
             file_data = file.read().decode("utf-8")
-            lines = re.split('\r|\n', file_data)[1:]
+            lines = re.split('\r\n|\r|\n', file_data)[1:]
             for line in lines:
-
+                 
+                if line == '':
+                    continue
+                    
                 fields = re.split('",|,"', line)
                 try:
-
+                    
                     matricNo = Student.objects.get(matricNo=fields[0])
                     alphanum = fields[2]
                     Grade.objects.get_or_create(
@@ -387,12 +390,13 @@ def module_grades_upload(request):
                         alphanum=alphanum,
                     )
                 except Exception as e:
-                    messages.error(request, repr(e))
+                    messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
-                        "Unable to upload file. "+repr(e))
+                        "Unable to upload file. " +repr(e))
                     pass
 
     except Exception as e:
+        messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
 
