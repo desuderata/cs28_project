@@ -325,3 +325,13 @@ body {
     top: 60;
     right: 0;
 }
+
+#bodyBlock.logout {
+    width: 100%;
+    position: absolute;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    /* transition: all 0.2s; */
+    top: 60;
+    right: 0;
+}
