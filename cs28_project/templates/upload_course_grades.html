@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <!--
-    Module Grades Upload
+    Upload Course Grades
 
     Todo:
     Author: Kien Welch 2371692w
 			Nguyen Thanh Hieu 2401707n
-    Filename: module_grades_upload.html
+    Filename: upload_course_grades.html
 -->
 
 {% extends 'base.html' %}
@@ -13,7 +13,7 @@
 
 
 {% block title_block %}
-    Module Grades Upload
+    Upload Course Grades
 {% endblock %}
 
 {% block head %}
@@ -333,13 +333,13 @@
 <!-- responsiveness abit wonky here -->
 <div class="page-header row h-100 align-items-center bg-blue">
 	<div class="page-text d-inline-flex text-white">
-		<h1>Module Grades Upload</h1>
+		<h1>Upload Course Grades</h1>
 	</div>
 </div>
 
 <div class="container">
     <form method="post"
-          action="{% url 'cs28:module_grades_upload' %}"
+          action="{% url 'cs28:upload_course_grades' %}"
           enctype="multipart/form-data"
           novalidate=""
           class="box has-advanced-upload">

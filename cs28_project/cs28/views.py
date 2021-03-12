@@ -347,26 +347,26 @@ def calculate(request):
         return HttpResponse(status=201)
     return HttpResponse(status=400)
 
-def module_grades_upload(request):
+def upload_course_grades(request):
     if request.method == "GET":
-        return render(request, 'module_grades_upload.html', {})
+        return render(request, 'upload_course_grades.html', {})
 
     try:
         csv_file = request.FILES.getlist("csv_file")
 
         # if not csv_file.name.endswith('.csv'):
         #   messages.error(request,"File is not CSV type")
-        #    return redirect(reverse("cs28:module_grades_upload"))
+        #    return redirect(reverse("cs28:upload_course_grades"))
         # check if file is too large
         # if csv_file.multiple_chunks():
-        #    return redirect(reverse("cs28:module_grades_upload"))
+        #    return redirect(reverse("cs28:upload_course_grades"))
 
         for file in csv_file:
 
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
                 messages.error(request, "File is not CSV type")
-                return redirect(reverse("cs28:module_grades_upload"))
+                return redirect(reverse("cs28:upload_course_grades"))
 
             # extract course code from the file name, for now hard-coded
             # (expected format: "Grade Roster CourseCode.csv")
@@ -400,7 +400,7 @@ def module_grades_upload(request):
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
 
-    return redirect(reverse("cs28:module_grades_upload"))
+    return redirect(reverse("cs28:upload_course_grades"))
 
 def help(request):
     return render(request, 'help.html')
