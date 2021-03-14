@@ -362,7 +362,7 @@ def upload_course_grades(request):
         #    return redirect(reverse("cs28:upload_course_grades"))
 
         for file in csv_file:
-
+            success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
                 messages.error(request, "File is not CSV type")
@@ -390,10 +390,16 @@ def upload_course_grades(request):
                         alphanum=alphanum,
                     )
                 except Exception as e:
+                    success = False
                     messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
                         "Unable to upload file. " +repr(e))
                     pass
+                
+            if (success):
+                messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
+            else:
+                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
 
     except Exception as e:
         messages.error(request, e)
