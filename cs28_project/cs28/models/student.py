@@ -93,7 +93,7 @@ class Student(models.Model):
     updatedAward = models.CharField("Updated Award",
                                     blank=True,
                                     default="-1",
-                                    max_length=5)
+                                    max_length=6)
 
     special_code_help = ("If this is checked, at least one grade for this "
                          "student is of MV, CR or CW")

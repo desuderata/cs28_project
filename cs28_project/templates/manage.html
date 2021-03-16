@@ -71,14 +71,13 @@ Manage Students
                 <div class="form-row">
                     <label class="mx-2">Color Code Legend: </label>
                     <div class="col-auto">
+                        <button class="btn btn-success" disabled>Degree Overridden</button>
+                    </div>
+                    <div class="col-auto">
                         <button class="btn btn-danger" disabled>Incomplete Course Assessment</button>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-warning" disabled>Discretionary</button>
-                    </div>
-                    <div class="col-auto">
-                        <button class="btn btn-success" disabled>Degree Overridden</button>
-
                     </div>
                     <!-- <div class="col-auto">
                         <button class="btn btn-primary" disabled>Special Code</button>
@@ -203,7 +202,7 @@ Manage Students
                     field: "type",
                     title: "Type",
                     sortable: true,
-                    visible: false
+                    visible: true
                 },
                 {
                     field: "mcId",
@@ -345,6 +344,11 @@ Manage Students
                         sortable: true
                     },
                     {
+                        field: "oAlpha",
+                        title: "Original Grade",
+                        sortable: true,
+                    },
+                    {
                         field: "alpha",
                         title: "Alphanumeric Grade",
                         sortable: true,
@@ -456,7 +460,8 @@ Manage Students
 
     // to highlight rows in the future
     function rowStyle(row, index) {
-        if (row.type === "Incomplete Course Assessment") {
+        if (row.type === "Incomplete Course Assessment" ||
+            row.type === "Course Grade Adjusted") {
             return {
                 classes: 'table-danger'
             }
@@ -488,6 +493,12 @@ Manage Students
                 classes: 'table-danger'
             }
         }
+        if (row.alpha != row.oAlpha){
+            return {
+                classes: 'table-success'
+            }
+        }
+
         return 0
     }
 
@@ -620,7 +631,7 @@ Manage Students
                         clear();
                     }
                     ajax_calculate(token, row, data);
-                    ajax_update(token, row, data);
+                    // ajax_update(token, row, data);
                 } else {
                     ajax_update(token, row, data);
                 }
@@ -641,7 +652,8 @@ Manage Students
             }
         };
 
-        // updates the table
+        // updates the table on every edit. its possible to refresh manually
+        // remove the call to this function if required
         function ajax_update(token, row, data) {
             $.ajax({
                 headers: { "X-CSRFToken": token },

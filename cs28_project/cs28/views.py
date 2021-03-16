@@ -141,15 +141,6 @@ def data(request):
     for student in students:
         row = {}
 
-        if student.isMissingGrades or student.hasSpecialCode:
-            row["type"] = "Incomplete Course Assessment"
-        elif is_discretionary(student):
-            row["type"] = "Discretionary"
-        elif student.updatedAward != "-1":
-            row["type"] = "Degree Overridden"
-        else:
-            row["type"] = "&#128077;"  # Thumbs up emoji
-
         row["id"] = student.matricNo
         row["mcId"] = student.matricNo
         row["grad"] = student.gradYear.gradYear
@@ -171,21 +162,27 @@ def data(request):
 
         sub = []
         grades = student.grade_set.all()
+
         # courses in the student academic plan
         courses = [c for c in student.academicPlan.get_courses() if c]
+        is_updated = False
         for course in courses:
             sub_row = {}
             if grades.filter(courseCode=course).exists():
+
                 grade = grades.filter(courseCode=course)
                 sub_row["gradeId"] = student.matricNo
                 sub_row["code"] = grade.values('courseCode')[0]['courseCode']
+                sub_row["subNotes"] = grade.values('notes')[0]['notes']
 
                 alpha = grade.values('alphanum')[0]['alphanum']
-                sub_row["alpha"] = alpha
+                u_alpha = grade.values('updatedGrade')[0]['updatedGrade']
+                is_updated = u_alpha != "-1" if not is_updated else is_updated
 
-                sub_row["ttpt"] = to_ttpt(alpha)
-
-                sub_row["subNotes"] = grade.values('notes')[0]['notes']
+                grade = alpha if u_alpha == "-1" else u_alpha
+                sub_row["oAlpha"] = alpha
+                sub_row["alpha"] = grade
+                sub_row["ttpt"] = to_ttpt(grade)
             else:
                 sub_row["gradeId"] = student.matricNo
                 sub_row["code"] = course
@@ -194,6 +191,18 @@ def data(request):
                 sub_row["subNotes"] = ""
             sub.append(sub_row)
         row["sub"] = sub
+
+        if student.updatedAward != "-1":
+            row["type"] = "Degree Overridden"
+        elif is_updated and student.hasSpecialCode:
+            row["type"] = "Course Grade Adjusted"
+        elif student.isMissingGrades or student.hasSpecialCode:
+            row["type"] = "Incomplete Course Assessment"
+        elif is_discretionary(student):
+            row["type"] = "Discretionary"
+        else:
+            row["type"] = "&#128077;"  # Thumbs up emoji
+
         json_array.append(row)
 
     return JsonResponse(json_array, safe=False)
@@ -240,7 +249,10 @@ def update_field(request):
 
                 grade = Grade.objects.get(matricNo=student, courseCode=code)
                 if field == "alpha":
-                    grade.alphanum = row["alpha"]
+                    alpha = row["alpha"]
+                    o_alpha = row["oAlpha"]
+
+                    grade.updatedGrade = alpha if alpha != o_alpha else "-1"
                     grade.save()
                 if field == "subNotes":
                     grade.notes = row["subNotes"]
@@ -320,6 +332,10 @@ def calculate(request):
             has_special_code = False
 
             for grade in grades.iterator():
+                o_grade = grade.get_alphanum_as_num()
+                u_grade = grade.get_updated_as_num()
+
+                score = o_grade if u_grade == "-1" else u_grade
                 if grade.is_grade_a_special_code():
                     has_special_code = True
                     continue
@@ -329,7 +345,8 @@ def calculate(request):
                     continue
 
                 # dot of vec to get sum of all weighted scores
-                numerical_score.append(grade.get_alphanum_as_num())
+
+                numerical_score.append(score)
                 weight_list.append(course_weights[plan_code][grade.courseCode])
                 overall_points = np.dot(weight_list, numerical_score)
 

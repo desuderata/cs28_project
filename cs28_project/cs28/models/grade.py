@@ -31,6 +31,11 @@ class Grade(models.Model):
                                          ("H", "H"), ("CW", "CW"),
                                          ("CR", "CR"), ("MV", "MV")])
 
+    updatedGrade = models.CharField("Alphanumeric Grade",
+                                    max_length=2,
+                                    default="-1",
+                                    blank=True)
+
     notes = models.TextField(default="", blank=True)
 
     class Meta:
@@ -43,8 +48,15 @@ class Grade(models.Model):
     def get_alphanum_as_num(self):
         return to_ttpt(self.alphanum)
 
+    def get_updated_as_num(self):
+        tt = to_ttpt(self.updatedGrade) if self.updatedGrade != "-1" else "-1"
+        return tt
+
     def is_grade_a_special_code(self):
-        return self.alphanum in ["MV", "CW", "CR"]
+        alpha = self.alphanum
+        updated = self.updatedGrade
+        grade = updated if updated != "-1" else alpha
+        return grade in ["MV", "CW", "CR"]
 
     def course_does_not_exist(self):
         plan = self.matricNo.academicPlan
