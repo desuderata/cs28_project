@@ -26,7 +26,7 @@
 
 {% block head %}
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="main.css">
+
 
 <style>
     *{
@@ -310,6 +310,22 @@
     {
         background-color: #0f3c4b;
     }
+	
+	    .page-text {
+        padding-left: 75px;
+        padding-right: 75px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+	
+    @media (max-width: 979px) {
+        .page-text {
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-top: 25px;
+            padding-bottom: 25px;
+        }
+    }
 </style>
 
 <script>
@@ -323,16 +339,10 @@
 
 {% block body_block %}
 <!-- responsiveness abit wonky here -->
-<div class="py-0">
-    <div class="row h-100 align-items-center blue-bg">
-        <div class="welcome-text col-md-5 col-xs-12 ">
-            <div class="text-nowrap white">
-                <h1>
-                    Upload Student Roster
-                </h1>
-            </div>
-        </div>
-    </div>
+<div class="page-header row h-100 align-items-center bg-blue">
+	<div class="page-text d-inline-flex text-white">
+		<h1>Upload Student Roster</h1>
+	</div>
 </div>
 
 <div class="container">
@@ -357,7 +367,7 @@
                    data-multiple-caption="{count} files selected"
                    multiple="">
             <label for="file">
-                <strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.
+                <!--<strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.-->
             </label>
             <button type="submit" class="box__button ">Upload</button>
         </div>
@@ -371,12 +381,39 @@
                value="1">
     </form>
 </div>
+
+{% if messages %}
+	<ul class="messages">
+	{% for message in messages %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+		<div class="alert alert-danger" role="alert">
+			<center>{{message}}</center>
+		</div>
+		{% endif %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+		<div class="alert alert-warning" role="alert">
+			<center>{{message}}</center>
+		</div>
+		{% endif %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+		<div class="alert alert-success" role="alert">
+			<center>{{message}}</center>
+		</div>
+		{% endif %}
+	{% endfor %}
+	</ul>
+{% endif %}
+
+
+
+
 {% endblock %}
 
 {% block scripts %}
+<!--
 <script>
     'use strict';
-
+	
     ;( function ( document, window, index )
     {
         // feature detection for drag&drop upload
@@ -489,7 +526,7 @@
                     ajax.onload = function()
                     {
                         form.classList.remove( 'is-uploading' );
-                        if( ajax.status >= 200 && ajax.status < 1000 )
+                        if( ajax.status >= 200 && ajax.status < 300 )
                         {
                             var data = JSON.parse( ajax.responseText );
                             form.classList.add( data.success == true ? 'is-success' : 'is-error' );
@@ -550,8 +587,6 @@
         });
     }( document, window, 0 ));
 </script>
-
-
-
+-->
 
 {% endblock %}
