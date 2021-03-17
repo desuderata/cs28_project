@@ -368,40 +368,41 @@ def calculate(request):
         return HttpResponse(status=201)
     return HttpResponse(status=400)
 
-
-@login_required
-def module_grades_upload(request):
+def upload_course_grades(request):
     if request.method == "GET":
-        return render(request, 'module_grades_upload.html', {})
+        return render(request, 'upload_course_grades.html', {})
 
     try:
         csv_file = request.FILES.getlist("csv_file")
 
         # if not csv_file.name.endswith('.csv'):
         #   messages.error(request,"File is not CSV type")
-        #    return redirect(reverse("cs28:module_grades_upload"))
+        #    return redirect(reverse("cs28:upload_course_grades"))
         # check if file is too large
         # if csv_file.multiple_chunks():
-        #    return redirect(reverse("cs28:module_grades_upload"))
+        #    return redirect(reverse("cs28:upload_course_grades"))
 
         for file in csv_file:
-
+            success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
                 messages.error(request, "File is not CSV type")
-                return redirect(reverse("cs28:module_grades_upload"))
+                return redirect(reverse("cs28:upload_course_grades"))
 
             # extract course code from the file name, for now hard-coded
             # (expected format: "Grade Roster CourseCode.csv")
             courseCode = file.name[13:-9]
 
             file_data = file.read().decode("utf-8")
-            lines = re.split('\r|\n', file_data)[1:]
+            lines = re.split('\r\n|\r|\n', file_data)[1:]
             for line in lines:
-
+                 
+                if line == '':
+                    continue
+                    
                 fields = re.split('",|,"', line)
                 try:
-
+                    
                     matricNo = Student.objects.get(matricNo=fields[0])
                     alphanum = fields[2]
                     Grade.objects.get_or_create(
@@ -410,16 +411,23 @@ def module_grades_upload(request):
                         alphanum=alphanum,
                     )
                 except Exception as e:
-                    messages.error(request, repr(e))
+                    success = False
+                    messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
-                        "Unable to upload file. "+repr(e))
+                        "Unable to upload file. " +repr(e))
                     pass
+                
+            if (success):
+                messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
+            else:
+                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
 
     except Exception as e:
+        messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
 
-    return redirect(reverse("cs28:module_grades_upload"))
+    return redirect(reverse("cs28:upload_course_grades"))
 
 
 @login_required
