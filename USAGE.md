@@ -11,7 +11,6 @@ Please read this guide **thoroughly** for the application to work as intended. I
 
 
 ## General Features
-***
 
 ### Search
 
@@ -32,7 +31,6 @@ The logo is specially created for the School of Chemistry database. Clicking on 
 
 
 ## User Hierarchy
-***
 
 ### Admin
 As part of the setup process, an admin (superuser) account should have been created. An admin user is able to manage all other users (by adding or removing permissions for each of the hierarchy groups) in addition to data stored in the database.
@@ -44,13 +42,10 @@ By default, a staff is able to access the admin page albeit not being able to ac
 A user in the User group is not able to edit anything on the webpage, upload grades and will not be able to access the admin site. They will still be able to view data and generate graphs.
 
 ## Upload
-***
 
 ## Course Grades
-***
 
 ## Manage and Export CSV
-***
 
 <img src="./cs28_project/static/pics/manage.png"
      alt="manage.png"
