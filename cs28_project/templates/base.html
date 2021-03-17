@@ -56,7 +56,8 @@
             <!-- todo: brand redirects to index 
                            edit svg to include School of Chemistry Database -->
             <div class="d-flex flex-grow-1">
-                <button class="btn btn-sm"
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm mr-4"
                         type="button"
                         id="collapseSidebar">
                     <!-- <i class="fas fa-bars p-0"></i> -->
@@ -67,30 +68,35 @@
                         <span></span>
                     </div>
                 </button>
+                {% endif %}
 
-
-                <a id="logo" class="d-none d-sm-block navbar-brand pl-4" href="{% url 'cs28:index' %}">
+                <a id="logo" class="d-none d-sm-block navbar-brand" href="{% url 'cs28:index' %}">
                     <img class="logo" src="{% static 'icons/UoG_keyline_edited.svg' %}" height="150" alt="UoG brand logo" />
                 </a>
 
-                <!-- if the customer wants to use the other navbar option, its here. -->
-                <!-- use "user.is_authenticated" to check whether user is logged in to show these navbar items -->
-                <!-- <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav">
-                            <a class="nav-item nav-link active" href="{% url 'cs28:index' %}">Home <span class="sr-only">(current)</span></a>
-                            <a class="nav-item nav-link" href="#">Manage</a>
-                            <a class="nav-item nav-link" href="#">Upload</a>
-                        </div>
-                    </div> -->
-
                 {% if user.is_authenticated %}
-                <form action="" class="ml-2 mr-5 my-auto form-inline d-inline w-100">
+                <form action="{% url 'cs28:search_results' %}"
+                      class="ml-2 mr-5 my-auto form-inline d-inline w-100"
+                      method="GET"
+                      value="{{ request.GET.search }}">
                     <div class="input-group">
-                        <input type="search" placeholder="Search or jump to..." aria-label="Search"
-                            class="form-control">
+
+                        <input type="search"
+                               name="search"
+                               placeholder="Search or jump to..."
+                               value="{{ request.GET.search }}"
+                               aria-label="Search"
+                               class="form-control">
+
                         <div class="input-group-append">
-                            <button type="submit" class="btn"><i class="mr-1 fas fa-search"></i> Search</button>
+                            <button type="submit"
+                                    name="submit"
+                                    class="btn"
+                                    value="Search">
+                                <i class="mr-1 fas fa-search"></i> <span id="searchText">Search</span>
+                            </button>
                         </div>
+
                     </div>
                 </form>
 
@@ -138,6 +144,7 @@
         </nav>
     </header>
     <div class="wrapper">
+        {% if user.is_authenticated %}
         <!-- sidebar -->
         <nav id="sidebar" class="active">
             <ul class="nav components flex-column">
@@ -150,15 +157,26 @@
                         </a>
                     </div>
                 </li>
-                <!-- degree -->
+                {% if user.is_superuser or user.is_staff %}
+                <!-- Student Upload -->
+                <li class="nav-item">
+                    <div class="px-1 py-2">
+                        <a class="nav-link" href="{% url 'cs28:student_upload' %}">
+                            <i class="fa-fw fas fa-upload"></i>
+                            <p class="pl-2">Student Upload</p>
+                        </a>
+                    </div>
+                </li>
+                <!-- Grades Upload -->
                 <li class="nav-item">
                     <div class="px-1 py-2">
                         <a class="nav-link" href="{% url 'cs28:upload_course_grades' %}">
                             <i class="fa-fw fas fa-file-upload"></i>
-                            <p class="pl-2">Grades</p>
+                            <p class="pl-2">Grades Upload</p>
                         </a>
                     </div>
                 </li>
+                {% endif %}
                 <!-- students -->
                 <li class="nav-item">
                     <div class="px-1 py-2">
@@ -177,12 +195,12 @@
                         </a>
                     </div>
                 </li>
-                <!-- upload -->
+                <!-- Graphs -->
                 <li class="nav-item">
                     <div class="px-1 py-2">
-                        <a class="nav-link" href="#">
-                            <i class="fa-fw fas fa-upload"></i>
-                            <p class="pl-2">Upload</p>
+                        <a class="nav-link" href="{% url 'cs28:graph' %}">
+                            <i class="fa-fw fas fa-chart-bar"></i>
+                            <p class="pl-2">Graphs</p>
                         </a>
                     </div>
                 </li>
@@ -206,9 +224,10 @@
                 </li>
             </ul>
         </nav>
+        {% endif %}
 
         <!-- body block -->
-        <div id="bodyBlock" class="active">
+        <div id="bodyBlock" class="{% if user.is_authenticated %} active {% else %} logout {% endif %}">
             {% block body_block %}
 
             {% endblock %}
@@ -217,29 +236,72 @@
                 <div class="container">
                     <div class="container-fluid justify-content-center text-center text-md-left">
                         <div class="row">
-                            <div class="col-md-6 mt-md-0 mb-3">
-                                <!-- kinda hoping this would center it abit... still wonky -->
+                            <div class="col-md-4 mt-md-0 mb-3">
                                 <div class="ml-5">
+                                    <h5 class="text-uppercase font-weight-bold">Quick Links</h5>
                                     <ul class="list-unstyled">
-                                        <li>
-                                            <a href="{% url 'cs28:index' %}">Home</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'cs28:manage' %}">Manage and Export CSV</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Upload</a>
-                                        </li>
-                                        {% if user.is_superuser or user.is_staff %}
-                                        <li>
-                                            <a href="{% url 'admin:index' %}">Admin Page</a>
-                                        </li>
+                                        {% if user.is_authenticated %}
+                                            <li>
+                                                <a href="{% url 'cs28:index' %}">Home</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'cs28:manage' %}">Manage and Export CSV</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'cs28:course_grades' %}">Course Grades</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'cs28:help_page' %}">Help</a>
+                                            </li>
+                                            {% if user.is_superuser or user.is_staff %}
+                                                <li>
+                                                    <a href="{% url 'admin:index' %}">Admin Page</a>
+                                                </li>
+                                            {% endif %}
+                                        {% else %}
+                                            <li>
+                                                <a href="{% url 'cs28:login' %}">Login</a>
+                                            </li>
+                                            <li>
+                                                <a href="mailto:Linnea.Soler@glasgow.ac.uk?cc=Smita.Odedra@glasgow.ac.uk&subject=The%20School%20of%20Chemistry%20Database%20Inquiry">Contact Us</a>
+                                            </li>
                                         {% endif %}
                                     </ul>
                                 </div>
                             </div>
+
+                            <div class="col-md-4 mt-md-0 mb-3">
+                                <div class="ml-5">
+                                {% if user.is_authenticated %}
+                                    {% if user.is_superuser or user.is_staff %}
+                                            <h5 class="text-uppercase font-weight-bold">Upload</h5>
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <a href="{% url 'cs28:student_upload' %}">Upload Students</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'cs28:module_grades_upload' %}">Upload Module Grades</a>
+                                                </li>
+                                            </ul>
+                                    {% else %}
+                                            <h5 class="text-uppercase font-weight-bold">Need to edit?</h5>
+                                            <p>
+                                                Contact an administrator<br/>
+                                                to start editing
+                                            </p>
+                                    {% endif %}
+                                {% else %}
+                                        <h5 class="text-uppercase font-weight-bold">Interested?</h5>
+                                        <p>
+                                            Contact the<br/>
+                                            School of Chemistry<br/>
+                                            to learn more
+                                        </p>
+                                {% endif %}
+                                </div>
+                            </div>
         
-                            <div class="col-md-6 mb-md-0 mb-3">
+                            <div class="col-md-4 mb-md-0 mb-3">
                                 <div class="ml-5">
                                     <h5 class="text-uppercase font-weight-bold">The School of Chemistry</h5>
                                     <p>
@@ -277,12 +339,6 @@
             $("#sidebar").mCustomScrollbar({
                 theme: "minimal"
             });
-
-            // $('#collapseSidebar').on('click', function () {
-            //     $('#sidebar').toggleClass('active');
-            //     $('#bodyBlock').toggleClass('active');
-            //     $('.bars').toggleClass('active');
-            // });
 
             $('#collapseSidebar').on('click', function () {
                 $('#sidebar').toggleClass('active');

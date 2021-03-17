@@ -11,39 +11,7 @@
 
 
 {% block head %}
-<!-- add to separate css file later -->
-<style>
-    .container-width {
-        width: 99%
-    }
-
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-
-    .bg-white {
-        background-color: #fefefe;
-    }
-
-    .text-area {
-        /* width: 150px;
-        height: 100px; */
-        width: 300px;
-    }
-
-</style>
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 
 <!-- jump to page -->
 <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
@@ -65,6 +33,7 @@ Manage Students
             <h1>Manage Students</h1>
         </div>
     </div>
+    <div class="mt-3" id="message"></div>
     <div class="row justify-content-between">
         <div class="col-auto d-flex mt-3">
         <!-- <div id="toolbar"> -->
@@ -72,7 +41,7 @@ Manage Students
                 <div class="form-row">
                     <!-- <label class="mx-2">Year: </label> -->
                     <div class="col-auto mr-2">
-                        <select name="year" class="form-control">
+                        <select name="year" id="year" class="form-control">
                             <option value="" selected disabled>Graduation Year</option>
                             {% for year in years %}
                                 <option value="{{ year.gradYear }}">{{ year.gradYear }}</option>
@@ -102,17 +71,17 @@ Manage Students
                 <div class="form-row">
                     <label class="mx-2">Color Code Legend: </label>
                     <div class="col-auto">
-                        <button class="btn btn-success" disabled>Overridden</button>
+                        <button class="btn btn-success" disabled>Degree Overridden</button>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-danger" disabled>Incomplete Course Assessment</button>
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-warning" disabled>Discretionary</button>
                     </div>
-                    <div class="col-auto">
-                        <button class="btn btn-danger" disabled>Missing Grades</button>
-                    </div>
-                    <div class="col-auto">
+                    <!-- <div class="col-auto">
                         <button class="btn btn-primary" disabled>Special Code</button>
-                    </div>
+                    </div> -->
                     <!-- <div class="col-auto">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="anonymizeCheck" value="anonymize">
@@ -186,8 +155,10 @@ Manage Students
 
 {% block scripts %}
 <script>
+    var edit = {% if user.is_superuser or user.is_staff %} true {% else %} false {% endif %};
+
     var $table = $('#table');
-    
+
     var token = '{{ csrf_token }}'
 
     var filename = "degree_classification"
@@ -222,6 +193,7 @@ Manage Students
             exportDataType: "all",
             visibleSearch: true,
             minimumCountColumns: 2,
+            showColumnsSearch: true,
             exportOptions: {
                 fileName: filename
             },
@@ -229,7 +201,8 @@ Manage Students
                 {
                     field: "type",
                     title: "Type",
-                    sortable: true
+                    sortable: true,
+                    visible: true
                 },
                 {
                     field: "mcId",
@@ -294,10 +267,15 @@ Manage Students
                     sortable: true
                 },
                 {
-                    field: "oAward",
-                    title: "Original Award",
+                    field: "gpa",
+                    title: "GPA",
                     sortable: true,
                     visible: false
+                },
+                {
+                    field: "oAward",
+                    title: "Original Award",
+                    sortable: true
                 },
                 {
                     field: "award",
@@ -305,6 +283,7 @@ Manage Students
                     sortable: true,
                     searchable: false,
                     editable: {
+                        disabled: !edit,
                         type: 'select',
                         mode: 'inline',
                         source: [
@@ -343,6 +322,7 @@ Manage Students
                     sortable: true,
                     searchable: false,
                     editable: {
+                        disabled: !edit,
                         mode: "inline",
                         inputclass: "text-area",
                         emptytext: "Add Note"
@@ -364,10 +344,16 @@ Manage Students
                         sortable: true
                     },
                     {
+                        field: "oAlpha",
+                        title: "Original Grade",
+                        sortable: true,
+                    },
+                    {
                         field: "alpha",
                         title: "Alphanumeric Grade",
                         sortable: true,
                         editable: {
+                            disabled: !edit,
                             type: 'select',
                             mode: 'inline',
                             source: [
@@ -450,6 +436,18 @@ Manage Students
                         title: "22pt. (4 d.p.)",
                         sortable: true
                     },
+                    {
+                    field: "subNotes",
+                    title: "Notes",
+                    sortable: true,
+                    searchable: false,
+                    editable: {
+                        disabled: !edit,
+                        mode: "inline",
+                        inputclass: "text-area",
+                        emptytext: "Add Note"
+                    }
+                }
                 ]
                 $el.bootstrapTable({
                     rowStyle: 'rowStyle',
@@ -462,10 +460,10 @@ Manage Students
 
     // to highlight rows in the future
     function rowStyle(row, index) {
-        // console.log(row.notes);
-        if (row.type === 'Overridden') {
+        if (row.type === "Incomplete Course Assessment" ||
+            row.type === "Course Grade Adjusted") {
             return {
-                classes: 'table-success'
+                classes: 'table-danger'
             }
         }
         if (row.type === "Discretionary") {
@@ -473,9 +471,9 @@ Manage Students
                 classes: 'table-warning'
             }
         }
-        if (row.type === "Missing Grades") {
+        if (row.type === "Degree Overridden") {
             return {
-                classes: 'table-danger'
+                classes: 'table-success'
             }
         }
         if (row.type === "Special Code") {
@@ -487,7 +485,7 @@ Manage Students
             row.alpha === "MV" ||
             row.alpha === "CR") {
             return {
-                classes: 'table-primary'
+                classes: 'table-danger'
             }
         }
         if (row.alpha === "-") {
@@ -495,6 +493,12 @@ Manage Students
                 classes: 'table-danger'
             }
         }
+        if (row.alpha != row.oAlpha){
+            return {
+                classes: 'table-success'
+            }
+        }
+
         return 0
     }
 
@@ -543,7 +547,7 @@ Manage Students
                     $table.bootstrapTable('hideColumn', 'gpa3');
                     $table.bootstrapTable('hideColumn', 'gpa2');
                     $table.bootstrapTable('showColumn', 'gpa1');
-                    $table.bootstrapTable('hideColumn', 'oAward');
+                    $table.bootstrapTable('showColumn', 'oAward');
                     $table.bootstrapTable('showColumn', 'award');
                     $table.bootstrapTable('showColumn', 'notes');
                     break;
@@ -552,34 +556,54 @@ Manage Students
             if (iteration>2) iteration = 1;
             $(this).data('iteration',iteration);
 
-            
+
         });
     });
 
     var calculate_data;
 
+    function error(message) {
+        $('#message').html(
+            `<div class="alert alert-danger alert-dismissible fade show" role="alert"> \
+                ${message} \
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
+                    <span aria-hidden="true">&times;</span> \
+                </button>\
+            </div>`
+        )
+    }
+
+    var clear = function() {$('#message').empty()};
+
+
     // get students and calculate data
+    function calculate() {
+        calculate_data = $('#calculateForm').serialize();
+        $table.bootstrapTable('refreshOptions', {
+            exportOptions: {"fileName": document.getElementById("plan").value}
+        });
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            url: "{% url 'cs28:calculate' %}",
+            type: "POST",
+            data: calculate_data,
+            success: function (data) {
+                clear();
+                $table.bootstrapTable('refresh', {
+                    url: "{% url 'cs28:data' %}".concat("?", calculate_data)
+                });
+            },
+            error: function (data) {
+                error('Error retrieving data. Please ensure that both <strong>Graduation Year</strong> and <strong>Academic Plans</strong> are selected.')
+            }
+        })
+    }
     $(function() {
         $('#calculate').click(function() {
-            calculate_data = $('#calculateForm').serialize();
-            $table.bootstrapTable('refreshOptions', {
-                exportOptions: {"fileName": document.getElementById("plan").value}
-            });
-            $.ajax({
-                headers: { "X-CSRFToken": token },
-                url: "{% url 'cs28:calculate' %}",
-                type: "POST",
-                data: calculate_data,
-                success: function (data) {
-                    $table.bootstrapTable('refresh', {
-                        url: "{% url 'cs28:data' %}".concat("?", calculate_data)
-                    });
-                }
-            })
+            calculate();
         })
     });
 
-    console.log(filename)
     // ajax post to update database
     $('#table').on('editable-save.bs.table', function(e, field, row, oldValue, $el){
         console.log(e);  // event
@@ -587,6 +611,10 @@ Manage Students
         console.log(row);  // row as json
         console.log(oldValue);  // old value? it just returns a 0
         console.log($el);  // old value
+        if (row.alpha === "-") {
+            error('Error updating data. Please ensure that <strong>Alphanumeric Grade</strong> is not <strong><i>Empty</i></strong>');
+            return;
+        }
         $.ajax({
             headers: { "X-CSRFToken": token },
             url:"{% url 'cs28:update' %}",
@@ -599,8 +627,11 @@ Manage Students
             dataType: 'json',
             success: function (data) {
                 if (row.gradeId) {
+                    if (!(field === "subNotes")){
+                        clear();
+                    }
                     ajax_calculate(token, row, data);
-                    ajax_update(token, row, data);
+                    // ajax_update(token, row, data);
                 } else {
                     ajax_update(token, row, data);
                 }
@@ -621,7 +652,8 @@ Manage Students
             }
         };
 
-        // updates the table 
+        // updates the table on every edit. its possible to refresh manually
+        // remove the call to this function if required
         function ajax_update(token, row, data) {
             $.ajax({
                 headers: { "X-CSRFToken": token },
@@ -635,8 +667,25 @@ Manage Students
                 }
             });
         };
+    });
 
-        console.log(row.parentElement);
+    // for search
+    $(document).ready(function() {
+        // check for query param
+        var url = new URL(document.location);
+        var params = url.searchParams;
+
+        var plan = params.get("plan");
+        var year = params.get("year");
+        var id = params.get("id");
+        if (plan && year && id) {
+            $table.bootstrapTable('refreshOptions', {
+                searchText: id
+            });
+            $("#plan").val(plan);
+            $("#year").val(year);
+            calculate();
+        }
     });
 </script>
 
@@ -645,7 +694,7 @@ Manage Students
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.0.14/jspdf.plugin.autotable.js" integrity="sha512-9xVpHMGorTPbSEFD6+ex0dKDYKxvciATI70tPCHCGxTkBD3HXboXLTnnpMwgdxms9uOwocFZdUx4AFl4p0FHag==" crossorigin="anonymous"></script>
 
 <!-- excel export -->
-<script type="text/javascript" src="libs/js-xlsx/xlsx.core.min.js"></script>
+<!-- <script type="text/javascript" src="libs/js-xlsx/xlsx.core.min.js"></script> -->
 
 <!-- keystrokes -->
 <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>

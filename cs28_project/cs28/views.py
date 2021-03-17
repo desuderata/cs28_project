@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
+from django.db.models import Q
 from decimal import localcontext, Decimal, ROUND_HALF_UP
 
 from .convert_to_ttpt import to_ttpt
@@ -22,30 +23,25 @@ from cs28.models import Student, Grade, GraduationYear, AcademicPlan
 
 import re
 import logging
-from .models.academic_plan import AcademicPlan
-from .models.graduation_year import GraduationYear
-
-from .models.grade import Grade
-from .models.student import Student
 from django.contrib import messages
-
 
 
 def index(request):
     return render(request, 'index.html')
 
+
 @login_required
 def student_upload(request):
     if request.method == "GET":
-        return render(request, 'student_upload.html',{})
-        
+        return render(request, 'student_upload.html', {})
+
     try:
         csv_file = request.FILES.getlist("csv_file")
         for file in csv_file:
             file_data = file.read().decode("utf-8")
             lines = re.split('\r|\n', file_data)[1:]
             for line in lines:
-               
+
                 fields = line.split(",")
                 try:
                     print(fields)
@@ -54,10 +50,9 @@ def student_upload(request):
                     surname = fields[2][:-1]
                     academicPlan = AcademicPlan.objects.get(planCode=fields[3])
                     gradYear = GraduationYear.objects.get(gradYear=fields[4])
-                   
-                       
+
                     Student.objects.get_or_create(
-                       
+
                         matricNo=matricNo,
                         givenNames=givenNames,
                         surname=surname,
@@ -66,13 +61,13 @@ def student_upload(request):
                     )
 
                 except Exception as e:
-                    logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))                    
+                    logging.getLogger("error_logger").error(
+                        "Unable to upload file. "+repr(e))
                     pass
 
-
-
     except Exception as e:
-        logging.getLogger("error_logger").error("Unable to upload file. "+repr(e))
+        logging.getLogger("error_logger").error(
+            "Unable to upload file. "+repr(e))
 
     return redirect(reverse("cs28:student_upload"))
 
@@ -84,7 +79,11 @@ def user_login(request):
         # get username and password then check if acc is valid
         username = request.POST.get("username")
         password = request.POST.get("password")
+        remember_me = request.POST.get("remember") == "remember"
+
         user = authenticate(username=username, password=password)
+        if not remember_me:
+            request.session.set_expiry(0)
 
         if user:
             if user.is_active:
@@ -95,7 +94,7 @@ def user_login(request):
 
         else:
             # wrong details
-            print(f"Invalid login details: {username}, {password}")
+            messages.error(request, "Invalid username or password")
             return redirect(reverse('cs28:login'))
     else:
         return render(request, 'login.html')
@@ -115,14 +114,6 @@ def manage(request):
     return render(request, 'manage.html', context=ctx)
 
 
-# @login_required
-# def data(request):
-#     ctx = {"student": Student.objects.all(),
-#            "years": GraduationYear.objects.all().order_by('gradYear'),
-#            "plans": AcademicPlan.objects.all().order_by('planCode'), }
-#     return render(request, 'data.html', context=ctx)
-
-
 def is_discretionary(student):
     award = student.finalAward4
     if ((17 < award < 18) or
@@ -139,6 +130,7 @@ def data(request):
     plan = request.GET.get('plan', None)
 
     if not (year and plan):
+        messages.error(request, "Error retrieving data")
         return HttpResponse(status=400)
 
     students = Student.objects.filter(gradYear=year,
@@ -148,23 +140,6 @@ def data(request):
 
     for student in students:
         row = {}
-
-        if student.updatedAward != "-1":
-            row["type"] = "Overridden"
-        elif is_discretionary(student):
-            row["type"] = "Discretionary"
-        elif student.isMissingGrades:
-            row["type"] = "Missing Grades"
-        elif student.hasSpecialCode:
-            row["type"] = "Special Code"
-        else:
-            row["type"] = "&#128077;"
-
-        # row["type"] = "Overridden" if student.updatedAward != "-1" else \
-        #     "Discretionary" if student.is_discretionary else \
-        #     "Missing Grades" if student.isMissingGrades else \
-        #     "Special Code" if student.hasSpecialCode else \
-        #     "&#128077;"  # Everything is good (thumbs up emoji)
 
         row["id"] = student.matricNo
         row["mcId"] = student.matricNo
@@ -177,6 +152,7 @@ def data(request):
         row["gpa3"] = str(student.finalAward3)
         row["gpa2"] = str(student.finalAward2)
         row["gpa1"] = str(student.finalAward1)
+        row["gpa"] = str(student.finalAward)
         row["oAward"] = student.award_as_mc()
         row["award"] = student.award_as_mc() if student.updatedAward == "-1" \
             else student.updatedAward
@@ -186,24 +162,47 @@ def data(request):
 
         sub = []
         grades = student.grade_set.all()
+
         # courses in the student academic plan
         courses = [c for c in student.academicPlan.get_courses() if c]
+        is_updated = False
         for course in courses:
             sub_row = {}
             if grades.filter(courseCode=course).exists():
+
                 grade = grades.filter(courseCode=course)
                 sub_row["gradeId"] = student.matricNo
                 sub_row["code"] = grade.values('courseCode')[0]['courseCode']
+                sub_row["subNotes"] = grade.values('notes')[0]['notes']
+
                 alpha = grade.values('alphanum')[0]['alphanum']
-                sub_row["alpha"] = alpha
-                sub_row["ttpt"] = to_ttpt(alpha)
+                u_alpha = grade.values('updatedGrade')[0]['updatedGrade']
+                is_updated = u_alpha != "-1" if not is_updated else is_updated
+
+                grade = alpha if u_alpha == "-1" else u_alpha
+                sub_row["oAlpha"] = alpha
+                sub_row["alpha"] = grade
+                sub_row["ttpt"] = to_ttpt(grade)
             else:
                 sub_row["gradeId"] = student.matricNo
                 sub_row["code"] = course
                 sub_row["alpha"] = "-"
                 sub_row["ttpt"] = "-"
+                sub_row["subNotes"] = ""
             sub.append(sub_row)
         row["sub"] = sub
+
+        if student.updatedAward != "-1":
+            row["type"] = "Degree Overridden"
+        elif is_updated and student.hasSpecialCode:
+            row["type"] = "Course Grade Adjusted"
+        elif student.isMissingGrades or student.hasSpecialCode:
+            row["type"] = "Incomplete Course Assessment"
+        elif is_discretionary(student):
+            row["type"] = "Discretionary"
+        else:
+            row["type"] = "&#128077;"  # Thumbs up emoji
+
         json_array.append(row)
 
     return JsonResponse(json_array, safe=False)
@@ -239,16 +238,32 @@ def update_field(request):
                 student.updatedAward = award if award != o_award else "-1"
                 student.save()
 
-        if field == "alpha":
+        if field == "alpha" or field == "subNotes":
             # First seven chars of gradeId is matric Num
             matric = row["gradeId"][:7]
             code = row["code"]
 
             student = Student.objects.get(matricNo=matric)
-            grade = Grade.objects.get(matricNo=student, courseCode=code)
 
-            grade.alphanum = row["alpha"]
-            grade.save()
+            if Grade.objects.filter(matricNo=student, courseCode=code).exists():
+
+                grade = Grade.objects.get(matricNo=student, courseCode=code)
+                if field == "alpha":
+                    alpha = row["alpha"]
+                    o_alpha = row["oAlpha"]
+
+                    grade.updatedGrade = alpha if alpha != o_alpha else "-1"
+                    grade.save()
+                if field == "subNotes":
+                    grade.notes = row["subNotes"]
+                    grade.save()
+            else:
+                if field == "alpha":
+                    print(row['alpha'])
+                    grade, created = Grade.objects.get_or_create(
+                        matricNo=student, courseCode=code)
+                    grade.alphanum = row["alpha"]
+                    grade.save()
 
         data = {
             'Status': 'success'
@@ -317,6 +332,10 @@ def calculate(request):
             has_special_code = False
 
             for grade in grades.iterator():
+                o_grade = grade.get_alphanum_as_num()
+                u_grade = grade.get_updated_as_num()
+
+                score = o_grade if u_grade == "-1" else u_grade
                 if grade.is_grade_a_special_code():
                     has_special_code = True
                     continue
@@ -326,7 +345,8 @@ def calculate(request):
                     continue
 
                 # dot of vec to get sum of all weighted scores
-                numerical_score.append(grade.get_alphanum_as_num())
+
+                numerical_score.append(score)
                 weight_list.append(course_weights[plan_code][grade.courseCode])
                 overall_points = np.dot(weight_list, numerical_score)
 
@@ -335,6 +355,7 @@ def calculate(request):
                 return Decimal(str(flt)).quantize(Decimal(dec),
                                                   rounding=ROUND_HALF_UP)
 
+            student.finalAward = round(overall_points, "0")
             student.finalAward1 = round(overall_points, "0.0")
             student.finalAward2 = round(overall_points, "0.00")
             student.finalAward3 = round(overall_points, "0.000")
@@ -408,5 +429,42 @@ def upload_course_grades(request):
 
     return redirect(reverse("cs28:upload_course_grades"))
 
+
+@login_required
 def help(request):
     return render(request, 'help.html')
+
+
+@login_required
+def search_results(request):
+    """Search results view.
+
+    Splits the query, iterates through it then filter results
+    """
+    if request.method == "GET":
+        query = request.GET.get('search')
+        submit_button = request.GET.get('submit')
+
+        if query:
+            student = Student.objects.all()
+            words = query.split()
+
+            for w in words:
+                lookup_student = Q(matricNo__icontains=w) | \
+                    Q(givenNames__icontains=w) | \
+                    Q(surname__icontains=w) | \
+                    Q(gradYear__gradYear__icontains=w) | \
+                    Q(academicPlan__planCode__icontains=w)
+                student = student.filter(lookup_student).distinct()
+            ctx = {'students': student,
+                   'submit_button': submit_button}
+            return render(request, 'search_results.html', ctx)
+
+    return render(request, 'search_results.html')
+
+
+@login_required
+def graph(request):
+    ctx = {"years": GraduationYear.objects.all(),
+           "plans": AcademicPlan.objects.all(), }
+    return render(request, 'graph.html', context=ctx)
