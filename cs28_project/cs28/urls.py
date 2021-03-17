@@ -7,13 +7,13 @@ author: Yee Hou, Teoh (2471020t)
         Kien Welch 2371692w
 """
 from django.urls import path
+from django.conf.urls import include
 from cs28 import views
 
 app_name = 'cs28'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    # path('cs28', include('django.contrib.auth.urls')),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
 
@@ -31,4 +31,5 @@ urlpatterns = [
     path('help-page/', views.help, name='help_page'),
     path('search-results/', views.search_results, name="search_results"),
     path('graph/', views.graph, name="graph"),
+
 ]
