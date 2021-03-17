@@ -59,55 +59,23 @@ This web app is built on:
 - [Jquery 3.5.1](https://jquery.com/download/)
 
 ## Installation / Setup
-
-1. Create a virtual environment:
-
-```bash
-conda create -n cs28 python
-conda activate cs28
-```
-
-2. Clone the repository:
-```bash
-git clone https://stgit.dcs.gla.ac.uk/tp3-2020-CS28/cs28-main.git
-```
-
-3. Use the package manager [pip](https://pip.pypa.io/en/stable/) to install packages through the requirements.txt file:
-```bash
-pip install -r requirements.txt
-```
-
-4. Migrate database models:
-```bash
-cd cs28_project
-python manage.py makemigrations cs28
-python manage.py migrate
-```
-
-5. Run the server
-```bash
-python manage.py runserver
-```
-
-### Superuser Account
-
-**To create a superuser account:**
-
-```bash
-python manage.py createsuperuser
-```
-
-You will be prompted to enter your username, email and password.
+See [INSTALL.md](INSTALL.md) for full instructions on installation
 
 ## Usage
+
+See [USAGE.md](USAGE.md) for detailed usage guide.
 
 ### Features
 
 **User Interface**
 - Professional look that is consistent with other webpages from the University
 - Sidebar with quick access icons
+- Search with quick links to student in [course grades](USAGE.md#course-grades) or [manage](USAGE.md#manage-and-export-csv)
+- Row highlighting in tables
 
-**Security**
+**Security**  
+- Safe from [OWASP Top 10 vulnerabilities](https://owasp.org/www-project-top-ten/)  
+  > *Ensure that site is appropriately [set up](INSTALL.md#live-server) for deployment*
 - [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection
 
 ## Contributing
@@ -116,6 +84,8 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## Licenses
+
+- CS28 Project ([MIT](LICENSE))
 
 - Bootstrap table ([MIT](https://github.com/wenzhixin/bootstrap-table/blob/master/LICENSE))
 
