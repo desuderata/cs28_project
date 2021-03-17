@@ -15,7 +15,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
-from django.db.models import Q
 from decimal import localcontext, Decimal, ROUND_HALF_UP
 
 from .convert_to_ttpt import to_ttpt
@@ -23,7 +22,13 @@ from cs28.models import Student, Grade, GraduationYear, AcademicPlan
 
 import re
 import logging
+from .models.academic_plan import AcademicPlan
+from .models.graduation_year import GraduationYear
+
+from .models.grade import Grade
+from .models.student import Student
 from django.contrib import messages
+
 
 
 def index(request):
@@ -55,7 +60,7 @@ def student_upload(request):
                     givenNames = fields[1][1:]
                     surname = fields[2][:-1]
                     academicPlan = AcademicPlan.objects.get(planCode=fields[3])
-                    gradYear = GraduationYear.objects.get(gradYear=fields[4])
+                    #gradYear = GraduationYear.objects.get(gradYear=fields[4])
 
                     Student.objects.get_or_create(
 
@@ -63,17 +68,26 @@ def student_upload(request):
                         givenNames=givenNames,
                         surname=surname,
                         academicPlan=academicPlan,
-                        gradYear=gradYear,
+                        #gradYear=gradYear,
                     )
 
                 except Exception as e:
+                    success = False
+                    messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
-                        "Unable to upload file. "+repr(e))
+                        "Unable to upload file. " +repr(e))
                     pass
+                    
+            if (success):
+                messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
+            else:
+                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
 
     except Exception as e:
+        messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
+
 
     return redirect(reverse("cs28:student_upload"))
 
