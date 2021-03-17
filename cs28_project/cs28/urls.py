@@ -25,8 +25,5 @@ urlpatterns = [
     path('module-grades/', views.module_grades, name='module_grades'),
     path('manage/data/', views.data, name='data'),
     path('upload-course-grades/', views.upload_course_grades, name='upload_course_grades'),
-    path('help-page/', views.help, name='help_page'),
-    path('search-results/', views.search_results, name="search_results"),
-    path('graph/', views.graph, name="graph"),
-
+    path('help-page/', views.help, name='help_page')
 ]
