@@ -28,7 +28,7 @@ from .models.graduation_year import GraduationYear
 from .models.grade import Grade
 from .models.student import Student
 from django.contrib import messages
-
+import csv
 
 
 def index(request):
@@ -73,21 +73,24 @@ def student_upload(request):
 
                 except Exception as e:
                     success = False
-                    messages.error(request,"[" + line + "] " + str(e))
+                    messages.error(request, "[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
-                        "Unable to upload file. " +repr(e))
+                        "Unable to upload file. " + repr(e))
                     pass
-                    
+
             if (success):
-                messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
+                messages.success(request, "All grades from file " +
+                                 file.name + " were uploaded successfully!")
             else:
-                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
+                messages.warning(request, "File " + file.name +
+                                 """ uploaded, but not all grades were uploaded
+                                     successfully. Please check the error
+                                     messages above.""")
 
     except Exception as e:
         messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
-
 
     return redirect(reverse("cs28:student_upload"))
 
@@ -174,9 +177,9 @@ def data(request):
         row["gpa1"] = str(student.finalAward1)
         row["gpa"] = str(student.finalAward)
         row["oAward"] = student.award_as_mc()
-        row["award"] = student.award_as_mc() if student.updatedAward == "-1" \
+        row["award"] = student.award_as_mc() if student.updatedAward == "-1"\
             else student.updatedAward
-        row["mcAward"] = student.award_as_mc() if student.updatedAward == "-1" \
+        row["mcAward"] = student.award_as_mc() if student.updatedAward == "-1"\
             else student.updatedAward
         row["notes"] = student.notes
 
@@ -388,6 +391,7 @@ def calculate(request):
         return HttpResponse(status=201)
     return HttpResponse(status=400)
 
+
 @login_required
 def upload_course_grades(request):
     if request.method == "GET":
@@ -417,13 +421,13 @@ def upload_course_grades(request):
             file_data = file.read().decode("utf-8")
             lines = re.split('\r\n|\r|\n', file_data)[1:]
             for line in lines:
-                 
+
                 if line == '':
                     continue
-                    
+
                 fields = re.split('",|,"', line)
                 try:
-                    
+
                     matricNo = Student.objects.get(matricNo=fields[0])
                     alphanum = fields[2]
                     Grade.objects.get_or_create(
@@ -433,15 +437,19 @@ def upload_course_grades(request):
                     )
                 except Exception as e:
                     success = False
-                    messages.error(request,"[" + line + "] " + str(e))
+                    messages.error(request, "[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
-                        "Unable to upload file. " +repr(e))
+                        "Unable to upload file. " + repr(e))
                     pass
-                
+
             if (success):
-                messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
+                messages.success(request, "All grades from file " +
+                                 file.name + " were uploaded successfully!")
             else:
-                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
+                messages.warning(request, "File " + file.name +
+                                 """ uploaded, but not all grades were uploaded
+                                     successfully. Please check the error
+                                     messages above.""")
 
     except Exception as e:
         messages.error(request, e)
@@ -489,3 +497,50 @@ def graph(request):
     ctx = {"years": GraduationYear.objects.all(),
            "plans": AcademicPlan.objects.all(), }
     return render(request, 'graph.html', context=ctx)
+
+
+@login_required
+def upload_academic_plan(request):
+    if request.method == "GET":
+        return render(request, 'upload_academic_plan.html')
+
+    try:
+        files = request.FILES.getlist("file")
+
+        for file in files:
+            if not file.name.endswith('.csv'):
+                print("File is not CSV type")
+                messages.error(request, "File is not CSV type")
+                return redirect(reverse("cs28:upload_academic_plan"))
+
+            year = file.name[-9:-4]
+            decoded_file = file.read().decode('utf-8').splitlines()
+            grad_year, g_created = GraduationYear.objects.get_or_create(
+                gradYear=year)
+            file_data = csv.reader(decoded_file[1:],
+                                   quotechar='"',
+                                   delimiter=',',
+                                   quoting=csv.QUOTE_ALL,
+                                   skipinitialspace=True)
+            for line in file_data:
+                if line == '':
+                    continue
+                # course name and weight only
+                courses = line[3:]
+                acad_plan = AcademicPlan.objects
+                plan, p_created = acad_plan.get_or_create(gradYear=grad_year,
+                                                          planCode=line[0],
+                                                          courseCode=line[1],
+                                                          mcName=line[2])
+                i = 0
+
+                for c, w in zip(courses[::2], courses[1::2]):
+                    i += 1
+                    if c and w:
+                        setattr(plan, f"course_{i}", c)
+                        setattr(plan, f"weight_{i}", w)
+                        plan.save()
+    except Exception as e:
+        print(str(e))
+
+    return redirect(reverse("cs28:upload_academic_plan"))
