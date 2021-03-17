@@ -50,7 +50,7 @@ def student_upload(request):
                 return redirect(reverse("cs28:student_upload"))
 
             file_data = file.read().decode("utf-8")
-            lines = re.split('\r|\n', file_data)[1:]
+            lines = re.split('\r\n|\r|\n', file_data)[1:]
             for line in lines:
 
                 fields = line.split(",")
@@ -60,7 +60,7 @@ def student_upload(request):
                     givenNames = fields[1][1:]
                     surname = fields[2][:-1]
                     academicPlan = AcademicPlan.objects.get(planCode=fields[3])
-                    #gradYear = GraduationYear.objects.get(gradYear=fields[4])
+                    gradYear = GraduationYear.objects.get(gradYear=fields[4])
 
                     Student.objects.get_or_create(
 
@@ -68,7 +68,7 @@ def student_upload(request):
                         givenNames=givenNames,
                         surname=surname,
                         academicPlan=academicPlan,
-                        #gradYear=gradYear,
+                        gradYear=gradYear,
                     )
 
                 except Exception as e:
