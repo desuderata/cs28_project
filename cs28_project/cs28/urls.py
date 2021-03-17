@@ -20,8 +20,7 @@ urlpatterns = [
     path('module-grades/', views.module_grades, name='module_grades'),
     path('course-grades/', views.module_grades, name='course_grades'),
     path('student-upload/', views.student_upload, name='student_upload'),
-    path('module-grades-upload/', views.module_grades_upload,
-         name='module_grades_upload'),
+    path('upload-course-grades/', views.upload_course_grades, name='upload_course_grades'),
 
     path('manage/', views.manage, name='manage'),
     path('manage/calculate/', views.calculate, name='calculate'),

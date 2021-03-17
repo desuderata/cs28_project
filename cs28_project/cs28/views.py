@@ -368,6 +368,7 @@ def calculate(request):
         return HttpResponse(status=201)
     return HttpResponse(status=400)
 
+@login_required
 def upload_course_grades(request):
     if request.method == "GET":
         return render(request, 'upload_course_grades.html', {})
