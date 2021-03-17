@@ -38,6 +38,12 @@ def student_upload(request):
     try:
         csv_file = request.FILES.getlist("csv_file")
         for file in csv_file:
+            success = True
+            if not file.name.endswith('.csv'):
+                print("File is not CSV type")
+                messages.error(request, "File is not CSV type")
+                return redirect(reverse("cs28:student_upload"))
+
             file_data = file.read().decode("utf-8")
             lines = re.split('\r|\n', file_data)[1:]
             for line in lines:

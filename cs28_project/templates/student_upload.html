@@ -351,7 +351,7 @@
           enctype="multipart/form-data"
           novalidate=""
           class="box has-advanced-upload">
-		{% csrf_token %}
+				{% csrf_token %}
         <div class="box__input">
             <svg class="box__icon"
                  xmlns="http://www.w3.org/2000/svg"
@@ -367,7 +367,7 @@
                    data-multiple-caption="{count} files selected"
                    multiple="">
             <label for="file">
-                <strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.
+                <!--<strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.-->
             </label>
             <button type="submit" class="box__button ">Upload</button>
         </div>
@@ -385,16 +385,32 @@
 {% if messages %}
 	<ul class="messages">
 	{% for message in messages %}
-		<script>M.toast({html:"{{message})", classes:'blue rounded', 
-			displayLength:2000})</script>
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+		<div class="alert alert-danger" role="alert">
+			<center>{{message}}</center>
+		</div>
+		{% endif %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+		<div class="alert alert-warning" role="alert">
+			<center>{{message}}</center>
+		</div>
+		{% endif %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+		<div class="alert alert-success" role="alert">
+			<center>{{message}}</center>
+		</div>
+		{% endif %}
 	{% endfor %}
 	</ul>
 {% endif %}
 
 
+
+
 {% endblock %}
 
 {% block scripts %}
+<!--
 <script>
     'use strict';
 	
@@ -510,7 +526,7 @@
                     ajax.onload = function()
                     {
                         form.classList.remove( 'is-uploading' );
-                        if( ajax.status >= 200 && ajax.status < 500 )
+                        if( ajax.status >= 200 && ajax.status < 300 )
                         {
                             var data = JSON.parse( ajax.responseText );
                             form.classList.add( data.success == true ? 'is-success' : 'is-error' );
@@ -571,8 +587,6 @@
         });
     }( document, window, 0 ));
 </script>
-
-
-
+-->
 
 {% endblock %}
