@@ -46,7 +46,6 @@ A user in the User group is not able to edit anything on the webpage, upload gra
 ## Course Grades
 This is where student's course grades are filtered and displayed, this page has viewing permission only, there is no editing from the user. 
 Using the search bar that is located above "Alphanumeric Grade", allows the user to search for different information and will display only the data that matches the user's input, for example this could be a course code, studentId or a grade. 
-Different academic years can also be filered using the "Year" drop down menu on the left hand of the screen.
 The arrows next to the table column headers allow for users to display the requested data either in asending or desending order and the column icon to the far right of the screen above "22pt Grade" allows the user to toggle what data feilds are shown. 
 
 ## Manage and Export CSV
