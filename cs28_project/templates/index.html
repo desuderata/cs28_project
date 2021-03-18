@@ -169,6 +169,21 @@
     <div class="py-5 container-fluid">
         <div class="d-flex justify-content-around">
             <div class="row nav-buttons w-100 px-5">
+
+                <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
+                    <button class="shadow btn btn-light btn-block btn-sq"
+                            type ="submit"
+                            onclick="location.href = '{% url 'cs28:course_grades' %}';">
+                        <h1>COURSE<br/>GRADES</h1>
+                        <br>
+
+                        <i class="fa-fw fas fa-award"></i>
+                        <br>
+
+                        <h5>Go to...</h5>
+                    </button>
+                </div>
+
                 <div class="col-md-3 col-sm-6 col d-flex justify-content-center py-2">
                     <button class="shadow btn btn-light btn-block btn-sq"
                             type ="submit"
@@ -186,25 +201,11 @@
                 <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
                     <button class="shadow btn btn-light btn-block btn-sq"
                             type ="submit"
-                            onclick="location.href = '{% url 'cs28:student_upload' %}';">
-                        <h1>STUDENT<br/>UPLOAD</h1>
+                            onclick="location.href = '{% url 'cs28:graph' %}';">
+                        <h1>GENERATE<br/>GRAPHS</h1>
                         <br>
 
-                        <i class="fa-fw fas fa-upload"></i>
-                        <br>
-
-                        <h5>Go to...</h5>
-                    </button>
-                </div>
-
-            <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
-                <button class="shadow btn btn-light btn-block btn-sq"
-                        type ="submit"
-                        onclick="location.href = '{% url 'cs28:upload_course_grades' %}';">
-                    <h1>GRADES</h1>
-                    <br>
-
-                        <i class="fa-fw fas fa-file-upload"></i>
+                        <i class="fa-fw fas fa-chart-bar"></i>
                         <br>
 
                         <h5>Go to...</h5>
@@ -214,11 +215,11 @@
                 <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
                     <button class="shadow btn btn-light btn-block btn-sq"
                             type ="submit"
-                            onclick="location.href = '{% url 'cs28:course_grades' %}';">
-                        <h1>COURSE<br/>GRADES</h1>
+                            onclick="location.href = '{% url 'cs28:help_page' %}';">
+                        <h1>HELP<br/>PAGE</h1>
                         <br>
 
-                        <i class="fa-fw fas fa-award"></i>
+                        <i class="fa-fw fas fa-question-circle"></i>
                         <br>
 
                         <h5>Go to...</h5>

@@ -9,6 +9,7 @@ author: Yee Hou, Teoh (2471020t)
 """
 import numpy as np
 import json
+import time
 
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -540,6 +541,7 @@ def upload_academic_plan(request):
                         setattr(plan, f"course_{i}", c)
                         setattr(plan, f"weight_{i}", w)
                         plan.save()
+            time.sleep(1)
     except Exception as e:
         print(str(e))
 
