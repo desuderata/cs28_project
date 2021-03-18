@@ -42,8 +42,8 @@ def student_upload(request):
         return render(request, 'student_upload.html', {})
 
     try:
-        files = request.FILES.getlist("file")
-        for file in files:
+        csv_file = request.FILES.getlist("csv_file")
+        for file in csv_file:
             success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
@@ -395,7 +395,7 @@ def upload_course_grades(request):
         return render(request, 'upload_course_grades.html', {})
 
     try:
-        csv_file = request.FILES.getlist("csv_file")
+        files = request.FILES.getlist("file")
 
         # if not csv_file.name.endswith('.csv'):
         #   messages.error(request,"File is not CSV type")
@@ -404,7 +404,7 @@ def upload_course_grades(request):
         # if csv_file.multiple_chunks():
         #    return redirect(reverse("cs28:upload_course_grades"))
 
-        for file in csv_file:
+        for file in files:
             success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
