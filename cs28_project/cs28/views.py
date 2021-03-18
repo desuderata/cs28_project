@@ -9,6 +9,7 @@ author: Yee Hou, Teoh (2471020t)
 """
 import numpy as np
 import json
+import time
 
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -41,7 +42,7 @@ def student_upload(request):
         return render(request, 'student_upload.html', {})
 
     try:
-        csv_file = request.FILES.getlist("csv_file")
+        files = request.FILES.getlist("file")
         for file in csv_file:
             success = True
             if not file.name.endswith('.csv'):
@@ -82,6 +83,7 @@ def student_upload(request):
                 messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
             else:
                 messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
+            time.sleep(1)
 
     except Exception as e:
         messages.error(request, e)
