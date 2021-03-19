@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cs28'
+    'cs28',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -188,5 +189,13 @@ DATABASES['default'].update(prod_db)
 
 # for development purposes only
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+# SMTP
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+DEFAULT_FROM_EMAIL = "team@cs28.com"
+
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": "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",
+}
