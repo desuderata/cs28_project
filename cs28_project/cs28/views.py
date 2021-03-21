@@ -396,10 +396,6 @@ def upload_course_grades(request):
 
     try:
         files = request.FILES.getlist("file")
-
-        # if not csv_file.name.endswith('.csv'):
-        #   messages.error(request,"File is not CSV type")
-        #    return redirect(reverse("cs28:upload_course_grades"))
         # check if file is too large
         # if csv_file.multiple_chunks():
         #    return redirect(reverse("cs28:upload_course_grades"))
@@ -408,9 +404,8 @@ def upload_course_grades(request):
             success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
-                messages.error(request, "File is not CSV type")
-                return redirect(reverse("cs28:upload_course_grades"))
-
+                error="File is not CSV type"
+                return JsonResponse({'error':error},status=400)
             # extract course code from the file name, for now hard-coded
             # (expected format: "Grade Roster CourseCode.csv")
             courseCode = file.name[13:-9]
@@ -437,6 +432,8 @@ def upload_course_grades(request):
                     messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
                         "Unable to upload file. " +repr(e))
+                    error=str(e)
+                    return JsonResponse({'error':error},status=400)
                     pass
                 
             if (success):
@@ -449,6 +446,8 @@ def upload_course_grades(request):
         messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
+        error=str(e)
+        return JsonResponse({'error':error},status=400)
 
     return redirect(reverse("cs28:upload_course_grades"))
 
