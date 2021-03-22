@@ -509,38 +509,47 @@ def upload_academic_plan(request):
         files = request.FILES.getlist("file")
 
         for file in files:
+            
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
-                messages.error(request, "File is not CSV type")
-                return redirect(reverse("cs28:upload_academic_plan"))
+                error="File is not CSV type"
+                return JsonResponse({'error':error},status=400)
 
-            year = file.name[-9:-4]
-            decoded_file = file.read().decode('utf-8').splitlines()
-            grad_year, g_created = GraduationYear.objects.get_or_create(
-                gradYear=year)
-            file_data = csv.reader(decoded_file[1:],
-                                   quotechar='"',
-                                   delimiter=',',
-                                   quoting=csv.QUOTE_ALL,
-                                   skipinitialspace=True)
+            try:
+                year = file.name[-9:-4]
+                decoded_file = file.read().decode('utf-8').splitlines()
+                grad_year, g_created = GraduationYear.objects.get_or_create(
+                    gradYear=year)
+                file_data = csv.reader(decoded_file[1:],
+                                       quotechar='"',
+                                       delimiter=',',
+                                       quoting=csv.QUOTE_ALL,
+                                       skipinitialspace=True)
+            except Exception as e:
+                error=str(e)
+                return JsonResponse({'error':error},status=400)
             for line in file_data:
                 if line == '':
                     continue
-                # course name and weight only
-                courses = line[3:]
-                acad_plan = AcademicPlan.objects
-                plan, p_created = acad_plan.get_or_create(gradYear=grad_year,
-                                                          planCode=line[0],
-                                                          courseCode=line[1],
-                                                          mcName=line[2])
-                i = 0
+                try:
+                    # course name and weight only
+                    courses = line[3:]
+                    acad_plan = AcademicPlan.objects
+                    plan, p_created = acad_plan.get_or_create(gradYear=grad_year,
+                                                              planCode=line[0],
+                                                              courseCode=line[1],
+                                                              mcName=line[2])
+                    i = 0
 
-                for c, w in zip(courses[::2], courses[1::2]):
-                    i += 1
-                    if c and w:
-                        setattr(plan, f"course_{i}", c)
-                        setattr(plan, f"weight_{i}", w)
-                        plan.save()
+                    for c, w in zip(courses[::2], courses[1::2]):
+                        i += 1
+                        if c and w:
+                            setattr(plan, f"course_{i}", c)
+                            setattr(plan, f"weight_{i}", w)
+                            plan.save()
+                except Exception as e:
+                    error=str(e)
+                    return JsonResponse({'error':error},status=400)
             time.sleep(1)
     except Exception as e:
         print(str(e))
