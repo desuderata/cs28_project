@@ -81,7 +81,9 @@ def user_login(request):
         password = request.POST.get("password")
         remember_me = request.POST.get("remember") == "remember"
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(username=username,
+                            password=password,
+                            request=request)
         if not remember_me:
             request.session.set_expiry(0)
 
@@ -460,3 +462,8 @@ def graph(request):
     ctx = {"years": GraduationYear.objects.all(),
            "plans": AcademicPlan.objects.all(), }
     return render(request, 'graph.html', context=ctx)
+
+
+def locked_out(request):
+    print(request)
+    return render(request, 'lockout.html')

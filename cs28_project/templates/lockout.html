@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--
+    Lock Out
+    locks user out after 10 failed password attempts
+    Filename: lockout.html
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Locked Out
+{% endblock %}
+
+{% block head %}
+<style>
+    .login-form {
+        width: 400px;
+        margin: 100px auto;
+    }
+
+    .login-form .box {
+        background: #fefefe;
+        box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
+        padding: 25px 50px 50px;
+    }
+
+    .login-form h2 {
+        margin: 0 0 25px;
+    }
+
+    .form-control,
+    .btn {
+        min-height: 40px;
+        border-radius: 3px;
+    }
+
+    .btn {
+        font-size: 15px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block body_block %}
+<div class="login-form">
+    <div class="box">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert
+                            {% if message.tags %}
+                                alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}{{ message.tags }}{% endif %}
+                            {% endif %}
+                            alert-dismissible
+                            fade
+                            show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <h2 class="text-center">You have been locked out</h2>
+        <p class="text-center">Please try again after 10 minutes</p>
+        <a role="button" href="{% url 'cs28:login' %}" class="btn btn-primary btn-block">Go to login</a>
+        <a role="button" href="{% url 'password_reset' %}" class="btn btn-primary btn-block">Reset password</a>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

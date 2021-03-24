@@ -31,5 +31,6 @@ urlpatterns = [
     path('help-page/', views.help, name='help_page'),
     path('search-results/', views.search_results, name="search_results"),
     path('graph/', views.graph, name="graph"),
+    path('locked-out/', views.locked_out, name="lockout"),
 
 ]
