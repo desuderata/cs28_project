@@ -428,18 +428,12 @@ def upload_course_grades(request):
                         alphanum=alphanum,
                     )
                 except Exception as e:
-                    success = False
-                    messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
                         "Unable to upload file. " +repr(e))
-                    error=str(e)
+                    error="[" + line + "] " + str(e)
                     return JsonResponse({'error':error},status=400)
                     pass
                 
-            if (success):
-                messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
-            else:
-                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
             time.sleep(1)
 
     except Exception as e:
