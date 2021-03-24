@@ -32,6 +32,16 @@ from django.contrib import messages
 import csv
 
 
+def _check_year(year):
+    try:
+        year1, year2 = year.split("-")
+        return (int(year2) - int(year1) == 1) and \
+            (len(year1) == 2) and \
+            (len(year2) == 2)
+    except Exception:
+        return False
+
+
 def index(request):
     return render(request, 'index.html')
 
@@ -509,36 +519,58 @@ def upload_academic_plan(request):
         files = request.FILES.getlist("file")
 
         for file in files:
-            
+
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
-                error="File is not CSV type"
-                return JsonResponse({'error':error},status=400)
+                error = "File is not CSV type"
+                return JsonResponse({'error': error}, status=400)
 
             try:
                 year = file.name[-9:-4]
+                if not _check_year(year):
+                    return JsonResponse({'error': 'Invalid year format.'},
+                                        status=400)
+
                 decoded_file = file.read().decode('utf-8').splitlines()
                 grad_year, g_created = GraduationYear.objects.get_or_create(
                     gradYear=year)
-                file_data = csv.reader(decoded_file[1:],
+                file_data = csv.reader(decoded_file,
                                        quotechar='"',
                                        delimiter=',',
                                        quoting=csv.QUOTE_ALL,
                                        skipinitialspace=True)
+
+                # check headers
+                file_header = [i for i in next(file_data)]
+                expected_header = ["Academic Plan Code",
+                                   "Internal Course Code",
+                                   "MyCampus Description"]
+
+                courses = [f"Course {i}" for i in range(1, 41)]
+                weights = [f"Weight {i}" for i in range(1, 41)]
+
+                expected_header.extend([j for i in zip(courses, weights)
+                                        for j in i])
+
+                if file_header != expected_header:
+                    error = 'Incorrect file headers. Please refer to the Help \
+                        Page for the correct header format'
+                    return JsonResponse({'error': error}, status=400)
+
             except Exception as e:
-                error=str(e)
-                return JsonResponse({'error':error},status=400)
+                error = str(e)
+                return JsonResponse({'error': error}, status=400)
             for line in file_data:
                 if line == '':
                     continue
                 try:
                     # course name and weight only
                     courses = line[3:]
-                    acad_plan = AcademicPlan.objects
-                    plan, p_created = acad_plan.get_or_create(gradYear=grad_year,
-                                                              planCode=line[0],
-                                                              courseCode=line[1],
-                                                              mcName=line[2])
+                    a_plan = AcademicPlan.objects
+                    plan, p_created = a_plan.get_or_create(gradYear=grad_year,
+                                                           planCode=line[0],
+                                                           courseCode=line[1],
+                                                           mcName=line[2])
                     i = 0
 
                     for c, w in zip(courses[::2], courses[1::2]):
@@ -548,8 +580,8 @@ def upload_academic_plan(request):
                             setattr(plan, f"weight_{i}", w)
                             plan.save()
                 except Exception as e:
-                    error=str(e)
-                    return JsonResponse({'error':error},status=400)
+                    error = str(e)
+                    return JsonResponse({'error': error}, status=400)
             time.sleep(1)
     except Exception as e:
         print(str(e))
