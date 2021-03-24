@@ -42,13 +42,14 @@ def student_upload(request):
         return render(request, 'student_upload.html', {})
 
     try:
-        files = request.FILES.getlist("file")
+        csv_file = request.FILES.getlist("csv_file")
         for file in csv_file:
             success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
-                messages.error(request, "File is not CSV type")
-                return redirect(reverse("cs28:student_upload"))
+                error="File is not CSV type"
+                return JsonResponse({'error':error},status=400)
+
 
             file_data = file.read().decode("utf-8")
             lines = re.split('\r\n|\r|\n', file_data)[1:]
@@ -77,7 +78,10 @@ def student_upload(request):
                     messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
                         "Unable to upload file. " +repr(e))
+                    error=str(e)
+                    return JsonResponse({'error':error},status=400)
                     pass
+
                     
             if (success):
                 messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
@@ -89,6 +93,9 @@ def student_upload(request):
         messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
+        error=str(e)
+        return JsonResponse({'error':error},status=400)
+
 
 
     return redirect(reverse("cs28:student_upload"))
