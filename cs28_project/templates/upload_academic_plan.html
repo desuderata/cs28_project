@@ -47,6 +47,7 @@
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
     }
+    
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.css" />
 {% endblock %}
@@ -64,7 +65,7 @@
               method="post"
               enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="dz-message" data-dz-message><h2><span class="text-muted">Drop files here or click to browse files for upload</span></h2></div>
+            <div class="dz-message" data-dz-message><i class="fas fa-file-upload text-muted fa-fw fa-5x"></i><br/><h2 class="pt-2"><span class="text-muted">Drop files here or click to browse files for upload</span></h2></div>
         </form>
     </div>
     <p class="text-muted"><i>*Please refer to the <a href="{% url 'cs28:help_page' %}">Help Page</a> for the correct CSV headers</i></p>
