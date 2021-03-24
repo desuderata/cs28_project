@@ -36,7 +36,16 @@
         border: 2px dashed #0087F7 !important; 
         border-radius: 5px;
         background: white;
-        height: calc(100vh - 290px);
+        min-height: calc(100vh - 290px) !important; 
+    }
+
+    .dz-message{
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
     }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.css" />
@@ -50,12 +59,12 @@
         </div>
     </div>
     <div id="dropzone" class="mt-3">
-        <form class="dropzone needsclick dz-clickable d-flex justify-content-center"
+        <form class="dropzone needsclick dz-clickable"
               action="{% url 'cs28:upload_academic_plan' %}"
               method="post"
               enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="dz-message align-self-center" data-dz-message><h2><span class="text-muted">Drop files here or click to browse files for upload</span></h2></div>
+            <div class="dz-message" data-dz-message><h2><span class="text-muted">Drop files here or click to browse files for upload</span></h2></div>
         </form>
     </div>
     <p class="text-muted"><i>*Please refer to the <a href="{% url 'cs28:help_page' %}">Help Page</a> for the correct CSV headers</i></p>
@@ -65,5 +74,5 @@
 {% endblock %}
 
 {% block scripts %}
-<scrip src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.js"></scrip>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.js"></script>
 {% endblock %}
