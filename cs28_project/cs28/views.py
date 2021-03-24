@@ -432,17 +432,14 @@ def upload_course_grades(request):
                     messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
                         "Unable to upload file. " +repr(e))
-                    return redirect(upload_course_grades)
                     error=str(e)
                     return JsonResponse({'error':error},status=400)
                     pass
                 
             if (success):
                 messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
-                return redirect(upload_course_grades)
             else:
                 messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
-                return redirect(upload_course_grades)
             time.sleep(1)
 
     except Exception as e:
@@ -452,7 +449,7 @@ def upload_course_grades(request):
         error=str(e)
         return JsonResponse({'error':error},status=400)
 
-    return redirect(upload_course_grades)
+    return redirect(reverse("cs28:upload_course_grades"))
 
 
 @login_required
