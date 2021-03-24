@@ -42,7 +42,7 @@ def student_upload(request):
         return render(request, 'student_upload.html', {})
 
     try:
-        csv_file = request.FILES.getlist("csv_file")
+        csv_file = request.FILES.getlist("file")
         for file in csv_file:
             success = True
             if not file.name.endswith('.csv'):
