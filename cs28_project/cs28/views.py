@@ -25,6 +25,12 @@ import re
 import logging
 from django.contrib import messages
 
+import hashlib
+
+
+def _anonymize(matric):
+    return hashlib.sha1(str(matric).encode("UTF-8")).hexdigest()[:11]
+
 
 @login_required
 def index(request):
@@ -143,7 +149,7 @@ def data(request):
 
     for student in students:
         row = {}
-
+        row["anon"] = _anonymize(student.matricNo)
         row["id"] = student.matricNo
         row["mcId"] = student.matricNo
         row["grad"] = student.gradYear.gradYear

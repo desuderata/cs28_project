@@ -29,6 +29,12 @@ $(function () {
                 visible: true
             },
             {
+                field: "anon",
+                title: "Anonymized student",
+                sortable: true,
+                visible: false
+            },
+            {
                 field: "mcId",
                 title: "StudentID",
                 sortable: true,
@@ -334,12 +340,17 @@ $('#table').on('editable-hidden.bs.table', function() {
     $('#table').bootstrapTable('resetView')
 });
 
+var isMyCampus = false
+
 $(function() {
     $('#myCampusLayout').click(function() {
 
         var iteration=$(this).data('iteration')||1
+
         switch (iteration) {
             case 1:
+                isMyCampus = true;
+                $table.bootstrapTable('hideColumn', 'anon');
                 $table.bootstrapTable('showColumn', 'mcId');
                 $table.bootstrapTable('showColumn', 'name');
                 $table.bootstrapTable('showColumn', 'plan');
@@ -357,7 +368,10 @@ $(function() {
                 $table.bootstrapTable('hideColumn', 'award');
                 $table.bootstrapTable('hideColumn', 'notes');
                 break;
+
             case 2:
+                isMyCampus = false;
+                $table.bootstrapTable('hideColumn', 'anon');
                 $table.bootstrapTable('hideColumn', 'mcId');
                 $table.bootstrapTable('hideColumn', 'name');
                 $table.bootstrapTable('hideColumn', 'plan');
@@ -379,8 +393,39 @@ $(function() {
         iteration++;
         if (iteration>2) iteration = 1;
         $(this).data('iteration',iteration);
+    });
+    $('#anonymize').click(function() {
+        var iter=$(this).data('iter')||1;
+        switch (iter) {
+            case 1:
+                if (isMyCampus) {
+                    $table.bootstrapTable('showColumn', 'anon');
+                    $table.bootstrapTable('hideColumn', 'mcId');
+                    $table.bootstrapTable('hideColumn', 'name');
+                    break;
+                }
+                $table.bootstrapTable('showColumn', 'anon');
+                $table.bootstrapTable('hideColumn', 'id');
+                $table.bootstrapTable('hideColumn', 'first');
+                $table.bootstrapTable('hideColumn', 'last');
+                break;
 
-
+            case 2:
+                if (isMyCampus) {
+                    $table.bootstrapTable('hideColumn', 'anon');
+                    $table.bootstrapTable('showColumn', 'mcId');
+                    $table.bootstrapTable('showColumn', 'name');
+                    break;
+                }
+                $table.bootstrapTable('hideColumn', 'anon');
+                $table.bootstrapTable('showColumn', 'id');
+                $table.bootstrapTable('showColumn', 'first');
+                $table.bootstrapTable('showColumn', 'last');
+                break;
+        }
+        iter++;
+        if (iter>2) iter = 1;
+        $(this).data('iter',iter);
     });
 });
 

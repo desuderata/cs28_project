@@ -40,7 +40,7 @@
             <form class="form-inline" id="calculateForm">
                 <div class="form-row">
                     <!-- <label class="mx-2">Year: </label> -->
-                    <div class="col-auto mr-2">
+                    <div class="col-auto">
                         <select name="year" id="year" class="form-control">
                             <option value="" selected disabled>Graduation Year</option>
                             {% for year in years %}
@@ -48,7 +48,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-auto mr-2">
+                    <div class="col-auto">
                         <select name="plan" id="plan" class="form-control">
                             <option value="" selected disabled>Academic Plan</option>
                             {% for plan in plans %}
@@ -109,6 +109,11 @@
                             id="myCampusLayout"
                             onclick="return false">
                         Toggle MyCampus Layout
+                    </button>
+                    <button class="btn btn-secondary"
+                            id="anonymize"
+                            onclick="return false">
+                        Anonymize
                     </button>
                 </div>
             </div>
