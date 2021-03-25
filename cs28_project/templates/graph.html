@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <!--
-    Help page
-    Helps the user understand and get around the page.
-        Everyone should add how their page works and walk
-        the user through how they could use it
-    Filename: help.html
+    Graphs page
+    allows users to create graphs from dataset
+
+    Filename: graph.html
 -->
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title_block %}
-    Help Page
+    Graphs
 {% endblock %}
 
 {% block head %}
@@ -81,8 +80,14 @@
                         </div>
                     </div>
                     <div class="form-row">
+                        <div class="form-group col" onclick="return false">
+                            <button onclick="setGraphType()" class="btn btn-secondary btn-block">Set Graph Type</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row">
                         <div class="form-group col">
-                            <label for="title">Graph Details</label>
+                            <label for="title">Graph Labels</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Title</span>
@@ -111,7 +116,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col" onclick="return false">
-                            <button onclick="setUpGraph()" class="btn btn-secondary btn-block">Set Graph</button>
+                            <button onclick="setGraphDetails()" class="btn btn-secondary btn-block">Set Graph Labels</button>
                         </div>
                     </div>
                     <hr>
@@ -169,13 +174,16 @@
     const gpa = ["Fail", "33", "0L", "0U", "01"];
     const labels = {"ttpt": ttpt, "gpa":gpa};
     var graph = "gpa";
-    function setUpGraph() {
+
+    function setGraphType() {
         graph = document.getElementById("graph").value;
         chart.data = {
                 labels: graph ? labels[graph] : gpa,
                 datasets: []
             };
-
+        chart.update();
+    }
+    function setGraphDetails() {
         var title = document.getElementById("title").value;
         var xAxis = document.getElementById("axisX").value;
         var yAxis = document.getElementById("axisY").value;
