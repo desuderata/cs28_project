@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from decimal import localcontext, Decimal, ROUND_HALF_UP
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .convert_to_ttpt import to_ttpt
 from cs28.models import Student, Grade, GraduationYear, AcademicPlan
@@ -390,6 +391,7 @@ def calculate(request):
     return HttpResponse(status=400)
 
 @login_required
+@staff_member_required
 def upload_course_grades(request):
     if request.method == "GET":
         return render(request, 'upload_course_grades.html', {})
