@@ -26,7 +26,8 @@ class LogoutTest(TestCase):
         Tests whether a user that is logged in can log out.
         """
         # log user in for testing
-        self.client.login(username='testuser', password='password')
+        with self.settings(AXES_ENABLED=False):
+            self.client.login(username='testuser', password='password')
         try:
             self.assertEqual(self.user.id,
                              int(self.client.session['_auth_user_id']),

@@ -27,7 +27,7 @@ def _create_student(matric):
 
 class StudentTest(TestCase):
     def setUp(self):
-        login(self.client)
+        login(self)
         populate(self)
 
     def test_wrong_matriculation_number(self):
