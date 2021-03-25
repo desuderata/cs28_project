@@ -74,20 +74,20 @@
                         <div class="form-group col">
                             <label for="graph">Type of Graph</label>
                             <select name="graph" id="graph" class="form-control">
-                                <option value="" selected disabled>Type of Graph</option>
-                                <option value="gpa">GPA Bar Chart</option>
+                                <option value="" disabled>Type of Graph</option>
+                                <option value="gpa" selected>GPA Bar Chart</option>
                                 <option value="ttpt">22 Point Scale Bar Chart</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col">
-                            <label for="title">Graph Title</label>
+                            <label for="title">Graph Details</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Title</span>
                                 </div>
-                                <input name="title" id="title" class="form-control" placeholder="E.g. Number of Students vs. GPA">
+                                <input name="title" id="title" class="form-control" value="Students vs. GPA" placeholder="E.g. Number of Students vs. GPA">
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">x Axis</span>
                                 </div>
-                                <input name="axisX" id="axisX" class="form-control" placeholder="E.g. GPA">
+                                <input name="axisX" id="axisX" class="form-control" value="GPA" placeholder="E.g. GPA">
                             </div>
                         </div>
                         <div class="form-group col">
@@ -105,7 +105,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">y Axis</span>
                                 </div>
-                                <input name="axisY" id="axisY" class="form-control" placeholder="E.g. Number of Students">
+                                <input name="axisY" id="axisY" class="form-control" value="Students" placeholder="E.g. Number of Students">
                             </div>
                         </div>
                     </div>
