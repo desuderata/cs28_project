@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from decimal import localcontext, Decimal, ROUND_HALF_UP
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .convert_to_ttpt import to_ttpt
 from cs28.models import Student, Grade, GraduationYear, AcademicPlan
@@ -398,27 +399,23 @@ def calculate(request):
     return HttpResponse(status=400)
 
 @login_required
+@staff_member_required
 def upload_course_grades(request):
     if request.method == "GET":
         return render(request, 'upload_course_grades.html', {})
 
     try:
-        csv_file = request.FILES.getlist("csv_file")
-
-        # if not csv_file.name.endswith('.csv'):
-        #   messages.error(request,"File is not CSV type")
-        #    return redirect(reverse("cs28:upload_course_grades"))
+        files = request.FILES.getlist("file")
         # check if file is too large
         # if csv_file.multiple_chunks():
         #    return redirect(reverse("cs28:upload_course_grades"))
 
-        for file in csv_file:
+        for file in files:
             success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
-                messages.error(request, "File is not CSV type")
-                return redirect(reverse("cs28:upload_course_grades"))
-
+                error="File is not CSV type"
+                return JsonResponse({'error':error},status=400)
             # extract course code from the file name, for now hard-coded
             # (expected format: "Grade Roster CourseCode.csv")
             courseCode = file.name[13:-9]
@@ -441,21 +438,20 @@ def upload_course_grades(request):
                         alphanum=alphanum,
                     )
                 except Exception as e:
-                    success = False
-                    messages.error(request,"[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
                         "Unable to upload file. " +repr(e))
+                    error="[" + line + "] " + str(e)
+                    return JsonResponse({'error':error},status=400)
                     pass
                 
-            if (success):
-                messages.success(request, "All grades from file " + file.name + " were uploaded successfully!")
-            else:
-                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
+            time.sleep(1)
 
     except Exception as e:
         messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
+        error=str(e)
+        return JsonResponse({'error':error},status=400)
 
     return redirect(reverse("cs28:upload_course_grades"))
 
