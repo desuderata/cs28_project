@@ -99,6 +99,12 @@ Please make sure to update tests as appropriate.
 
 - Malihu custom scrollbar ([MIT](https://github.com/malihu/malihu-custom-scrollbar-plugin/blob/master/LICENSE.txt))
 
+- Chart.js ([MIT](https://github.com/chartjs/Chart.js/blob/master/LICENSE.md))
+
+- Dropzone.js ([MIT](https://github.com/dropzone/dropzone/blob/main/LICENSE))
+
+- Django Axes ([MIT](https://github.com/jazzband/django-axes/blob/master/LICENSE))
+
 ## Authors and Contact
 ### Scrum Master
 Alana Grant (Meeting Chair) - [2390384G@student.gla.ac.uk](2390384G@student.gla.ac.uk)
@@ -132,3 +138,9 @@ Robert Pringle - [2304777P@student.gla.ac.uk](2304777P@student.gla.ac.uk)
 [TableExport](https://tableexport.v5.travismclarke.com/)
 
 [Malihu custom scrollbar](https://github.com/malihu/malihu-custom-scrollbar-plugin)
+
+[Chart.js](https://www.chartjs.org/)
+
+[Dropzone.js](https://www.dropzonejs.com/)
+
+[Django Axes](https://pypi.org/project/django-axes/)
