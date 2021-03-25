@@ -42,8 +42,69 @@ By default, a staff is able to access the admin page albeit not being able to ac
 A user in the User group is not able to edit anything on the webpage, upload grades and will not be able to access the admin site. They will still be able to view data and generate graphs.
 
 ## Upload
+Data could be uploaded to the database through their corresponding upload pages. Files could be uploaded by dragging and dropping into the dropzone or clicking on the dropzone to browse files. Only files with the extension of `.csv` will be accepted. Multiple files could be uploaded at once.
+
+### Academic Plans
+
+<img src="./cs28_project/static/pics/upload_plan.png"
+     alt="upload_plan.png"
+     width="512">  
+
+Academics Plans could be uploaded through the Upload Academic Plan page.
+
+**The CSV format is as follows:**  
+
+Name: The name could be anything followed by the graduation year with the extension of `.csv` (Eg. `My Academic Plan 19-20.csv`)
+
+File contents:  
+| Academic Plan Code | Internal Course Code | MyCampus Description    | Course 1 | Weight 1 | Course 2 | Weight 2 | ... | Course 40 | Weight 40 |
+|--------------------|----------------------|-------------------------|----------|----------|----------|----------|-----|-----------|-----------|
+| F100-2208          | CHEM-4H              | Chemistry, BSc          | foo      | 0.5      | bar      | 0.5      | ... |           |           |
+| F101-2207          | CHEM-5M              | Chemistry with WP, Msci | bar      | 1        |          |          | ... |           |           |
+
+### Student Roster
+
+Student Roster could be uploaded through the Upload Student Roster page.
+
+**The CSV format is as follows:**  
+
+Name: The name could be anything with the extension of `.csv` (Eg. `F100-2208-Graduating Year.csv`) as the upload system does not rely on any data from the name.
+
+File contents:  
+| StudentID | Name                         | Acad Plan | Grad Year |
+|-----------|------------------------------|-----------|-----------|
+| 3159976   | Ahab,Captain                 | F100-2208 | 19-20     |
+| 2790987   | Blake,Flake                  | F100-2208 | 19-20     |
+| 2110101   | Boingo,Oingo                 | F100-2208 | 18-19     |
+| 3428888   | Chowder,Clam Stinky Gooey    | F100-2208 | 16-17     |
+| 4512345   | Dinky,Fluffy Puffy           | F100-2208 | 19-20     |
+| 1239876   | Gobsmacker,Flatulent Poopsie | F100-2208 | 18-19     |
+| 2016655   | McBoatface,Boaty             | F100-2208 | 19-20     |
+
+### Course Grades
+
+Grades Roster could be uploaded through the Upload Course Grades page.
+
+**The CSV format is as follows:**
+
+Name: The name could be anything followed by the course code followed by the year (with underscores) with the extension of `.csv` (Eg. `Grade roster CHEM_4014_2019.csv`).
+
+File contents:  
+| EMPLID  | Name                         | Grade |
+|---------|------------------------------|-------|
+| 3159976 | Ahab,Captain                 | A3    |
+| 2790987 | Blake,Flake                  | B1    |
+| 2110101 | Boingo,Oingo                 | C1    |
+| 3428888 | Chowder,Clam Stinky Gooey    | D3    |
+| 4512345 | Dinky,Fluffy Puffy           | E2    |
+| 1239876 | Gobsmacker,Flatulent Poopsie | A1    |
+| 2016655 | McBoatface,Boaty             | G1    |
+
 
 ## Course Grades
+This is where student's course grades are filtered and displayed, this page has viewing permission only, there is no editing from the user. 
+Using the search bar that is located above "Alphanumeric Grade", allows the user to search for different information and will display only the data that matches the user's input, for example this could be a course code, studentId or a grade. 
+The arrows next to the table column headers allow for users to display the requested data either in asending or desending order and the column icon to the far right of the screen above "22pt Grade" allows the user to toggle what data feilds are shown. 
 
 ## Manage and Export CSV
 
@@ -163,3 +224,45 @@ From left to right:
 <img src="./cs28_project/static/pics/export.png"
      alt="export.png"
      width="128">
+
+## Graphs
+<img src="./cs28_project/static/pics/graphs.png"
+     alt="graphs.png"
+     width="512">  
+
+Users could create visualizations from data from the database with the option of a GPA bar chart or a 22 point scale bar chart.
+
+### Selecting Graph type
+
+<img src="./cs28_project/static/pics/graph_type.png"
+     alt="graph_type.png"
+     width="256">  
+
+The graph type could be selected by expanding the Graph Type dropdown. Clicking on Set Graph Type will remove all datasets that are currently on the chart (changing from GPA to 22 Point with data still on the chart).
+
+### Setting Graph Labels
+
+<img src="./cs28_project/static/pics/graph_label.png"
+     alt="graph_label.png"
+     width="256">  
+
+Graph labels (title and axes names) could be changed by entering the desired names and clicking on Set Graph Labels. If nothing has been entered, the default will be used.
+
+### Adding a Dataset
+
+<img src="./cs28_project/static/pics/dataset.png"
+     alt="dataset.png"
+     width="256">  
+
+A new dataset could be added by selecting all three fields then clicking on Add. To remove the last dataset added, click on Remove. Reset will remove all datasets that are currently on the chart.
+
+### Chart
+<img src="./cs28_project/static/pics/chart_value.png"
+     alt="chart_value.png"
+     width="256">  
+By hovering over the bars, the exact value for each bar will pop up.
+
+<img src="./cs28_project/static/pics/legend.png"
+     alt="legend.png"
+     width="256">  
+Clicking on any dataset on the legend will hide the dataset from the chart.
