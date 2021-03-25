@@ -174,7 +174,7 @@ def data(request):
         row["id"] = student.matricNo
         row["mcId"] = student.matricNo
         row["grad"] = student.gradYear.gradYear
-        row["name"] = student.givenNames + "," + student.surname
+        row["name"] = student.surname + "," + student.givenNames
         row["first"] = student.givenNames
         row["last"] = student.surname
         row["plan"] = student.academicPlan.planCode
