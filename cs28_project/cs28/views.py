@@ -26,6 +26,7 @@ import logging
 from django.contrib import messages
 
 
+@login_required
 def index(request):
     return render(request, 'index.html')
 

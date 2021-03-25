@@ -32,5 +32,4 @@ urlpatterns = [
     path('search-results/', views.search_results, name="search_results"),
     path('graph/', views.graph, name="graph"),
     path('locked-out/', views.locked_out, name="lockout"),
-
 ]
