@@ -26,92 +26,106 @@ $(function () {
                 field: "type",
                 title: "Type",
                 sortable: true,
-                visible: true
+                visible: true,
+                filterControl: "select"
             },
             {
                 field: "anon",
                 title: "Anonymized student",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "input"
             },
             {
                 field: "mcId",
                 title: "StudentID",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "input"
             },
             {
                 field: "id",
                 title: "Matric No.",
                 sortable: true,
-                width: 100
+                width: 100,
+                filterControl: "input"
             },
             {
                 field: "grad",
                 title: "Graduation Year",
-                sortable: true
+                sortable: true,
+                filterControl: "select"
             },
             {
                 field: "name",
                 title: "Name",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "input"
             },
             {
                 field: "first",
                 title: "First Name",
-                sortable: true
+                sortable: true,
+                filterControl: "input"
             },
             {
                 field: "last",
                 title: "Last Name",
-                sortable: true
+                sortable: true,
+                filterControl: "input"
             },
             {
                 field: "plan",
                 title: "Acad Plan",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "select"
             },
             {
                 field: "gpa4",
                 title: "GPA (4 d.p.)",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "input"
             },
             {
                 field: "gpa3",
                 title: "GPA (3 d.p.)",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "input"
             },
             {
                 field: "gpa2",
                 title: "GPA (2 d.p.)",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "input"
             },
             {
                 field: "gpa1",
                 title: "GPA (1 d.p.)",
-                sortable: true
+                sortable: true,
+                filterControl: "input"
             },
             {
                 field: "gpa",
                 title: "GPA",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "select"
             },
             {
                 field: "oAward",
                 title: "Original Award",
-                sortable: true
+                sortable: true,
+                filterControl: "select"
             },
             {
                 field: "award",
                 title: "Award",
                 sortable: true,
-                searchable: false,
                 editable: {
                     disabled: !edit,
                     type: 'select',
@@ -138,25 +152,27 @@ $(function () {
                             ]
                         }
                     ]
-                }
+                },
+                filterControl: "select"
             },
             {
                 field: "mcAward",
                 title: "Degree Honors",
                 sortable: true,
-                visible: false
+                visible: false,
+                filterControl: "select"
             },
             {
                 field: "notes",
                 title: "Notes",
                 sortable: true,
-                searchable: false,
                 editable: {
                     disabled: !edit,
                     mode: "inline",
                     inputclass: "text-area",
                     emptytext: "Add Note"
-                }
+                },
+                filterControl: "input"
             }
         ],
         // subtable

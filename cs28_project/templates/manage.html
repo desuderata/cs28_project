@@ -125,7 +125,7 @@
     - adding data-search-highlight="true" breaks editable fields.
     - data-reorderable-columns="true" breaks table-->
     <table id="table"
-           class="table table-bordered"
+           class="table"
            data-search-accent-neutralise="true"
 
            data-unique-id="id"
@@ -144,7 +144,7 @@
            data-toolbar="#toolbar"
 
            data-search="true"
-           data-search-highlight="true"
+           data-search-highlight="false"
 
            data-show-refresh="true"
            data-show-toggle="true"
@@ -153,7 +153,8 @@
            data-show-columns-toggle-all="true"
            data-show-export="true"
 
-           data-detail-view="true">
+           data-detail-view="true"
+           data-filter-control="true">
     </table>
 </div>
 {% endblock %}
@@ -193,6 +194,9 @@
 <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.22/tableExport.min.js"></script>
 
+
+<!-- per column filtering -->
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
 <!-- dependency for export -->
 

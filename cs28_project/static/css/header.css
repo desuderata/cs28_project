@@ -25,3 +25,10 @@
 .bg-height {
     min-height: 100vh;
 }
+
+.bootstrap-table select {
+    border-radius: 0;
+}
+.bootstrap-table input {
+    border-radius: 0;
+}

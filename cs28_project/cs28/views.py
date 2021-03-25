@@ -210,7 +210,7 @@ def data(request):
         elif is_discretionary(student):
             row["type"] = "Discretionary"
         else:
-            row["type"] = "&#128077;"  # Thumbs up emoji
+            row["type"] = "No Issues"
 
         json_array.append(row)
 
