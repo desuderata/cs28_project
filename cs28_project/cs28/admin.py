@@ -10,7 +10,10 @@ from cs28.models import Grade, Student, AcademicPlan, GraduationYear
 @register(Grade)
 class GradeAdmin(ModelAdmin):
     icon_name = "grade"
-    list_display = ("matricNo", "courseCode", "alphanum")
+    list_display = ("matricNo",
+                    "courseCode",
+                    "alphanum",
+                    "notes")
 
     actions = ["delete_selected_grades"]
 
@@ -52,7 +55,8 @@ class StudentAdmin(ModelAdmin):
                     "finalAward2",
                     "finalAward3",
                     "finalAward4",
-                    "updatedAward")
+                    "updatedAward",
+                    "notes")
 
 
 @register(AcademicPlan)
