@@ -81,6 +81,13 @@
                         Yes, that's great and all but how could you get those pesky
                         data into the database? That's what the upload page is for. The
                         name is self explanatory.
+
+                        In all seriousness, this is where you shape and populate 
+                        your multi-layered database by:
+                        <ol>
+                            <li>adding your students, student number, programme and graduation year, and</li>
+                            <li>populating the grades for each of the courses that contribute to each student's degree calculations.</li>
+                        </ol>
                     </p>
                 </dd>
             </dl>
@@ -356,9 +363,16 @@
                             editable fields.
                         </p>
 
+                        <h6>Filtering</h6>
+                        <p class="pt-3">
+                            All columns are filterable. More than one column could 
+                            be filtered at once. Column searches will be filtered
+                            by keyword matches.
+                        </p>
+
                         <h6>Export</h6>
                         <p class="pt-3">
-                            The data in the table could be exported in the following 
+                            The data in the table can be exported in the following 
                             formats. The exported data will have the academic plan 
                             as the file name and will contain all the columns that 
                             are currently visible. To export in MyCampus friendly 
@@ -543,7 +557,7 @@
                 </div>
                 <div id="collapseTwo" class="collapse">
                     <div class="card-body">
-                        <img src="{% static 'pics/course_grades.png' %}"
+                        <img src="{% static 'pics/course_grades.PNG' %}"
                         alt="course_grades.png"
                         class="img-fluid">
                         <p class="pt-3">
@@ -558,6 +572,15 @@
                             All columns are sortable. The first click sorts the 
                             column in ascending order, the second in descending 
                             order and the third to reset the sort.
+                        </p>
+
+                        <br>
+
+                        <h5>Filtering</h5>
+                        <p class="pt-3">
+                            All columns are filterable. More than one column could 
+                            be filtered at once. Column searches will be filtered
+                            by keyword matches.
                         </p>
 
                         <br>
@@ -1071,6 +1094,27 @@
                 </div>
             </div>
         </div>
+        <h4>To put it all together <small class="text-muted">If you haven't already caught on</small></h4>
+        <hr class="w-100">
+        <br/>
+        <h5>This is how a normal operation of the page would go</h5>
+        <p class="pt-2">
+            Upload academic plans for the year in the <strong>Upload Academic Plan</strong>
+            page, then the student rosters and their grades at the <strong>Upload Student Roster</strong>
+            and the <strong>Upload Course Grades</strong> page respectively. The order is important if
+            the required students or academic plans are not already in the database yet (you will know when 
+            get an error while uploading course grades) <br/><br/>
+
+            Do a quick skim through on the <strong>Course Grades</strong> (do not worry if you find 
+            anything out of the ordinary as you could change them in the next step) then proceed to the
+            <strong>Manage Students and Export CSV</strong>. Manage the individual course grades or the 
+            final awards for each student and export the table as MyCampus format in the desired file 
+            format.<br/><br/>
+
+            <strong>Graphs</strong> could be generated as a visual aid for comparison between academic
+            plans or years.
+        </p>
+        <br/>
         <h2 class="mb-3">
             Still don't get it?</br>
             <small class="text-muted">We knew you wouldn't.</small>
@@ -1102,7 +1146,7 @@
             <dt class="col-sm-2">Alana Grant</dt>
             <dd class="col-sm-10">
                 <p class="mb-2">
-                    The page I worked on majority of the time was the course grades 
+                    The page that I worked on majority of the time was the course grades 
                     (<a href="{% url 'cs28:module_grades' %}">
                         the course grades page
                     </a>),
@@ -1141,17 +1185,13 @@
                 <p class="mb-2">
                     <!-- Todo: Add which page you've worked on and what they should contact
                     you about -->
-                    I worked on the <a href="{% url 'cs28:module_grades' %}">
-                        Course Grades page
-                    </a>. Feel free to contact me if you have any questions about it.
+                    I worked on the <a href="{% url 'cs28:module_grades' %}">Course Grades page</a>. Feel free to contact me if you have any questions about it.
                     </br>
                 </p>
                 <!-- Todo: Change the email to yrs. remember the mailto:  -->
                 <p class=mb-3>Contact me at: <a href="mailto:2403606T@student.gla.ac.uk">2403606T@student.gla.ac.uk</a></p>
             </dd>
-            
         </dl>
-
     </div>
 </div>
 {% endblock %}

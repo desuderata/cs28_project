@@ -10,45 +10,7 @@
 {% endblock %}
 
 {% block head %}
-<style>
-    .container-width {
-        width: 99%
-    }
-    .bg-white {
-        background-color: #fefefe;
-    }
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-
-    .dropzone {
-        border: 2px dashed #0087F7 !important; 
-        border-radius: 5px;
-        background: white;
-        min-height: calc(100vh - 290px) !important; 
-    }
-
-    .dz-message{
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    }
-    
-</style>
+<link rel="stylesheet" href="{% static 'css/upload.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.css" />
 {% endblock %}
 

@@ -330,31 +330,29 @@
         r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")
     })(document,window,0);
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.css" />
 
 {% endblock %}
 
 
 
 {% block body_block %}
-
-<div class="page-header row h-100 align-items-center bg-blue">
-    <div class="page-text d-inline-flex text-white">
-        <h1>Upload Course Grades</h1>
+<div class="mt-4 pb-1 container-fluid container-width bg-white"></div>
+    <div class="page-header row h-100 align-items-center bg-blue">
+        <div class="page-text d-inline-flex text-white">
+            <h1>Upload Course Grades</h1>
+        </div>
     </div>
+    <div id="dropzone" class="mt-3">
+        <form class="dropzone needsclick dz-clickable"
+                action="{% url 'cs28:upload_course_grades' %}"
+                method="post"
+                enctype="multipart/form-data">
+            {% csrf_token %}
+        </form>
+    </div>
+    <p class="text-muted"><i>*Please refer to the <a href="{% url 'cs28:help_page' %}">Help Page</a> for the correct CSV headers</i></p>
 </div>
-<div id="dropzone" class="mt-3">
-  <form class="dropzone needsclick dz-clickable"
-        action="{% url 'cs28:upload_course_grades' %}"
-        method="post"
-        enctype="multipart/form-data">
-    {% csrf_token %}
-  </form>
-</div>
-<div>
-<p class="text-muted"><i>*Please refer to the <a href="{% url 'cs28:help_page' %}">Help Page</a> for the correct CSV headers</i></p>
-</div>
-
-
 
 
 {% if messages %}
@@ -386,6 +384,4 @@
 {% block scripts %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.css" />
-
 {% endblock %}

@@ -182,6 +182,9 @@ All columns are sortable. The first click sorts the column in ascending order, t
 
 Almost all fields are searchable with the exception of editable fields.
 
+#### **Filtering**
+All columns are filterable. More than one column could be filtered at once. Column searches will be filtered by keyword matches.
+
 #### **Export**
 The data in the table could be exported in the following formats. The exported data will have the academic plan as the file name and will contain all the columns that are currently visible. To export in MyCampus friendly format, click on the Toggle MyCampus Layout to quickly toggle between edit-friendly and MyCampus layout.
 
