@@ -18,7 +18,7 @@ from cs28.models import Student, Grade
 
 class GradesTest(TestCase):
     def setUp(self):
-        login(self.client)
+        login(self)
         populate(self)
         self.grade = Grade.objects.get(courseCode="CHEM_4012",
                                        matricNo=self.student)

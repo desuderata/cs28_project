@@ -57,6 +57,11 @@ class Student(models.Model):
     final_award_help = ("Updating this field automatically sets Final award "
                         "(1dp) and Final award (2dp). This is done to prevent "
                         "rounding errors.")
+    finalAward = models.DecimalField(max_digits=2,
+                                     decimal_places=0,
+                                     null=True,
+                                     blank=True,
+                                     verbose_name="Final award")
     finalAward1 = models.DecimalField(max_digits=3,
                                       decimal_places=1,
                                       null=True,
@@ -88,7 +93,7 @@ class Student(models.Model):
     updatedAward = models.CharField("Updated Award",
                                     blank=True,
                                     default="-1",
-                                    max_length=5)
+                                    max_length=6)
 
     special_code_help = ("If this is checked, at least one grade for this "
                          "student is of MV, CR or CW")
@@ -113,9 +118,10 @@ class Student(models.Model):
         # self.finalAward2 = Decimal(round(self.finalAward4, 2))
         # self.finalAward3 = Decimal(round(self.finalAward4, 3))
         # self.finalAward4 = Decimal(round(self.finalAward4, 4))
-        award = self.finalAward4
+        award = str(self.finalAward4)
         with localcontext() as ctx:
             ctx.rounding = ROUND_HALF_UP
+            self.finalAward = Decimal(str(award)).quantize(Decimal("0"))
             self.finalAward1 = Decimal(str(award)).quantize(Decimal("0.0"))
             self.finalAward2 = Decimal(str(award)).quantize(Decimal("0.00"))
             self.finalAward3 = Decimal(str(award)).quantize(Decimal("0.000"))

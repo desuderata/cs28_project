@@ -21,89 +21,30 @@
 {% endblock %}
 
 {% block head %}
-<style>
-    .white {
-        color: #fefefe;
-    }
-    .div-centered {
-    text-align: left; 
-    margin: auto; 
-    width: 500px;
-    }
-    .nav-buttons {
-        height:100%;
-    }
-    .nav-buttons .fas {
-        font-size:100px;
-    }
-    .nav-buttons .btn {
-        color: #6C757D;
-    }
-
-    .welcome-text {
-        padding-left: 150px;
-        padding-right: 150px;
-    }
-
-    .btn-sq {
-        width: 300px !important;
-        height: 300px !important;
-    }
-
-    @media screen and (max-width: 1300px) {
-        .welcome-text {
-            padding-left: 100px;
-            padding-right: 100px;
-        }
-        .welcome-text h1{
-            font-size:30px;
-        }
-        .btn-sq {
-            width: 200px !important;
-            height: 200px !important;
-        }
-        .nav-buttons .fas{
-            font-size:70px;
-        }
-        .nav-buttons h1{
-            font-size:20px;
-        }
-    }
-
-    /* for carousel */
-    .carousel-img-top {
-        object-fit: cover;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 550px;
-    }
-
-    .carousel-img {
-        object-fit: cover;
-        height: 550px;
-        position: relative;
-        top: 0;
-        left: 0;
-    }
-
-    .blur{
-        filter: blur(8px);
-    }
-
-    .carousel-inner .carousel-item {
-        transition: -webkit-transform 2s ease;
-        transition: transform 2s ease;
-        transition: transform 2s ease, -webkit-transform 2s ease;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
 
 {% block body_block %}
 
+
+{% if not user.is_authenticated %}
+    <div class="pt-4"></div>
+    <div class="container-fluid mt-3">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <span class="pl-3"><b>You are currently not logged in.</b> <a href="{% url 'cs28:login' %}">Login here</a></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    <div class="pt-1"></div>
+{% else %}
+    <div class="pt-5"></div>
+{% endif %}
+
+
 <!-- responsiveness abit wonky here -->
-<div class="pt-5 container-fluid">
+<div class="container-fluid">
     <div class="row h-100 align-items-center bg-uog-light">
         <div class="welcome-text col-md-5 col-xs-12">
             <div class="d-inline-flex white">
@@ -112,11 +53,6 @@
                 </h1>
             </div>
         </div>
-        <!-- <div class="col-md-7 col-xs-12">
-            <img src="{% static 'pics/uni.jpg' %}"
-                    class="img-fluid"
-                    alt="Uni of Glasgow Image">
-        </div> -->
         <div class="col-md-7 col-xs-12 pr-0">
             <div id="slideshow"
                  class="carousel slide"
@@ -144,72 +80,69 @@
         </div>
     </div>
 </div>
+{% if user.is_authenticated %}
+    <div class="py-5 container-fluid">
+        <div class="d-flex justify-content-around">
+            <div class="row nav-buttons w-100 px-5">
 
-<!-- These buttons are not actually center -->
-<div class="py-5 container-fluid">
-    <div class="d-flex justify-content-around">
-        <div class="row nav-buttons w-100 px-5">
-            <div class="col-md-3 col-sm-6 col d-flex justify-content-center py-2">
-                <button class="shadow btn btn-light btn-block btn-sq"
-                        type ="submit"
-                        onclick="location.href = '{% url 'cs28:manage' %}';">
-                    <h1>MANAGE</h1>
-                    <br>
+                <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
+                    <button class="shadow btn btn-light btn-block btn-sq"
+                            type ="submit"
+                            onclick="location.href = '{% url 'cs28:course_grades' %}';">
+                        <h1>COURSE<br/>GRADES</h1>
+                        <br>
 
-                    <i class="fa-fw fas fa-cogs"></i>
-                    <br>
+                        <i class="fa-fw fas fa-award"></i>
+                        <br>
 
-                    <h5>Go to...</h5>
-                </button>
-            </div>
+                        <h5>Go to...</h5>
+                    </button>
+                </div>
 
-            <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
-                <button class="shadow btn btn-light btn-block btn-sq"
-                        type ="submit"
-                        onclick="location.href = '{% url 'cs28:student_upload' %}';">
-                    <h1>UPLOAD</h1>
-                    <br>
+                <div class="col-md-3 col-sm-6 col d-flex justify-content-center py-2">
+                    <button class="shadow btn btn-light btn-block btn-sq"
+                            type ="submit"
+                            onclick="location.href = '{% url 'cs28:manage' %}';">
+                        <h1>MANAGE<br/>STUDENTS</h1>
+                        <br>
 
-                    <i class="fa-fw fas fa-upload"></i>
-                    <br>
+                        <i class="fa-fw fas fa-cogs"></i>
+                        <br>
 
-                    <h5>Go to...</h5>
-                </button>
-            </div>
+                        <h5>Go to...</h5>
+                    </button>
+                </div>
 
-            <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
-                <button class="shadow btn btn-light btn-block btn-sq"
-                        type ="submit"
-                        onclick="location.href = '{% url 'cs28:module_grades_upload' %}';">
-                    <h1>GRADES</h1>
-                    <br>
+                <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
+                    <button class="shadow btn btn-light btn-block btn-sq"
+                            type ="submit"
+                            onclick="location.href = '{% url 'cs28:graph' %}';">
+                        <h1>GENERATE<br/>GRAPHS</h1>
+                        <br>
 
-                    <i class="fa-fw fas fa-file-upload"></i>
-                    <br>
+                        <i class="fa-fw fas fa-chart-bar"></i>
+                        <br>
 
-                    <h5>Go to...</h5>
-                </button>
-            </div>
+                        <h5>Go to...</h5>
+                    </button>
+                </div>
 
-            <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
-                <button class="shadow btn btn-light btn-block btn-sq"
-                        type ="submit"
-                        onclick="location.href = '{% url 'cs28:course_grades' %}';">
-                    <h1>GRADES</h1>
-                    <br>
+                <div class="col-md-3 col-sm-6 d-flex justify-content-center py-2">
+                    <button class="shadow btn btn-light btn-block btn-sq"
+                            type ="submit"
+                            onclick="location.href = '{% url 'cs28:help_page' %}';">
+                        <h1>HELP<br/>PAGE</h1>
+                        <br>
 
-                    <i class="fa-fw fas fa-award"></i>
-                    <br>
+                        <i class="fa-fw fas fa-question-circle"></i>
+                        <br>
 
-                    <h5>Go to...</h5>
-                </button>
+                        <h5>Go to...</h5>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+{% endif %}
 
-{% block scripts %}
-<script>
-</script>
 {% endblock %}

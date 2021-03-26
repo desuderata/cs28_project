@@ -1,0 +1,34 @@
+.container-width {
+    width: 99%
+}
+
+.bg-white {
+    background-color: #fefefe;
+}
+
+@media (max-width: 979px) {
+    .page-text {
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+}
+
+.page-text {
+    padding-left: 75px;
+    padding-right: 75px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.bg-height {
+    min-height: 100vh;
+}
+
+.bootstrap-table th select  {
+    border-radius: 0;
+}
+.bootstrap-table th input {
+    border-radius: 0;
+}

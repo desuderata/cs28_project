@@ -15,34 +15,8 @@
 
 
 {% block head %}
-<!-- add to separete css file later -->
-<style>
-    .login-form {
-        width: 400px;
-        margin: 100px auto;
-    }
-
-    .login-form form {
-        background: #fefefe;
-        box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
-        padding: 25px 50px 50px;
-    }
-
-    .login-form h2 {
-        margin: 0 0 25px;
-    }
-
-    .form-control,
-    .btn {
-        min-height: 40px;
-        border-radius: 3px;
-    }
-
-    .btn {
-        font-size: 15px;
-        font-weight: bold;
-    }
-</style>
+<!-- CSS file -->
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 
 
@@ -54,12 +28,28 @@ Login
 {% block body_block %}
 <div class="login-form">
     <form action="{% url 'cs28:login' %}" method="post">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert
+                            {% if message.tags %}
+                                alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}{{ message.tags }}{% endif %}
+                            {% endif %}
+                            alert-dismissible
+                            fade
+                            show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
         {% csrf_token %}
         <h2 class="text-center">Log in</h2>
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <!-- <i class="fas fa-envelope"></i> -->
                     <span class="input-group-text">
                         <i class="fas fa-envelope"></i>
                     </span>
@@ -70,7 +60,6 @@ Login
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <!-- <i class="fas fa-envelope"></i> -->
                     <span class="input-group-text">
                         <i class="fas fa-key"></i>
                     </span>
@@ -82,8 +71,8 @@ Login
             <button type="submit" value="submit" class="btn btn-primary btn-block">Log in</button>
         </div>
         <div class="clearfix">
-            <label class="float-left checkbox-inline"><input type="checkbox"> Remember me</label>
-            <a href="#" class="float-right">Forgot Password?</a>
+            <label class="float-left checkbox-inline"><input name="remember" value="remember" type="checkbox"> Remember me</label>
+            <a href="{% url 'password_reset' %}" class="float-right">Forgot Password?</a>
         </div>
     </form>
 </div>

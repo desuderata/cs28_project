@@ -25,15 +25,18 @@ def user_create():
     return (user, created,)
 
 
-def login(client):
+def login(self):
     """
     Creates user and logs them in
 
     Args:
         client: the client to log in to
     """
-    user_create()
-    client.login(username='testuser', password='password')
+
+    with self.settings(AXES_ENABLED=False):
+        client = self.client
+        user_create()
+        client.login(username='testuser', password='password')
 
 
 def populate(self):

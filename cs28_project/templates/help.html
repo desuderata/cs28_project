@@ -5,6 +5,10 @@
         Everyone should add how their page works and walk
         the user through how they could use it
     Filename: help.html
+    Author: Alana Grant (2390384G)
+            Yee Hou, Teoh (2471020t)
+
+
 -->
 {% extends 'base.html' %}
 {% load static %}
@@ -14,26 +18,15 @@
 {% endblock %}
 
 {% block head %}
+<!-- CSS file -->
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.css" />
 <style>
-    .container-width {
-        width: 99%
-    }
-    .bg-white {
-        background-color: #fefefe;
-    }
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
+    .dropzone {
+        border: 2px dashed #0087F7 !important; 
+        border-radius: 5px;
+        background: white;
+        height: 200px;
     }
 </style>
 {% endblock %}
@@ -45,56 +38,1164 @@
             <h1>Help Page</h1>
         </div>
     </div>
-    <div class="mt-3" id="accordion">
-        <div class="card">
-            <div class="card-header" id="headingOne">
-                <h5 class="mb-0">
-                    <button class="btn" data-toggle="collapse" data-target="#collapseOne">
-                    Manage
-                    </button>
-                </h5>
+    <div class="container w-75 mt-3">
+        <h2 class="mb-3">
+            Introduction</br>
+            <small class="text-muted">Not that it matters. You won't read it anyways.</small>
+        </h2>
+        <hr class="w-100">
+
+        <p class="lead mb-3">
+            Just a year ago, you were toiling in front of your screen, jabbing away
+            at keyboard deciding which student to fail and on what account; all these 
+            while paying Microsoft their costly annual subscription for a few weeks worth
+            of editing an excel spreadsheet. That's why you came up to us, to streamline
+            the failings (touch wood) without knocking a chunk out of your department budget.
+
+            <dl class="row">
+                <dt class="col-sm-2">View Course Grades</dt>
+                <dd class="col-sm-10">
+                    <p>
+                        Course grades &mdash; responsible for more sleepless nights than
+                        insomnia. Here's where you view your worst nightmares. You could
+                        even sort them in increasing or decreasing order.
+                    </p>
+                </dd>
+
+                <dt class="col-sm-2">Manage</dt>
+                <dd class="col-sm-10">
+                    <p>
+                        Missing grades? Discretionary zones? Passing (hopefully) and
+                        failing is just a few clicks away. You could edit and export
+                        individual user grades and Degree Classification.
+
+                        Plus, the rows are highlighted to help you identify issues
+                        so even the luckiest of your students wouldn't slip by to
+                        get an undeserving pass.
+                    </p>
+                </dd>
+
+                <dt class="col-sm-2">Upload</dt>
+                <dd class="col-sm-10">
+                    <p>
+                        Yes, that's great and all but how could you get those pesky
+                        data into the database? That's what the upload page is for. The
+                        name is self explanatory.
+
+                        In all seriousness, this is where you shape and populate 
+                        your multi-layered database by:
+                        <ol>
+                            <li>adding your students, student number, programme and graduation year, and</li>
+                            <li>populating the grades for each of the courses that contribute to each student's degree calculations.</li>
+                        </ol>
+                    </p>
+                </dd>
+            </dl>
+
+        </p>
+        <h2 class="mb-3">
+            Not sure how to use the page?</br>
+            <small class="text-muted">Here's how. You're welcome.</small>
+        </h2>
+        <hr class="w-100">
+
+        <h4>General Features</h4>
+        <hr class="w-100">
+        <br/>
+        <h5>
+            Search
+        </h5>
+        <p>
+            The search bar allows users to search for a student by first name, 
+            last name, matriculation number, academic plan or graduation year. 
+            The search results will show the student in card form and will 
+            directly link to the <strong>course grade</strong> page or the 
+            <strong>manage</strong> page with the appropriate filters for the 
+            student in the case of the latter (academic plan and graduation 
+            year with matriculation number in the table search)
+        </p>
+
+        <h5>
+            Sidebar
+        </h5>
+        <p>
+            The sidebar allows users to quickly navigate between pages. The menu 
+            icon <i class="fas fa-fw fa-bars"></i> expands the sidebar to view the page names for each 
+            icon. When expanded the icon will change to the cross icon <i class="fas fa-fw fa-times"></i> 
+            which collapses the sidebar for more space to work with.
+        </p>
+
+        <h5>
+            Footer Links
+        </h5>
+        <p>
+            Quick links in the footer lets the user navigate between pages. It 
+            is functionally similar to the sidebar. When it is used by a user 
+            without the admin or staff status, a mailto link allows the user 
+            to contact the system administrator for elevated permissions.
+        </p>
+
+        <h5>
+            Password Reset
+        </h5>
+        <p>
+            The password reset link is available at the login screen. Simply 
+            click on the Forgot Password link and enter a valid email. A mail 
+            will be sent to the registered email with a link to reset the 
+            password.
+        </p>
+
+        <h5>
+            Logo
+        </h5>
+        <p>
+            The logo is specially created for the School of Chemistry database. 
+            Clicking on it leads the user back to the home page.
+        </p>
+        <br/>
+
+        <h4>User Hierarchy</h4>
+        <hr class="w-100">
+        <br/>
+        <div class="row">
+            <div class="col-md-4 col-xs-12">
+                <h5>Admin</h5>
+                <p>
+                    As part of the setup process, an admin (superuser) account should 
+                    have been created. An admin user is able to manage all other users 
+                    (by adding or removing permissions for each of the hierarchy groups) 
+                    in addition to data stored in the database.
+                </p>
             </div>
-            <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            <div class="col-md-4 col-xs-12">
+                <h5>Staff</h5>
+                <p>
+                    By default, a staff is able to access the admin page albeit not 
+                    being able to access anything else. An admin should assign 
+                    permissions to the user as required.
+                </p>
+            </div>
+
+            <div class="col-md-4 col-xs-12">
+                <h5>User</h5>
+                <p>
+                    A user in the User group is not able to edit anything on the webpage, 
+                    upload grades and will not be able to access the admin site. They 
+                    will still be able to view data and generate graphs.
+                </p>
+            </div>
+        </div>
+        <br/>
+
+        <h4>Main Features</h4>
+        <hr class="w-100">
+        <br/>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn" data-toggle="collapse" data-target="#collapseOne">
+                        Manage
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse show">
+                    <div class="card-body">
+                        <img src="{% static 'pics/manage.png' %}"
+                            alt="manage.png"
+                            class="img-fluid">
+                        <p class="pt-3">
+                            This is where student's grades are managed and exported. 
+                            Student's award will be calculated before being displayed 
+                            on the table.
+                        </p>
+                        <h5>Load Table</h5>
+                        <!-- example -->
+                        <form class="form-inline pt-3">
+                            <div class="form-row">
+                                <div class="col-auto mr-2">
+                                    <select class="form-control">
+                                        <option value="" selected disabled>Graduation Year</option>
+                                        <option value="">19-20</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto mr-2">
+                                    <select class="form-control">
+                                        <option value="" selected disabled>Academic Plan</option>
+                                        <option value="">F100-2208</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-secondary"
+                                            onclick="return false">
+                                        Get Students
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="pt-3">
+                            The table could be loaded by selecting the required 
+                            Academic Plan and Graduation Year. By clicking on 
+                            "Get Students", the student's award will be 
+                            calculated before being loaded to the table. Give it a
+                            shot above.
+                        </p>
+                        <h5>Edit A Grade</h5>
+                        <img src="{% static 'pics/award_row.png' %}"
+                            alt="award_row.png"
+                            class="img-fluid pt-3">
+                        <p class="pt-3">
+                            Grades could be edited by clicking on the 
+                            <i class="fas fa-plus text-primary"></i>
+                            icon which expands a subtable with all the grades for 
+                            the student.
+                        </p>
+                        <img src="{% static 'pics/subtable.png' %}"
+                            alt="subtable.png"
+                            class="img-fluid">
+                        <p class="pt-3">
+                            You could select a grade from the <strong>Alphanumeric Grade</strong> 
+                            section to edit (Editable fields are in blue). 
+                            A dropdown list will show up with all the possible 
+                            grades. After a grade has been selected, 
+                            <i class="fas fa-check-square text-primary"></i> 
+                            to keep changes or <i class="fas fa-times"></i> to discard changes 
+                            (as with all editable fields). Notes could be added 
+                            if required.
+                        </p>
+                        <h5>Edit An Award</h5>
+                        <img src="{% static 'pics/award_row.png' %}"
+                            alt="award_row.png"
+                            class="img-fluid">
+                        <p class="pt-3">
+                            Student's award could be edited by clicking on the award 
+                            from the <strong>Award row</strong>. If the new award is not the same 
+                            as the original award, the row will show up as green to 
+                            signify that the award has been overridden. Notes could 
+                            be added if required.
+                        </p>
+                        <h5>The Table</h5>
+                        <p class="pt-3">
+                            The table comes with features such as row highlighting, 
+                            note-taking,  sortability, searchablilty and keyboard 
+                            shortcuts.
+                        </p>
+                        <h6>Row Highlighting</h6>
+                        <p class="pt-3">
+                            Rows are highlighted according to its corresponding 
+                            issues. There is an order of priority as to which color 
+                            the row will be highlighted should there be more than 
+                            one issue. This is because we are not able to use all 
+                            colors. The current order of importance is: <br/><br/>
+
+                            <i>Degree Overridden</i> &#8594; <i>Incomplete Course Assessment</i> &#8594; <i>Discretionary</i>
+                        </p>
+                        <dl class="row">
+                            <dt class="col-sm-1"><i>Green</i></dt>
+                            <dd class="col-sm-11">
+                                <strong>Degree Overridden</strong>
+                                <p class="mb-2">
+                                    When a degree has been overridden (the new award 
+                                    is no longer the same as the original award), 
+                                    the row shows up as green. This will hide issues 
+                                    such as <i>Incomplete Course Assessments</i> or 
+                                    <i>Discretionary</i>.
+                                </p>
+                                <strong>Grades Overridden</strong>
+                                <p class="mb-2">
+                                    When a grade has been overridden (the new grade 
+                                    is no longer the same as the original grade), 
+                                    the row shows up as green. This is only visible 
+                                    in the sub-table.
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1"><i>Red</i></dt>
+                            <dd class="col-sm-11">
+                                <strong>Incomplete Course Assessment</strong>
+                                <p class="mb-2">
+                                    When a student is missing grades for their 
+                                    academic plan, or the grades are a special 
+                                    code (CW, CR or MV), the row shows up as red. 
+                                    This will hide issues such as grades being in 
+                                    the discretionary zone. The row highlighting 
+                                    will go away once all the issues have been 
+                                    fixed.
+                                </p>
+                                <strong>Course Grade Adjusted</strong>
+                                <p class="mb-2">
+                                    When a student's grade has been overridden and 
+                                    there are still special codes, the row will 
+                                    show up as red. It will stay red if the student 
+                                    decides not to retake the course. This will 
+                                    hide <i>Discretionary</i> issues.
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1"><i>Yellow</i></dt>
+                            <dd class="col-sm-11">
+                                <strong>Discretionary</strong>
+                                <p class="mb-2">
+                                    When a student's final gpa is in the discretionary 
+                                    range, the row will show up as yellow.
+                                </p>
+                            </dd>
+                        </dl>
+                        <h6>Notes</h6>
+                        <p class="pt-3">
+                            Notes could be added to both the grades and the award row 
+                            to document changes and justification. The notes section 
+                            is not searchable as with all editable fields. Simply 
+                            click on the red <i>Add Notes</i> or an existing note to add 
+                            a note or make changes.
+                        </p>
+
+                        <h6>Sortability</h6>
+                        <p class="pt-3">
+                            All columns are sortable. The first click sorts the 
+                            column in ascending order, the second in descending 
+                            order and the third to reset the sort.
+                        </p>
+
+                        <h6>Searchability</h6>
+                        <p class="pt-3">
+                            Almost all fields are searchable with the exception of 
+                            editable fields.
+                        </p>
+
+                        <h6>Filtering</h6>
+                        <p class="pt-3">
+                            All columns are filterable. More than one column could 
+                            be filtered at once. Column searches will be filtered
+                            by keyword matches.
+                        </p>
+
+                        <h6>Export</h6>
+                        <p class="pt-3">
+                            The data in the table can be exported in the following 
+                            formats. The exported data will have the academic plan 
+                            as the file name and will contain all the columns that 
+                            are currently visible. To export in MyCampus friendly 
+                            format, click on the Toggle MyCampus Layout to quickly 
+                            toggle between edit-friendly and MyCampus layout.
+                        </p>
+                        <dl class="row">
+                            <dt class="col-sm-1"><i>JSON</i></dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Currently of no use but may be helpful in future 
+                                    projects to transfer data between databases (requested to be kept)
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1"><i>CSV</i></dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    The required format for MyCampus
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1"><i>TXT</i></dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Exported in plain text separated by commas. The 
+                                    content is the same as <i>CSV</i>
+                                </p>
+                            </dd>
+                            <dt class="col-sm-1"><i>Excel</i></dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Microsoft Excel format with the file extension 
+                                    of .xls. There will be a warning about file 
+                                    extension incompatibility which should not 
+                                    matter as the file format is xlshtml and 
+                                    the extension is .xls.
+                                </p>
+                            </dd>
+                            <dt class="col-sm-1"><i>PDF</i></dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Exports the table in pdf format. Notes that are 
+                                    too long will be truncated.
+                                </p>
+                            </dd>
+                        </dl>
+
+                        <h6>Keyboard Shortcuts</h6>
+                        <p class="pt-3">
+                            Keyboard shortcuts allow users to increase productivity 
+                            by navigating the page smoothly. 
+                        </p>
+                        <dl class="row">
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/cursor-left.svg' %}"
+                                    alt="cursor-left.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Previous page
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/cursor-right.svg' %}"
+                                    alt="cursor-right.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Next page
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/s.svg' %}"
+                                    alt="s.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    sets the caret (the "|" cursor in text boxes) to 
+                                    the search box for the table
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/r.svg' %}"
+                                    alt="r.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    refreshes the table manually (should it be opted 
+                                    over automatic refresh with every change)
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/t.svg' %}"
+                                    alt="t.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    toggles between the row view and the <i>Card View</i>
+                                </p>
+                            </dd>
+                        </dl>
+                        <h6>Toolbar</h6>
+                        <form class="form-inline pt-3">
+                            <div class="form-row">
+                                <div class="col-auto mr-2">
+                                    <input class="form-control" type="search" placeholder="Search">
+                                </div>
+                                <div class="col-auto btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button>
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-toggle-off"></i></button>
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-arrows-alt"></i></button>
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-th-list"></i><i class="pl-2 fas fa-caret-down"></i></button>
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-download"></i><i class="pl-2 fas fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="pt-4">From left to right:</p>
+                        <dl class="row pt-2">
+                            <dt class="col-sm-2 pb-2"><input class="form-control" type="search" placeholder="Search"></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Searches the table for the query entered 
+                                    with the exception of editable fields
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Manual refresh of the table should it be opted 
+                                    over automatic refresh with every change
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-toggle-off"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Shows all the rows in <i>Card View</i>
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-arrows-alt"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Shows the table exclusively in full screen
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-th-list"></i><i class="pl-2 fas fa-caret-down"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Choose columns to show or to hide from the table. 
+                                    The search bar inside the dropdown allows users 
+                                    to quickly search for the desired column
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-download"></i><i class="pl-2 fas fa-caret-down"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Export the table in the desired format
+                                </p>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">
+                            Course Grades
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse">
+                    <div class="card-body">
+                        <img src="{% static 'pics/course_grades.PNG' %}"
+                        alt="course_grades.png"
+                        class="img-fluid">
+                        <p class="pt-3">
+                            This page is for looking up different courses and the grades of the students taking those courses.
+                            This is a view only page, there is no data feild editing from the user.
+                        </p>
+                    
+                        <br>
+
+                        <h5>Sortability</h5>
+                        <p class="pt-3">
+                            All columns are sortable. The first click sorts the 
+                            column in ascending order, the second in descending 
+                            order and the third to reset the sort.
+                        </p>
+
+                        <br>
+
+                        <h5>Filtering</h5>
+                        <p class="pt-3">
+                            All columns are filterable. More than one column could 
+                            be filtered at once. Column searches will be filtered
+                            by keyword matches.
+                        </p>
+
+                        <br>
+
+                        <h5>Keyboard Shortcuts</h5>
+                        <p class="pt-3">
+                            Keyboard shortcuts allow users to increase productivity 
+                            by navigating the page smoothly. 
+                        </p>
+                        <dl class="row">
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/cursor-left.svg' %}"
+                                    alt="cursor-left.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Previous page
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/cursor-right.svg' %}"
+                                    alt="cursor-right.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    Next page
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/s.svg' %}"
+                                    alt="s.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    sets the caret (the "|" cursor in text boxes) to 
+                                    the search box for the table
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/r.svg' %}"
+                                    alt="r.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    refreshes the table manually (should it be opted 
+                                    over automatic refresh with every change)
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-1">
+                                <img src="{% static 'icons/t.svg' %}"
+                                    alt="t.svg"
+                                    width=32>
+                            </dt>
+                            <dd class="col-sm-11">
+                                <p class="mb-2">
+                                    toggles between the row view and the <i>Card View</i>
+                                </p>
+                            </dd>
+                        </dl>
+
+                        <h5>Toolbar</h5>
+                        <form class="form-inline pt-3">
+                            <div class="form-row">
+                                <div class="col-auto mr-2">
+                                    <input class="form-control" type="search" placeholder="Search">
+                                </div>
+                                <div class="col-auto btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button>
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-toggle-off"></i></button>
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-arrows-alt"></i></button>
+                                    <button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-th-list"></i><i class="pl-2 fas fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="pt-4">From left to right:</p>
+                        <dl class="row pt-2">
+                            <dt class="col-sm-2 pb-2"><input class="form-control" type="search" placeholder="Search"></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Searches the table for any specific information (i.e. student number, course code, grade) 
+                                    the user wants and will display data matching the input.
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Manual refresh of the table should it be opted 
+                                    over automatic refresh with every change
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-toggle-off"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Shows all the rows in <i>Card View</i>
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-arrows-alt"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Shows the table exclusively in full screen
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2 pb-2"><button type="button" class="btn btn-secondary"><i class="fas fa-fw fa-th-list"></i><i class="pl-2 fas fa-caret-down"></i></button></dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    Choose columns to show or to hide from the table. 
+                                    The search bar inside the dropdown allows users 
+                                    to quickly search for the desired column
+                                </p>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" data-toggle="collapse" data-target="#collapseThree">
+                        Upload
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse">
+                    <div class="card-body">
+                        <div class="container-fluid w-50 pb-3" id="dropzone" class="mt-3">
+                            <form class="dropzone needsclick dz-clickable"
+                                  action="#"
+                                  method="post"
+                                  enctype="multipart/form-data">
+                                  <div class="dz-message" data-dz-message><i class="fas fa-file-upload text-muted fa-fw fa-2x"></i><br/><h6 class="pt-2"><span class="text-muted">Drop files here or click to browse files for upload</span></h6></div>
+                            </form>
+                          </div>
+                        <p class="mb-2">
+                            Data could be uploaded to the database through their 
+                            corresponding upload pages. Files could be uploaded 
+                            by dragging and dropping into the dropzone or 
+                            clicking on the dropzone to browse files. Only files 
+                            with the extension of .csv will be accepted. 
+                            Multiple files could be uploaded at once. Give it a shot above.
+                        </p>
+                        <h5>
+                            Academic Plans
+                        </h5>
+                        <img src="{% static 'pics/upload_plan.png' %}"
+                                 alt="upload_plan.png"
+                                 class="img-fluid">
+                        <p class="mb-2">
+                            Academics Plans could be uploaded through the Upload Academic Plan page.
+                        </p>
+                        <h6>The CSV format is as follows:</h6>
+                        <dl class="row pt-2">
+                            <dt class="col-sm-2 pb-2">Name</dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    The name could be anything followed by the graduation year with the extension of .csv (Eg. My Academic Plan 19-20.csv)
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2 pb-2">File Contents</dt>
+                            <dd class="col-sm-10">
+                                <div class="mb-2">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">Academic Plan Code</th>
+                                            <th scope="col">Internal Course Code</th>
+                                            <th scope="col">MyCampus Description</th>
+                                            <th scope="col">Course 1</th>
+                                            <th scope="col">Weight 1</th>
+                                            <th scope="col">Course 2</th>
+                                            <th scope="col">Weight 2</th>
+                                            <th scope="col">...</th>
+                                            <th scope="col">Course 40</th>
+                                            <th scope="col">Weight 40</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>F100-2208</td>
+                                            <td>CHEM-4H</td>
+                                            <td>Chemistry, BSc</td>
+                                            <td>foo</td>
+                                            <td>0.5</td>
+                                            <td>bar</td>
+                                            <td>0.5</td>
+                                            <td>...</td>
+                                            <td></td>
+                                            <td></td>
+                                          </tr>
+                                          <tr>
+                                            <td>F101-2207</td>
+                                            <td>CHEM-5M</td>
+                                            <td>Chemistry with WP, Msci</td>
+                                            <td>bar</td>
+                                            <td>1</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>...</td>
+                                            <td></td>
+                                            <td></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                </div>
+                            </dd>
+                        </dl>
+
+                        <h5>
+                            Student Roster
+                        </h5>
+                        <p class="mb-2">
+                            Student Roster could be uploaded through the Upload Student Roster page.
+                        </p>
+                        <h6>The CSV format is as follows:</h6>
+                        <dl class="row pt-2">
+                            <dt class="col-sm-2 pb-2">Name</dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    The name could be anything with the extension of .csv (Eg. F100-2208-Graduating Year.csv) as the upload system does not rely on any data from the name.
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2 pb-2">File Contents</dt>
+                            <dd class="col-sm-10">
+                                <div class="mb-2">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">StudentID</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Acad Plan</th>
+                                            <th scope="col">Grad Year</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>3159976</td>
+                                            <td>Ahab,Captain</td>
+                                            <td>F100-2208</td>
+                                            <td>19-20</td>
+                                          </tr>
+                                          <tr>
+                                            <td>2790987</td>
+                                            <td>Blake,Flake</td>
+                                            <td>F100-2208</td>
+                                            <td>19-20</td>
+                                          </tr>
+                                          <tr>
+                                            <td>2110101</td>
+                                            <td>Boingo,Oingo</td>
+                                            <td>F100-2208</td>
+                                            <td>19-20</td>
+                                          </tr>
+                                          <tr>
+                                            <td>3428888</td>
+                                            <td>Chowder,Clam Stinky Gooey</td>
+                                            <td>F100-2208</td>
+                                            <td>19-20</td>
+                                          </tr>
+                                          <tr>
+                                            <td>4512345</td>
+                                            <td>Dinky,Fluffy Puffy</td>
+                                            <td>F100-2208</td>
+                                            <td>19-20</td>
+                                          </tr>
+                                          <tr>
+                                            <td>1239876</td>
+                                            <td>Gobsmacker,Flatulent Poopsie</td>
+                                            <td>F100-2208</td>
+                                            <td>19-20</td>
+                                          </tr>
+                                          <tr>
+                                            <td>2016655</td>
+                                            <td>Ahab,Captain</td>
+                                            <td>F100-2208</td>
+                                            <td>McBoatface,Boaty</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                </div>
+                            </dd>
+                        </dl>
+
+                        <h5>
+                            Course Grades
+                        </h5>
+                        <p class="mb-2">
+                            Grades Roster could be uploaded through the Upload Course Grades page.
+                        </p>
+                        <h6>The CSV format is as follows:</h6>
+                        <dl class="row pt-2">
+                            <dt class="col-sm-2 pb-2">Name</dt>
+                            <dd class="col-sm-10">
+                                <p class="mb-2">
+                                    The name could be anything followed by the course code followed by the year (with underscores) with the extension of .csv (Eg. Grade roster CHEM_4014_2019.csv).
+                                </p>
+                            </dd>
+                            <dt class="col-sm-2 pb-2">File Contents</dt>
+                            <dd class="col-sm-10">
+                                <div class="mb-2">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">EMPLID</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Grade</th>
+
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>3159976</td>
+                                            <td>Ahab,Captain</td>
+                                            <td>A3</td>
+                                          </tr>
+                                          <tr>
+                                            <td>2790987</td>
+                                            <td>Blake,Flake</td>
+                                            <td>B1</td>
+                                          </tr>
+                                          <tr>
+                                            <td>2110101</td>
+                                            <td>Boingo,Oingo</td>
+                                            <td>C1</td>
+                                          </tr>
+                                          <tr>
+                                            <td>3428888</td>
+                                            <td>Chowder,Clam Stinky Gooey</td>
+                                            <td>D3</td>
+                                          </tr>
+                                          <tr>
+                                            <td>4512345</td>
+                                            <td>Dinky,Fluffy Puffy</td>
+                                            <td>E2</td>
+                                          </tr>
+                                          <tr>
+                                            <td>1239876</td>
+                                            <td>Gobsmacker,Flatulent Poopsie</td>
+                                            <td>A1</td>
+                                          </tr>
+                                          <tr>
+                                            <td>2016655</td>
+                                            <td>McBoatface,Boaty</td>
+                                            <td>G1</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 card">
+                <div class="card-header" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" data-toggle="collapse" data-target="#collapseFour">
+                        Graph
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse">
+                    <div class="card-body">
+                        <img src="{% static 'pics/graphs.png' %}"
+                             alt="graphs.png"
+                             class="img-fluid">
+                        <p class="mb-2">
+                            Users could create visualizations from data from the 
+                            database with the option of a GPA bar chart or a 22 
+                            point scale bar chart.
+                        </p>
+
+                        <h5>Selecting Graph Type</h5>
+                        <form class="container-fluid w-75">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="graph">Type of Graph</label>
+                                    <select name="graph" id="graph" class="form-control">
+                                        <option value="" disabled>Type of Graph</option>
+                                        <option value="gpa" selected>GPA Bar Chart</option>
+                                        <option value="ttpt">22 Point Scale Bar Chart</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col" onclick="return false">
+                                    <button onclick="setGraphType()" class="btn btn-secondary btn-block">Set Graph Type</button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="mb-2">
+                            The graph type could be selected by expanding the 
+                            Graph Type dropdown. Clicking on Set Graph Type 
+                            will remove all datasets that are currently on 
+                            the chart (changing from GPA to 22 Point with data 
+                            still on the chart).
+                        </p>
+
+                        <h5>Selecting Graph Labels</h5>
+                        <form class="container-fluid w-75">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="title">Graph Labels</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Title</span>
+                                        </div>
+                                        <input name="title" id="title" class="form-control" value="Students vs. GPA" placeholder="E.g. Number of Students vs. GPA">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">x Axis</span>
+                                        </div>
+                                        <input name="axisX" id="axisX" class="form-control" value="GPA" placeholder="E.g. GPA">
+                                    </div>
+                                </div>
+                                <div class="form-group col">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">y Axis</span>
+                                        </div>
+                                        <input name="axisY" id="axisY" class="form-control" value="Students" placeholder="E.g. Number of Students">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col" onclick="return false">
+                                    <button onclick="setGraphDetails()" class="btn btn-secondary btn-block">Set Graph Labels</button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="mb-2">
+                            Graph labels (title and axes names) could be 
+                            changed by entering the desired names and clicking 
+                            on Set Graph Labels. If nothing has been entered, 
+                            the default will be used.
+                        </p>
+
+                        <h5>Adding a Dataset</h5>
+                        <form class="container-fluid w-75">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="year">Academic Year</label>
+                                    <select name="year" id="year" class="form-control" required>
+                                        <option value="" selected disabled>Academic Year</option>
+                                        <option value="">19-20</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col">
+                                    <label for="plan">Academic Plan</label>
+                                    <select name="plan" id="plan" class="form-control" required>
+                                        <option value="" selected disabled>Academic Plan</option>
+                                        <option value="">F100-2208</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col">
+                                    <label for="type">Type</label>
+                                    <select name="type" id="type" class="form-control" required>
+                                        <option value="" selected disabled>Type</option>
+                                        <option value="percentage">percentage (%)</option>
+                                        <option value="count">count (#)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col" onclick="return false">
+                                    <button id="add" class="btn btn-secondary btn-block">Add</button>
+                                </div>
+                                <div class="form-group col" onclick="return false">
+                                    <button class="btn btn-secondary btn-block">Remove</button>
+                                </div>
+                                <div class="form-group col" onclick="return false">
+                                    <button class="btn btn-secondary btn-block">Reset</button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="mb-2">
+                            A new dataset could be added by selecting all three 
+                            fields then clicking on Add. To remove the last 
+                            dataset added, click on Remove. Reset will remove 
+                            all datasets that are currently on the chart.
+                        </p>
+
+                        <h5>Chart</h5>
+                        <img src="{% static 'pics/chart_value.png' %}"
+                                alt="chart_value.png"
+                                class="img-fluid">
+                        <p class="mb-2">
+
+                            By hovering over the bars, the exact value for each bar will pop up.
+                        </p>
+                        <img src="{% static 'pics/legend.png' %}"
+                                 alt="legend.png"
+                                 class="img-fluid mt-3">
+                        <p class="mb-2">
+                            Clicking on any dataset on the legend will hide the dataset from the chart.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header" id="headingTwo">
-                <h5 class="mb-0">
-                    <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">
-                        Course Grades
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                <div class="card-body">
-                    This page is for looking up different courses and the grades of the students taking those courses. <br>
-                    The user is able to filter what year is shown from the drop down menu 'Year' above the table and you can sort the 
-                    tables in asending or desending order from the small arrows next to the column title. <br>
-                    Users also have the option to search for any specific information (i.e. student number, course code) they want from the table using the search box on the right side above the table.
-                    Next to the search box there is the option to change the view of the data, go into fullscreen or toggle what data is shown in the table.
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="headingThree">
-                <h5 class="mb-0">
-                    <button class="btn collapsed" data-toggle="collapse" data-target="#collapseThree">
-                    Upload
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseThree" class="collapse" data-parent="#accordion">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                </div>
-            </div>
-        </div>
+        <h4>To put it all together <small class="text-muted">If you haven't already caught on</small></h4>
+        <hr class="w-100">
+        <br/>
+        <h5>This is how a normal operation of the page would go</h5>
+        <p class="pt-2">
+            Upload academic plans for the year in the <strong>Upload Academic Plan</strong>
+            page, then the student rosters and their grades at the <strong>Upload Student Roster</strong>
+            and the <strong>Upload Course Grades</strong> page respectively. The order is important if
+            the required students or academic plans are not already in the database yet (you will know when 
+            get an error while uploading course grades) <br/><br/>
+
+            Do a quick skim through on the <strong>Course Grades</strong> (do not worry if you find 
+            anything out of the ordinary as you could change them in the next step) then proceed to the
+            <strong>Manage Students and Export CSV</strong>. Manage the individual course grades or the 
+            final awards for each student and export the table as MyCampus format in the desired file 
+            format.<br/><br/>
+
+            <strong>Graphs</strong> could be generated as a visual aid for comparison between academic
+            plans or years.
+        </p>
+        <br/>
+        <h2 class="mb-3">
+            Still don't get it?</br>
+            <small class="text-muted">We knew you wouldn't.</small>
+        </h2>
+        <hr class="w-100">
+        <p class="lead">
+            You're a chemist, not a coder &mdash; we wouldn't know what makes coke and
+            mentos goes boom either. So drop us an email if you need us to walk
+            you through on how to use the site (and maybe give us a crash course
+            on the sugary reaction while you're at it!).
+        </p>
+        <h4 class=mb-3>Team members and contact</h4>
+        <dl class="row">
+            <dt class="col-sm-2">Yee Hou Teoh</dt>
+            <dd class="col-sm-10">
+                <p class="mb-2">
+                    I know how to use the product in general in addition to 
+                    what I've worked on (the 
+                    <a href="{% url 'cs28:manage' %}">
+                        manage page
+                    </a>
+                    ). If you need to know anything specific about the other 
+                    pages, please reach out to the other team members.
+                    </br>
+                </p>
+                <p class=mb-3>Contact me at: <a href="mailto:2471020t@student.gla.ac.uk">2471020t@student.gla.ac.uk</a></p>
+            </dd>
+
+            <dt class="col-sm-2">Alana Grant</dt>
+            <dd class="col-sm-10">
+                <p class="mb-2">
+                    The page that I worked on majority of the time was the course grades 
+                    (<a href="{% url 'cs28:module_grades' %}">
+                        the course grades page
+                    </a>),
+                    feel free to contact me about any queries you have.
+                    </br>
+                </p>
+                <p class=mb-3>Contact me at: <a href="mailto:2390384G@student.gla.ac.uk">2390384G@student.gla.ac.uk</a></p>
+            </dd>
+            <dt class="col-sm-2">Hieu Nguyen</dt>
+            <dd class="col-sm-10">
+                <p class="mb-2">
+                    <!-- Todo: Add which page you've worked on and what they should contact
+                    you about -->
+                    I worked on the <a href="{% url 'cs28:upload_course_grades' %}">Upload Course Grades page</a>. Feel free to contact me if you have any questions about it.
+                    </br>
+                </p>
+                <!-- Todo: Change the email to yrs. remember the mailto:  -->
+                <p class=mb-3>Contact me at: <a href="mailto:2401707N@student.gla.ac.uk">2401707N@student.gla.ac.uk</a></p>
+            </dd>
+            <dt class="col-sm-2">Kien Welch</dt>
+            <dd class="col-sm-10">
+                <p class="mb-2">
+                    <!-- Todo: Add which page you've worked on and what they should contact
+                    you about -->
+                    I worked on the <a href="{% url 'cs28:student_upload' %}">Upload Student Roster page</a>. Feel free to contact me if you have any questions about it.
+                    </br>
+                </p>
+                <!-- Todo: Change the email to yrs. remember the mailto:  -->
+                <p class=mb-3>Contact me at: <a href="mailto:2371692W@student.gla.ac.uk">2371692W@student.gla.ac.uk</a></p>
+            </dd>
+
+            <!-- To the rest of the team, please add yr contact details below Here's a template for y'all
+            to copy-paste -->
+            <dt class="col-sm-2">Ekaterina Terzieva</dt>
+            <dd class="col-sm-10">
+                <p class="mb-2">
+                    <!-- Todo: Add which page you've worked on and what they should contact
+                    you about -->
+                    I worked on the <a href="{% url 'cs28:module_grades' %}">Course Grades page</a>. Feel free to contact me if you have any questions about it.
+                    </br>
+                </p>
+                <!-- Todo: Change the email to yrs. remember the mailto:  -->
+                <p class=mb-3>Contact me at: <a href="mailto:2403606T@student.gla.ac.uk">2403606T@student.gla.ac.uk</a></p>
+            </dd>
+        </dl>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.js"></script>
 {% endblock %}
