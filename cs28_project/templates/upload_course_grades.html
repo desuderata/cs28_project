@@ -1,19 +1,10 @@
 <!DOCTYPE html>
 <!--
-    Upload student
-
-    Note:
-    (Teoh) Try to keep indentations consistent (the file uses 4 spaces) for tabs
-    Using tabs may look weird when combined with spaces on certain text editors
-    as tabs may be 4-spaced or 8-spaced (like gitlab)
-
-    (Teoh) Keep head contents in "block head". this includes meta, links and style
-    I have added a script block in base so if you want to move scripts to "block scripts"
-    to load the page faster, its there.
+    Upload Course Grades
 
     Todo:
-    Author: Kien Welch 2371692w
-    Filename: upload_student.html
+    Author: Nguyen Thanh Hieu 2401707n
+    Filename: upload_course_grades.html
 -->
 
 {% extends 'base.html' %}
@@ -21,12 +12,11 @@
 
 
 {% block title_block %}
-    Upload
+    Upload Course Grades
 {% endblock %}
 
 {% block head %}
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 
 <style>
     *{
@@ -223,16 +213,16 @@
 
     @-webkit-keyframes appear-from-inside
     {
-        from	{ -webkit-transform: translateY( -50% ) scale( 0 ); }
-        75%		{ -webkit-transform: translateY( -50% ) scale( 1.1 ); }
-        to		{ -webkit-transform: translateY( -50% ) scale( 1 ); }
+        from    { -webkit-transform: translateY( -50% ) scale( 0 ); }
+        75%     { -webkit-transform: translateY( -50% ) scale( 1.1 ); }
+        to      { -webkit-transform: translateY( -50% ) scale( 1 ); }
     }
 
     @keyframes appear-from-inside
     {
-        from	{ transform: translateY( -50% ) scale( 0 ); }
-        75%		{ transform: translateY( -50% ) scale( 1.1 ); }
-        to		{ transform: translateY( -50% ) scale( 1 ); }
+        from    { transform: translateY( -50% ) scale( 0 ); }
+        75%     { transform: translateY( -50% ) scale( 1.1 ); }
+        to      { transform: translateY( -50% ) scale( 1 ); }
     }
 
     .box__restart
@@ -310,14 +300,14 @@
     {
         background-color: #0f3c4b;
     }
-	
-	    .page-text {
+
+   .page-text {
         padding-left: 75px;
         padding-right: 75px;
         padding-top: 50px;
         padding-bottom: 50px;
     }
-	
+
     @media (max-width: 979px) {
         .page-text {
             padding-left: 50px;
@@ -325,6 +315,12 @@
             padding-top: 25px;
             padding-bottom: 25px;
         }
+    }
+    .dropzone {
+         border: 2px dashed #0087F7 !important; 
+         border-radius: 5px;
+         background: white;
+         height: 500px;
     }
 </style>
 
@@ -334,53 +330,61 @@
         r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")
     })(document,window,0);
 </script>
+
 {% endblock %}
 
 
+
 {% block body_block %}
+
 <div class="page-header row h-100 align-items-center bg-blue">
-	<div class="page-text d-inline-flex text-white">
-		<h1>Upload Student Roster</h1>
-	</div>
+    <div class="page-text d-inline-flex text-white">
+        <h1>Upload Course Grades</h1>
+    </div>
 </div>
 <div id="dropzone" class="mt-3">
   <form class="dropzone needsclick dz-clickable"
-        action="{% url 'cs28:student_upload' %}"
+        action="{% url 'cs28:upload_course_grades' %}"
         method="post"
         enctype="multipart/form-data">
     {% csrf_token %}
   </form>
 </div>
+<div>
+<p class="text-muted"><i>*Please refer to the <a href="{% url 'cs28:help_page' %}">Help Page</a> for the correct CSV headers</i></p>
+</div>
+
+
 
 
 {% if messages %}
-	<ul class="messages">
-	{% for message in messages %}
-		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-		<div class="alert alert-danger" role="alert">
-			<center>{{message}}</center>
-		</div>
-		{% endif %}
-		{% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-		<div class="alert alert-warning" role="alert">
-			<center>{{message}}</center>
-		</div>
-		{% endif %}
-		{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-		<div class="alert alert-success" role="alert">
-			<center>{{message}}</center>
-		</div>
-		{% endif %}
-	{% endfor %}
-	</ul>
+    <ul class="messages">
+    {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger" role="alert">
+            <center>{{message}}</center>
+        </div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+        <div class="alert alert-warning" role="alert">
+            <center>{{message}}</center>
+        </div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class="alert alert-success" role="alert">
+            <center>{{message}}</center>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </ul>
 {% endif %}
-
-
 
 
 {% endblock %}
 
+
 {% block scripts %}
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.8.1/dropzone.css" />
 
