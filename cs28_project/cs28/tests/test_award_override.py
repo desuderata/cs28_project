@@ -13,7 +13,7 @@ from cs28.models import Student, AcademicPlan, GraduationYear, Grade
 
 class AwardOverrideTest(TestCase):
     def setUp(self):
-        login(self.client)
+        login(self)
         populate(self)
 
     def test_updated_award(self):

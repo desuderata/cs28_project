@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <!--
-    Password Reset Done
-
-    Author: Yee Hou, Teoh (2471020t)
-    Filename: password_reset_done.html
+    Lock Out
+    locks user out after 10 failed password attempts
+    Filename: lockout.html
 -->
-
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title_block %}
+    Locked Out
+{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/password_reset.css' %}">
-
 {% endblock %}
-
-
-{% block title_block %}
-Email Sent
-{% endblock %}
-
 
 {% block body_block %}
 <div class="login-form">
@@ -41,9 +35,10 @@ Email Sent
                 </div>
             {% endfor %}
         {% endif %}
-        <h2 class="text-center">Check your inbox.</h2>
-        <p class="text-center"><strong>We've emailed you instructions for setting your password. You should receive the email shortly!</strong><br/><span class="text-muted">It may end up in your spam folder</span></p>
+        <h2 class="text-center">You have been locked out</h2>
+        <p class="text-center">Please try again after 10 minutes</p>
         <a role="button" href="{% url 'cs28:login' %}" class="btn btn-primary btn-block">Go to login</a>
+        <a role="button" href="{% url 'password_reset' %}" class="btn btn-primary btn-block">Reset password</a>
 
     </div>
 </div>

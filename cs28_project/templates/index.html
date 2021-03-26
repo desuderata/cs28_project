@@ -21,83 +21,7 @@
 {% endblock %}
 
 {% block head %}
-<style>
-    .white {
-        color: #fefefe;
-    }
-    .div-centered {
-    text-align: left; 
-    margin: auto; 
-    width: 500px;
-    }
-    .nav-buttons {
-        height:100%;
-    }
-    .nav-buttons .fas {
-        font-size:100px;
-    }
-    .nav-buttons .btn {
-        color: #6C757D;
-    }
-
-    .welcome-text {
-        padding-left: 150px;
-        padding-right: 150px;
-    }
-
-    .btn-sq {
-        width: 300px !important;
-        height: 300px !important;
-    }
-
-    @media screen and (max-width: 1300px) {
-        .welcome-text {
-            padding-left: 100px;
-            padding-right: 100px;
-        }
-        .welcome-text h1{
-            font-size:30px;
-        }
-        .btn-sq {
-            width: 200px !important;
-            height: 200px !important;
-        }
-        .nav-buttons .fas{
-            font-size:70px;
-        }
-        .nav-buttons h1{
-            font-size:20px;
-        }
-    }
-
-    /* for carousel */
-    .carousel-img-top {
-        object-fit: cover;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 550px;
-    }
-
-    .carousel-img {
-        object-fit: cover;
-        height: 550px;
-        position: relative;
-        top: 0;
-        left: 0;
-    }
-
-    .blur{
-        filter: blur(8px);
-    }
-
-    .carousel-inner .carousel-item {
-        transition: -webkit-transform 2s ease;
-        transition: transform 2s ease;
-        transition: transform 2s ease, -webkit-transform 2s ease;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
 
 {% block body_block %}
@@ -108,15 +32,6 @@
     <div class="container-fluid mt-3">
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <span class="pl-3"><b>You are currently not logged in.</b> <a href="{% url 'cs28:login' %}">Login here</a></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-            <span class="pl-3">
-                Interested in what we do here? Contact the School of Chemistry if you
-                would like to learn more about it.
-            </span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -230,9 +145,4 @@
     </div>
 {% endif %}
 
-{% endblock %}
-
-{% block scripts %}
-<script>
-</script>
 {% endblock %}

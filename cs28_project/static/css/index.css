@@ -1,0 +1,75 @@
+.white {
+    color: #fefefe;
+}
+.div-centered {
+text-align: left; 
+margin: auto; 
+width: 500px;
+}
+.nav-buttons {
+    height:100%;
+}
+.nav-buttons .fas {
+    font-size:100px;
+}
+.nav-buttons .btn {
+    color: #6C757D;
+}
+
+.welcome-text {
+    padding-left: 150px;
+    padding-right: 150px;
+}
+
+.btn-sq {
+    width: 300px !important;
+    height: 300px !important;
+}
+
+@media screen and (max-width: 1300px) {
+    .welcome-text {
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+    .welcome-text h1{
+        font-size:30px;
+    }
+    .btn-sq {
+        width: 200px !important;
+        height: 200px !important;
+    }
+    .nav-buttons .fas{
+        font-size:70px;
+    }
+    .nav-buttons h1{
+        font-size:20px;
+    }
+}
+
+/* for carousel */
+.carousel-img-top {
+    object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 550px;
+}
+
+.carousel-img {
+    object-fit: cover;
+    height: 550px;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.blur{
+    filter: blur(8px);
+}
+
+.carousel-inner .carousel-item {
+    transition: -webkit-transform 2s ease;
+    transition: transform 2s ease;
+    transition: transform 2s ease, -webkit-transform 2s ease;
+}

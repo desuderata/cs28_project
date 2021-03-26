@@ -109,6 +109,8 @@ python manage.py runserver --insecure
 ### SMTP
 Password reset email is currently printed on the terminal. To send as an actual email, a SMTP service is required. For more information on setting up SMTP, please read Django's documentation:
 > https://docs.djangoproject.com/en/3.1/topics/email/
+>
+> *The current implementation uses Sendinblue. For more information, visit https://www.sendinblue.com/*
 
 ### Live server
 For more information on deploying on a live server, please read the following guide:  
@@ -124,3 +126,7 @@ and Python Anywhere's documentation:
 ### Heroku
 The application is ready for deployment on [Heroku](https://www.heroku.com/). However, there may be some changes to settings as with the previous option (live server). For more information on deploying to Heroku, please read Heroku's documentation:
 > https://devcenter.heroku.com/articles/deploying-python
+
+### PythonAnywhere vs Heroku
+The reason Heroku was used for Continuous Deployment during development process was due to GitLab not being able to clone directly into the bash shell in PythonAnywhere for free plan users. Both are viable options for deployment depending on usage purposes (such as specific databases, pricing or free plan features). For more information on which to choose, please read the following blog:
+> https://blog.pythonanywhere.com/65/#:~:text=Conclusions%3F-,%C2%B6,more%20like%20a%20development%20server.

@@ -12,7 +12,7 @@ from cs28.models import Student
 
 class CalculationTest(TestCase):
     def setUp(self):
-        login(self.client)
+        login(self)
         populate(self)
 
     def test_calculation(self):

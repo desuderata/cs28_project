@@ -12,10 +12,13 @@
 {% load static %}
 
 
-
 {% block head %}
 <!-- CSS file -->
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
+
+<!-- jump to page -->
+<link href="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
+
 {% endblock %}
 
 
@@ -70,6 +73,9 @@ Course grades
         id = "table"
         data-height= "700"
 
+        data-search-accent-neutralise="true"
+        data-key-events="true"
+
         data-pagination="true"
         data-side-pagination="client"
         data-server-sort="false"
@@ -81,17 +87,21 @@ Course grades
         data-show-fullscreen="true"
         data-show-columns="true"
         data-show-columns-toggle-all="true"
+        data-sort-reset="true"
+        data-sort-stable="true"
+        data-show-columns-search="true"
 
         data-show-export="true"
+        data-filter-control="true"
         >
         <thead >
           <tr>
-            <th data-field = "code" data-sortable="true">Course Code</th>
-            <th data-field = "id" data-sortable="true">Matric No.</th>
-            <th data-field = "first" data-sortable="true">First Name</th>
-            <th data-field = "last" data-sortable="true">Last Name</th>
-            <th data-field = "an_grade" data-sortable="true">Alphanumeric Grade</th>
-            <th data-field = "ttpt_grade" data-sortable="true">22pt Grade</th>
+            <th data-field = "code" data-sortable="true" data-filter-control="select">Course Code</th>
+            <th data-field = "id" data-sortable="true" data-filter-control="input">Matric No.</th>
+            <th data-field = "first" data-sortable="true" data-filter-control="input">First Name</th>
+            <th data-field = "last" data-sortable="true" data-filter-control="input">Last Name</th>
+            <th data-field = "an_grade" data-sortable="true" data-filter-control="select">Alphanumeric Grade</th>
+            <th data-field = "ttpt_grade" data-sortable="true" data-filter-control="select">22pt Grade</th>
           </tr>
         </thead>
     </table>
@@ -155,4 +165,12 @@ Course grades
     });
 
 </script>
+<!-- keystrokes -->
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
+
+<!-- jump to page -->
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js"></script>
+
+<!-- per col filter -->
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 {% endblock %}

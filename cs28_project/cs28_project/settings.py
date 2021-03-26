@@ -14,6 +14,7 @@ removed django_heroku as it is messing up with postgres on
 gitlab ci
 """
 
+from datetime import timedelta
 import sys
 import os
 import dj_database_url
@@ -37,6 +38,11 @@ SECRET_KEY = 'u(nf88^_55$ms2&i2jr3wvqzl53&i@jetdyeiek94)b^nb@8a+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Use HTTPS
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+
 ALLOWED_HOSTS = ['*', ]
 
 
@@ -49,7 +55,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cs28'
+    'cs28',
+    'anymail',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +71,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
-
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'cs28_project.urls'
@@ -136,6 +144,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -188,5 +201,19 @@ DATABASES['default'].update(prod_db)
 
 # for development purposes only
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+# SMTP
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+DEFAULT_FROM_EMAIL = "team@cs28.com"
+
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": "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",
+}
+
+AXES_ENABLED = True
+AXES_FAILURE_LIMIT = 10
+AXES_COOLOFF_TIME = timedelta(minutes=10)
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
+AXES_LOCKOUT_TEMPLATE = 'lockout.html'

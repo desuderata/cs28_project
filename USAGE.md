@@ -8,6 +8,7 @@ Please read this guide **thoroughly** for the application to work as intended. I
 [Upload](#upload)  
 [Course Grades](#course-grades)  
 [Manage and Export CSV](#manage-and-export-csv)  
+[Graphs](#graphs)
 
 
 ## General Features

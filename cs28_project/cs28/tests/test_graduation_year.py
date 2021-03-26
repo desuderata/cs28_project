@@ -14,7 +14,7 @@ from cs28.models import GraduationYear
 
 class GraduationYearOverride(TestCase):
     def setUp(self):
-        login(self.client)
+        login(self)
         populate(self)
 
     def test_grad_year_validator(self):

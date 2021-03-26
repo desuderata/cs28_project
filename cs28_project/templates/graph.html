@@ -1,48 +1,25 @@
 <!DOCTYPE html>
 <!--
-    Help page
-    Helps the user understand and get around the page.
-        Everyone should add how their page works and walk
-        the user through how they could use it
-    Filename: help.html
+    Graphs page
+    allows users to create graphs from dataset
+
+    Filename: graph.html
 -->
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title_block %}
-    Help Page
+    Graphs
 {% endblock %}
 
 {% block head %}
 <!-- chart.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" integrity="sha512-C7hOmCgGzihKXzyPU/z4nv97W0d9bv4ALuuEbSf6hm93myico9qa0hv4dODThvCsqQUmKmLcJmlpRmCaApr83g==" crossorigin="anonymous" />
 <!-- <link rel="stylesheet" href="{% static 'css/header.css' %}"> -->
-<!-- chart.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" integrity="sha512-hZf9Qhp3rlDJBvAKvmiG+goaaKRZA6LKUO35oK6EsM0/kjPK32Yw7URqrq3Q+Nvbbt8Usss+IekL7CRn83dYmw==" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-deferred@1"></script>
+
 <!-- temporarily add these until its merged -->
-<style>
-    .container-width {
-        width: 99%
-    }
-    .bg-white {
-        background-color: #fefefe;
-    }
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+
 {% endblock %}
 
 {% block body_block %}
@@ -62,18 +39,61 @@
                     <!-- make this show up without a reload 
                         monkeypatching this to use errorfunction and js-->
                     <div id="message"></div>
-                    <!-- <div class="form-group">
-                        <label for="type">Type</label>
-                        <select class="form-control" id="type">
-                            <option value="" selected disabled>Type</option>
-                            <option value="plans">Between Academic Plans</option>
-                            <option value="years">Between Academic Years</option>
-                        </select>
-                    </div> -->
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="graph">Type of Graph</label>
+                            <select name="graph" id="graph" class="form-control">
+                                <option value="" disabled>Type of Graph</option>
+                                <option value="gpa" selected>GPA Bar Chart</option>
+                                <option value="ttpt">22 Point Scale Bar Chart</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col" onclick="return false">
+                            <button onclick="setGraphType()" class="btn btn-secondary btn-block">Set Graph Type</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="title">Graph Labels</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Title</span>
+                                </div>
+                                <input name="title" id="title" class="form-control" value="Students vs. GPA" placeholder="E.g. Number of Students vs. GPA">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">x Axis</span>
+                                </div>
+                                <input name="axisX" id="axisX" class="form-control" value="GPA" placeholder="E.g. GPA">
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">y Axis</span>
+                                </div>
+                                <input name="axisY" id="axisY" class="form-control" value="Students" placeholder="E.g. Number of Students">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col" onclick="return false">
+                            <button onclick="setGraphDetails()" class="btn btn-secondary btn-block">Set Graph Labels</button>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="year">Academic Year</label>
-                            <select name="year" id="year" class="form-control">
+                            <select name="year" id="year" class="form-control" required>
                                 <option value="" selected disabled>Academic Year</option>
                                 {% for year in years %}
                                     <option value="{{ year.gradYear }}">{{ year.gradYear }}</option>
@@ -82,7 +102,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="plan">Academic Plan</label>
-                            <select name="plan" id="plan" class="form-control">
+                            <select name="plan" id="plan" class="form-control" required>
                                 <option value="" selected disabled>Academic Plan</option>
                                 {% for plan in plans %}
                                     <option value="{{ plan.planCode }}">{{ plan.planCode }}</option>
@@ -91,7 +111,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="type">Type</label>
-                            <select name="type" id="type" class="form-control">
+                            <select name="type" id="type" class="form-control" required>
                                 <option value="" selected disabled>Type</option>
                                 <option value="percentage">percentage (%)</option>
                                 <option value="count">count (#)</option>
@@ -117,156 +137,18 @@
 {% endblock %}
 
 {% block scripts %}
-
+<!-- django variables -->
 <script>
-    const ttpt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-                  12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-
-    function getCount(input) {
-        count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        for (let i=0; i<input.length; i++) {
-            count[parseInt(input[i].gpa)]++;
-        }
-        return count;
-    }
-
-    function getPercentage(input) {
-        count = getCount(input);
-        total = count.reduce((a, b) => a + b, 0);
-        for (let i=0; i<input.length; i++) {
-            count[i] /= total / 100;
-        }
-        return count;
-    }
-
-    $(function() {
-        var token = '{{ csrf_token }}'
-
-        $('#add').click(function() {
-            data = $('#dataset').serialize()
-            $.ajax({
-                headers: { "X-CSRFToken": token },
-                url: "{% url 'cs28:data' %}",
-                type: "GET",
-                data: data,
-                success: function (data) {
-                    // var data = console.log(getData(data));
-                    $('#message').empty();
-                    plan = document.getElementById("plan").value;
-                    year = document.getElementById("year").value;
-                    type = document.getElementById("type").value;
-                    if (type) {
-                        addDataset(`${plan} | ${year} | ${type=="percentage"?"%":"#"}`,
-                            type=="percentage"?getPercentage(data):getCount(data));
-                    }
-                },
-                error: function (data) {
-                    $('#message').html(
-                        '<div class="alert alert-danger alert-dismissible fade show" role="alert"> \
-                            Error retrieving data. Please ensure that <strong>Academic Year</strong>, \
-                            <strong>Academic Plan</strong> and  <strong>Type</strong> are selected. \
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
-                                <span aria-hidden="true">&times;</span> \
-                            </button>\
-                        </div>')
-                }
-            })
-        })
-    })
-
-    var chart;
-
-    $(function() {
-        var bar = document.getElementById('bar').getContext('2d');
-        chart = new Chart(bar, {
-            type: 'bar',
-            data: {
-                labels: ttpt,
-                datasets: []
-            },
-            options: {
-                title: {
-                    display: false,
-                    text: 'Graph'
-                },
-                tooltips: {
-                    mode: 'index'
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            min: 0,
-                            precision: 0
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Students'
-                        }
-                    }],
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'GPA'
-                        }
-                    }],
-                },
-                elements: {
-                    rectangle: {
-                        borderWidth: 1
-                    }
-                }
-            }
-        });
-    });
-
-    function addDataset(label, data) {
-        color = colorCount<colors.length-1? colors[colorCount] : getColor();
-        colorCount++;
-        chart.data.datasets.push({
-            label: label,
-            data: data,
-            backgroundColor: color[1],
-            borderColor: color[0]
-        });
-        chart.update();
-    }
-
-    function removeDataset() {
-        chart.data.datasets.pop();
-        if (colorCount >= 0) colorCount--;
-        console.log(colorCount);
-        chart.update();
-    }
-
-    function resetDataset() {
-        colorCount = 0;
-        console.log(colors);
-        chart.data.datasets = [];
-        chart.update();
-    }
-
-    function changeTitle(title) {
-        chart.options.title = title;
-    }
-
-    var colorCount = 0;
-
-    var colors = [
-        ['rgba(255, 99, 132, 1)', 'rgba(255, 99, 132, 0.2)'],
-        ['rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 0.2)'],
-        ['rgba(255, 206, 86, 1)', 'rgba(255, 206, 86, 0.2)'],
-        ['rgba(75, 192, 192, 1)', 'rgba(75, 192, 192, 0.2)'],
-        ['rgba(153, 102, 255, 1)', 'rgba(153, 102, 255, 0.2)'],
-        ['rgba(255, 159, 64, 1)', 'rgba(255, 159, 64, 0.2)']
-    ]
-
-    function getColor() { 
-        randCol = Math.round(360 * Math.random())
-
-        return [`hsla(${randCol}, 70%, 80%, 1)`,
-                `hsla(${randCol}, 70%, 80%, 0.2)`]
-    }
-
+    var token = '{{ csrf_token }}';
+    var dataUrl = "{% url 'cs28:data' %}";
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-deferred@1"></script>
+<script>
+    if (typeof Chart === 'undefined') {
+        document.write(unescape('%3Cscript src="{% static "js/fallbacks/Chart.min.js" %}"%3E%3C/script%3E'));
+    }
+</script>
+
+<script src="{% static 'js/graph.js' %}"></script> 
 {% endblock %}

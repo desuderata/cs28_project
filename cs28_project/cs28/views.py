@@ -32,6 +32,7 @@ from .models.student import Student
 from django.contrib import messages
 import csv
 
+import hashlib
 
 def _check_year(year):
     try:
@@ -43,6 +44,11 @@ def _check_year(year):
         return False
 
 
+def _anonymize(matric):
+    return hashlib.sha1(str(matric).encode("UTF-8")).hexdigest()[:11]
+
+
+@login_required
 def index(request):
     return render(request, 'index.html')
 
@@ -58,9 +64,8 @@ def student_upload(request):
             success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
-                error="File is not CSV type"
-                return JsonResponse({'error':error},status=400)
-
+                error = "File is not CSV type"
+                return JsonResponse({'error': error}, status=400)
 
             file_data = file.read().decode("utf-8")
             lines = re.split('\r\n|\r|\n', file_data)[1:]
@@ -88,26 +93,26 @@ def student_upload(request):
                     success = False
                     messages.error(request, "[" + line + "] " + str(e))
                     logging.getLogger("error_logger").error(
-                        "Unable to upload file. " +repr(e))
-                    error=str(e)
-                    return JsonResponse({'error':error},status=400)
+                        "Unable to upload file. " + repr(e))
+                    error = str(e)
+                    return JsonResponse({'error': error}, status=400)
                     pass
 
-                    
             if (success):
                 messages.success(request, "All grades from file " +
                                  file.name + " were uploaded successfully!")
             else:
-                messages.warning(request, "File " + file.name + " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
+                messages.warning(request, "File " + file.name +
+                                 " uploaded, but not all grades were uploaded successfully. Please check the error messages above.")
             time.sleep(1)
 
     except Exception as e:
         messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
-        error=str(e)
-        return JsonResponse({'error':error},status=400)
 
+        error = str(e)
+        return JsonResponse({'error': error}, status=400)
 
     return redirect(reverse("cs28:student_upload"))
 
@@ -121,7 +126,9 @@ def user_login(request):
         password = request.POST.get("password")
         remember_me = request.POST.get("remember") == "remember"
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(username=username,
+                            password=password,
+                            request=request)
         if not remember_me:
             request.session.set_expiry(0)
 
@@ -180,7 +187,7 @@ def data(request):
 
     for student in students:
         row = {}
-
+        row["anon"] = _anonymize(student.matricNo)
         row["id"] = student.matricNo
         row["mcId"] = student.matricNo
         row["grad"] = student.gradYear.gradYear
@@ -241,7 +248,7 @@ def data(request):
         elif is_discretionary(student):
             row["type"] = "Discretionary"
         else:
-            row["type"] = "&#128077;"  # Thumbs up emoji
+            row["type"] = "No Issues"
 
         json_array.append(row)
 
@@ -425,8 +432,8 @@ def upload_course_grades(request):
             success = True
             if not file.name.endswith('.csv'):
                 print("File is not CSV type")
-                error="File is not CSV type"
-                return JsonResponse({'error':error},status=400)
+                error = "File is not CSV type"
+                return JsonResponse({'error': error}, status=400)
             # extract course code from the file name, for now hard-coded
             # (expected format: "Grade Roster CourseCode.csv")
             courseCode = file.name[13:-9]
@@ -450,19 +457,19 @@ def upload_course_grades(request):
                     )
                 except Exception as e:
                     logging.getLogger("error_logger").error(
-                        "Unable to upload file. " +repr(e))
-                    error="[" + line + "] " + str(e)
-                    return JsonResponse({'error':error},status=400)
+                        "Unable to upload file. " + repr(e))
+                    error = "[" + line + "] " + str(e)
+                    return JsonResponse({'error': error}, status=400)
                     pass
-                
+
             time.sleep(1)
 
     except Exception as e:
         messages.error(request, e)
         logging.getLogger("error_logger").error(
             "Unable to upload file. "+repr(e))
-        error=str(e)
-        return JsonResponse({'error':error},status=400)
+        error = str(e)
+        return JsonResponse({'error': error}, status=400)
 
     return redirect(reverse("cs28:upload_course_grades"))
 
@@ -505,6 +512,10 @@ def graph(request):
     ctx = {"years": GraduationYear.objects.all(),
            "plans": AcademicPlan.objects.all(), }
     return render(request, 'graph.html', context=ctx)
+
+
+def locked_out(request):
+    return render(request, 'lockout.html')
 
 
 @login_required
