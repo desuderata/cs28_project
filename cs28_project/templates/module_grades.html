@@ -12,34 +12,10 @@
 {% load static %}
 
 
+
 {% block head %}
-<!-- add to separete css file later -->
-<style>
-    .container-width {
-        width: 98%
-    }
-
-    .page-text {
-        padding-left: 75px;
-        padding-right: 75px;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-
-    @media (max-width: 979px) {
-        .page-text {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 25px;
-            padding-bottom: 25px;
-        }
-    }
-
-    .bg-white {
-        background-color: #fefefe;
-    }
-
-</style>
+<!-- CSS file -->
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 {% endblock %}
 
 
