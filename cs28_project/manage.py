@@ -20,13 +20,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-                # numerical_score = [str(s) for s in numerical_score]
-                # weight_list = [str(w) for w in weight_list]
-                # overall_points = Decimal('0')
-                # # print(numerical_score)
-                # for i, j in zip(numerical_score, weight_list):
-                #     overall_points += Decimal(i) * Decimal(j)
-                # print(overall_points)

@@ -26,9 +26,9 @@
     min-height: 100vh;
 }
 
-.bootstrap-table select {
+.bootstrap-table th select  {
     border-radius: 0;
 }
-.bootstrap-table input {
+.bootstrap-table th input {
     border-radius: 0;
 }
