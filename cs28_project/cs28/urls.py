@@ -20,7 +20,10 @@ urlpatterns = [
     path('module-grades/', views.module_grades, name='module_grades'),
     path('course-grades/', views.module_grades, name='course_grades'),
     path('student-upload/', views.student_upload, name='student_upload'),
-    path('upload-course-grades/', views.upload_course_grades, name='upload_course_grades'),
+    path('upload-course-grades/', views.upload_course_grades,
+         name='upload_course_grades'),
+    path('academic-plan-upload/', views.upload_academic_plan,
+         name='upload_academic_plan'),
 
     path('manage/', views.manage, name='manage'),
     path('manage/calculate/', views.calculate, name='calculate'),
@@ -30,5 +33,4 @@ urlpatterns = [
     path('help-page/', views.help, name='help_page'),
     path('search-results/', views.search_results, name="search_results"),
     path('graph/', views.graph, name="graph"),
-
 ]
