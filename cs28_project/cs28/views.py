@@ -33,6 +33,8 @@ from django.contrib import messages
 import csv
 
 import hashlib
+from django.db.models.query_utils import Q
+
 
 def _check_year(year):
     try:
