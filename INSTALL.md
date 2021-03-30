@@ -47,7 +47,7 @@ conda activate [environment name]
 ## Cloning the Repository
 **Step 2** Clone the repository. Make sure you're in the directory that you intended to clone the project to.  
 ```bash
-git clone https://stgit.dcs.gla.ac.uk/tp3-2020-CS28/cs28-main.git
+git clone https://github.com/desuderata/cs28_project.git
 ```
 
 ## Setup Django
